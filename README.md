@@ -25,3 +25,24 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Steps to setup this project
+
+1. Install angular 9 (angular 10 had some issues with ngrx store)
+npm install -g @angular/cli@9
+2. Install ngrx/store
+npm install @ngrx/store --save
+3. Install bootstrap
+npm install bootstrap
+4. Add bootstrap styles/scripts to angular.json
+
+    ...
+    "styles": [
+       "src/styles.css",
+       "node_modules/bootstrap/dist/css/bootstrap.min.css"
+    ],
+    "scripts": [
+       "node_modules/jquery/dist/jquery.min.js",
+       "node_modules/bootstrap/dist/js/bootstrap.min.js"
+    ]
+    ...
