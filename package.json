@@ -19,8 +19,10 @@
     "@angular/platform-browser": "~9.1.12",
     "@angular/platform-browser-dynamic": "~9.1.12",
     "@angular/router": "~9.1.12",
+    "@ngrx/effects": "^9.2.0",
     "@ngrx/store": "^9.2.0",
     "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

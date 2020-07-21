@@ -1,0 +1,110 @@
+<div class="split left">
+  <div class="col">
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="inputISBN">ISBN</label>
+          <input type="number" class="form-control" id="inputISBN" placeholder="Number">
+        </div>
+        <div class="form-group col-md-5">
+          <label for="inputTitle">Titel</label>
+          <input type="text" class="form-control" id="inputTitle" placeholder="Text">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputAuthor">Auteur</label>
+          <input type="text" class="form-control" id="inputAuthor" placeholder="Text">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="inputPublisher">Uitgever</label>
+          <input type="text" class="form-control" id="inputPublisher" placeholder="Uitgever">
+        </div>
+        <div class="form-group col-md-1">
+          <label for="inputAmount">Aantal</label>
+          <input type="number" class="form-control" id="inputAmount" placeholder="1">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputPrice">Prijs</label>
+          <input type="number" class="form-control" id="inputPrice" placeholder="0">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputTax">Btw</label>
+          <input type="number" class="form-control" id="inputTax" placeholder="0">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="buttonOk">Toevoegen</label>
+          <button type="button" class="btn btn-info btn-block" id="buttonOk">Boek</button>
+        </div>
+      </div>
+    </form>
+    <br>
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-5">
+          <label for="inputObject">Artikel</label>
+          <input type="text" class="form-control" id="inputObject" placeholder="Artikel">
+        </div>
+        <div class="form-group col-md-1">
+          <label for="inputObjectAmount">Aantal</label>
+          <input type="number" class="form-control" id="inputObjectAmount" placeholder="1">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputObjectPrice">Prijs</label>
+          <input type="number" class="form-control" id="inputObjectPrice" placeholder="0">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputObjectTax">Btw</label>
+          <input type="number" class="form-control" id="inputObjectTax" placeholder="0">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="buttonObjectOk">Toevoegen</label>
+          <button type="button" class="btn btn-info btn-block" id="buttonObjectOk">Artikel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="split right">
+  <form>
+    <div class="form-group col-md-12">
+      <div class="order">
+        <span class="headerfont" style="display:block"><b>De KinderBoekenTuin</b></span>
+        <span class="headerfont" style="display:block">Speelhuislaan 80</span>
+        <span class="headerfont" style="display:block">4815 CG, Breda</span>
+        <span class="headerfont" style="display:block">info@kinderboekentuin.nl</span>
+        <span class="headerfont" style="display:block">076-737 0099</span>
+        <span style="display:block">&nbsp;</span>
+        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;"></span>
+        <span style="display:inline-block;width: 15ch;"><B>ISBN</B></span>
+        <span style="display:inline-block;width: 40ch;"><B>Boek/artikel</B></span>
+        <span style="display:inline-block;width: 7ch;"><B>Prijs</B></span>
+        <ul style="list-style-type:none;margin-bottom: 0;padding:0;" *ngFor="let order of orders">
+          <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;">&#x0229D;</span>
+          <span style="display:inline-block;width: 15ch;">{{order.isbn}}</span>
+          <span style="display:inline-block;width: 40ch;">{{order.item}}</span>
+          <span style="display:inline-block;width: 1ch;">&euro;</span>
+          <span style="display:inline-block;width: 7ch;text-align: right;">{{order.price / 100 | number:'1.2-2'}}</span>
+        </ul>
+        <br>
+        <span style="display:inline-block;width: 18ch;"></span>
+        <span style="display:inline-block;width: 40ch;"><b>Totaal te betalen:</b></span>
+        <span style="display:inline-block;width: 1ch;">&euro;</span>
+        <span style="display:inline-block;width: 7ch;text-align: right;"><b>{{6100 / 100 | number:'1.2-2'}}</b></span>
+        <span style="display:block"></span>
+        <span style="display:inline-block;width: 18ch;"></span>
+        <span style="display:inline-block;width: 40ch;">Totaal Btw 21%:</span>
+        <span style="display:inline-block;width: 1ch;">&euro;</span>
+        <span style="display:inline-block;width: 7ch;text-align: right;">{{1005 / 100 | number:'1.2-2'}}</span>
+        <span style="display:block"></span>
+        <span style="display:inline-block;width: 18ch;"></span>
+        <span style="display:inline-block;width: 40ch;">Totaal Btw 9%:</span>
+        <span style="display:inline-block;width: 1ch;">&euro;</span>
+        <span style="display:inline-block;width: 7ch;text-align: right;">{{1232 / 100 | number:'1.2-2'}}</span>
+
+      </div>
+    </div>
+  </form>
+</div>
+
+

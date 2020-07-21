@@ -1,0 +1,46 @@
+<div class="Container">
+  <h2>Artikelen:</h2>
+
+  <div *ngIf="itemError?.message">
+    <div class="alert alert-danger" role="alert">
+      Some error occurred. Please try again
+    </div>
+  </div>
+
+  <ng-container *ngFor="let item of ItemList">
+    <div class="row">
+      <div class="col-md-2">Beschrijving:</div>
+      <div class="col-md-2 todoItem">{{ item.description }}</div>
+      <div class="col-md-2">Btw:</div>
+      <div class="col-md-2 todoItem">{{ item.tax }}</div>
+    </div>
+  </ng-container>
+</div>
+<hr/>
+
+<div class="container form-group" style="margin: 10px;">
+  <h3>Creeer nieuwe artikel</h3>
+  <form (ngSubmit)="createItem()">
+    <div class="row">
+      <div class="form-group col-md-4">
+        <input
+          [(ngModel)]="Description"
+          placeholder="Beschrijving"
+          class="form-control"
+          name="Description"
+          style="min-width: 150px;"
+        />
+      </div>
+
+      <div class="col-md-2 form-check" style="margin-top: 10px; margin-left: 30px;">
+        <input type="number" class="form-check-input" id="Tax" name="Tax" [(ngModel)]="Tax"/>
+      </div>
+
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary" style="Width:70px;">
+          Add
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

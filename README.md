@@ -32,8 +32,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 npm install -g @angular/cli@9
 2. Install ngrx/store
 npm install @ngrx/store --save
+npm install @ngrx/effects --save
 3. Install bootstrap
 npm install bootstrap
+npm install jquery
 4. Add bootstrap styles/scripts to angular.json
 
     ...
@@ -46,3 +48,6 @@ npm install bootstrap
        "node_modules/bootstrap/dist/js/bootstrap.min.js"
     ]
     ...
+5. Add proxy configuration to prevent cors problems
+   Add /src/proxy.conf.json with reference to the backend server
+   Add the /src/proxy.json.conf reference in angular.json

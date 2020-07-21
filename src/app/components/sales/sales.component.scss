@@ -1,0 +1,44 @@
+@import "src/assets/styles/variables";
+/* Split the screen in half */
+.split {
+  height: 400px;
+  z-index: 1;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  position: absolute;
+  width: 60%;
+  top: $header-height;
+  left: 0;
+  background-color: aquamarine;
+}
+
+/* Control the right side */
+.right {
+  position: absolute;
+  width: 40%;
+  top: $header-height;
+  left: 60%;
+  background-color: aquamarine;
+}
+
+.order {
+  background-color: white;
+  height: 350px;
+  font-family:"Courier New", Courier, monospace;
+  font-size: 12px;
+}
+
+.headerfont {
+  font-family:"Arial", Helvetica, sans-serif;
+  font-size: 14px;
+  margin-left:3ch;
+}
+
+.tailfont {
+  font-family:"Courier New", Courier, monospace;
+  font-size: 12px;
+}
