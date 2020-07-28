@@ -29,39 +29,44 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Steps to setup this project
 
 1. Install angular 9 (angular 10 had some issues with ngrx store)
-npm install -g @angular/cli@9
+   ```
+   npm install -g @angular/cli@9
+   ```
 2. Install ngrx/store
-npm install @ngrx/store --save
-npm install @ngrx/effects --save
-npm install @ngrx/router-store --save
-npm install --save ngx-mask 
+   ```
+   npm install @ngrx/store --save
+   npm install @ngrx/effects --save
+   npm install @ngrx/router-store --save
+   npm install --save ngx-mask
+   ```
 3. Install bootstrap
-npm install bootstrap
-npm install popper --save
-npm install jquery
+   ```
+   npm install bootstrap --save
+   npm install popper --save
+   npm install jquery --save
+   ```
 4. Add bootstrap styles/scripts to angular.json
-
-    ...
-    "styles": [
-       "src/styles.css",
-       "node_modules/bootstrap/dist/css/bootstrap.min.css"
-    ],
-    "scripts": [
-       "node_modules/jquery/dist/jquery.min.js",
-       "node_modules/popper.js/dist/umd/popper.min.js",
-       "node_modules/bootstrap/dist/js/bootstrap.min.js"
-    ]
-    ...
+   ```
+   "styles": [
+      "src/styles.css",
+      "node_modules/bootstrap/dist/css/bootstrap.min.css"
+   ],
+   "scripts": [
+      "node_modules/jquery/dist/jquery.min.js",
+      "node_modules/popper.js/dist/umd/popper.min.js",
+      "node_modules/bootstrap/dist/js/bootstrap.min.js"
+   ]
+   ```
 5. Add code to enable bootstrap tooltips
-   ...
-       $('body').tooltip({
-         selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-         trigger: 'hover',
-         container: 'body'
-       }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',function() {
-         $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('dispose');
-       });
-   ...    
-6. Add proxy configuration to prevent cors problems
-   Add /src/proxy.conf.json with reference to the backend server
-   Add the /src/proxy.json.conf reference in angular.json
+   ```
+   $('body').tooltip({
+      selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+      trigger: 'hover',
+      container: 'body'
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',function() {
+      $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('dispose');
+    });
+   ```    
+6. Add proxy configuration to prevent cors problems  
+   Add /src/proxy.conf.json with reference to the backend server  
+   Add the /src/proxy.json.conf reference in angular.json  
