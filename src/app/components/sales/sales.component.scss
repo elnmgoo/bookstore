@@ -1,44 +1,53 @@
 @import "src/assets/styles/variables";
+$padding-height: 20px;
+$margin-width: 20px;
+
 /* Split the screen in half */
 .split {
-  height: 400px;
   z-index: 1;
   overflow-x: hidden;
-  padding-top: 20px;
+  padding-top: $padding-height;
+  padding-bottom: $padding-height;
+  height: calc(100% - #{$header-height});
 }
 
 /* Control the left side */
 .left {
   position: absolute;
-  width: 60%;
+  width: 40%;
   top: $header-height;
   left: 0;
   background-color: aquamarine;
+  font-family:"Arial", Helvetica, sans-serif;
+  font-size: 18px;
 }
 
 /* Control the right side */
 .right {
   position: absolute;
-  width: 40%;
+  width: 60%;
   top: $header-height;
-  left: 60%;
+  left: 40%;
   background-color: aquamarine;
 }
 
 .order {
   background-color: white;
-  height: 350px;
   font-family:"Courier New", Courier, monospace;
-  font-size: 12px;
+  font-size: 20px;
+  margin-left: $margin-width;
+  margin-right: $margin-width;
+  height: calc(100%);
+  overflow-y: scroll
 }
 
 .headerfont {
   font-family:"Arial", Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   margin-left:3ch;
 }
 
 .tailfont {
   font-family:"Courier New", Courier, monospace;
-  font-size: 12px;
+  font-size: 18px;
 }

@@ -1,26 +1,30 @@
-import { Injectable } from '@angular/core';
-import {Actions,  Effect, ofType} from '@ngrx/effects';
-import {  of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import * as ItemActions from '../actions/item.actions';
-import Item from '../models/item';
+import {Injectable, OnInit} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {of} from 'rxjs';
+import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
+import {Item} from '../models/item';
+import {AddItem, AddItemSuccess, DeleteItemSuccess, EItemActions, GetItemsSuccess, ItemError} from '../actions/item.actions';
 import {ItemService} from '../services/item.service';
+import {AppConstants} from '../../../app/app-constants';
 
 @Injectable()
 export class ItemEffects {
-  constructor(private itemService: ItemService, private action$: Actions) {
+
+  constructor(private action$: Actions, private itemService: ItemService) {
   }
 
   @Effect()
   GetItems$ = this.action$.pipe(
-    ofType(ItemActions.GetItemAction),
+    ofType(EItemActions.GetItems),
+    /*filter(() => AppConstants.getItemsCounter++ === 0), werkt ook echter take(1) is eenvoudiger*/
+    take(1),
     mergeMap((action) =>
       this.itemService.getItems().pipe(
         map((data: Item[]) => {
-          return ItemActions.GetItemActionSuccess({payload: data});
+          return new GetItemsSuccess(data);
         }),
         catchError((error: Error) => {
-          return of(ItemActions.ItemActionError(error));
+          return of(new ItemError(error));
         })
       )
     )
@@ -28,16 +32,34 @@ export class ItemEffects {
 
   @Effect()
   AddItems$ = this.action$.pipe(
-    ofType(ItemActions.AddItemAction),
+    ofType<AddItem>(EItemActions.AddItem),
     mergeMap(action =>
-      this.itemService.addItem(action.payload).pipe(
+      this.itemService.addItem(action.payload)
+        .pipe(
           map((data: Item) => {
-            return ItemActions.AddItemActionSuccess({payload: data});
+            return new AddItemSuccess(data);
           }),
           catchError((error: Error) => {
-            return of(ItemActions.ItemActionError(error));
+            return of(new ItemError(error));
           })
         )
     )
   );
+
+  @Effect()
+  DeleteItems$ = this.action$.pipe(
+    ofType<AddItem>(EItemActions.DeleteItem),
+    mergeMap(action =>
+      this.itemService.deleteItem(action.payload)
+        .pipe(
+          map((data: Item) => {
+            return new DeleteItemSuccess(data);
+          }),
+          catchError((error: Error) => {
+            return of(new ItemError(error));
+          })
+        )
+    )
+  );
+
 }

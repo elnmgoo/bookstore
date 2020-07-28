@@ -1,108 +1,158 @@
 <div class="split left">
   <div class="col">
-    <form>
+    <form [formGroup]="bookForm">
       <div class="form-row">
-        <div class="form-group col-md-3">
-          <label for="inputISBN">ISBN</label>
-          <input type="number" class="form-control" id="inputISBN" placeholder="Number">
-        </div>
-        <div class="form-group col-md-5">
-          <label for="inputTitle">Titel</label>
-          <input type="text" class="form-control" id="inputTitle" placeholder="Text">
-        </div>
         <div class="form-group col-md-4">
-          <label for="inputAuthor">Auteur</label>
-          <input type="text" class="form-control" id="inputAuthor" placeholder="Text">
+          <label for="inputISBN">ISBN</label>
+          <input #autofocus formControlName="isbn" type="text" class="form-control" id="inputISBN" placeholder="Number"  mask="000000000000">
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-12">
+          <label for="inputTitle">Titel</label>
+          <input formControlName="title" type="text" class="form-control" id="inputTitle" placeholder="Titel">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputAuthor">Auteur</label>
+          <input type="text" class="form-control" id="inputAuthor" placeholder="Auteur">
+        </div>
+        <div class="form-group col-md-6">
           <label for="inputPublisher">Uitgever</label>
           <input type="text" class="form-control" id="inputPublisher" placeholder="Uitgever">
         </div>
-        <div class="form-group col-md-1">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2">
           <label for="inputAmount">Aantal</label>
-          <input type="number" class="form-control" id="inputAmount" placeholder="1">
+          <input type="number" class="form-control" id="inputAmount" placeholder="1" default="1" min="1">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <label for="inputPrice">Prijs</label>
-          <input type="number" class="form-control" id="inputPrice" placeholder="0">
+          <input type="text" class="form-control" id="inputPrice" placeholder="0" mask="separator.2"
+                 thousandSeparator=".">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <label for="inputTax">Btw</label>
           <input type="number" class="form-control" id="inputTax" placeholder="0">
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
           <label for="buttonOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block" id="buttonOk">Boek</button>
+          <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid">Boek toevoegen</button>
         </div>
       </div>
     </form>
     <br>
-    <form>
+    <form [formGroup]="itemForm">
       <div class="form-row">
-        <div class="form-group col-md-5">
-          <label for="inputObject">Artikel</label>
-          <input type="text" class="form-control" id="inputObject" placeholder="Artikel">
+        <div class="form-group col-md-8">
+          <div class="form-group">
+            <label for="inputItem">Artikel</label>
+            <select formControlName="item" name="item" class="form-control" id="inputItem" placeholder="Artikel"
+                    type="number" (change)='onInputArticleSelected($event)'>
+              <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}} ({{item.tax}}
+                %) {{item.price.replace('.', ',')}}
+              </option>
+            </select>
+          </div>
         </div>
-        <div class="form-group col-md-1">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2">
           <label for="inputObjectAmount">Aantal</label>
-          <input type="number" class="form-control" id="inputObjectAmount" placeholder="1">
+          <input formControlName="itemAmount" type="number" class="form-control" min="1" id="inputObjectAmount"
+                 placeholder="1">
+          <div></div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <label for="inputObjectPrice">Prijs</label>
-          <input type="number" class="form-control" id="inputObjectPrice" placeholder="0">
+          <input formControlName="itemPrice" type="text" name="inputObjectPrice" class="form-control"
+                 id="inputObjectPrice" placeholder="Prijs"
+                 mask="separator.2" thousandSeparator=".">
+          <div class="validator"
+               *ngIf="itemForm.controls['itemPrice'].invalid && (itemForm.controls['itemPrice'].dirty ||itemForm.controls['itemPrice'].touched)">
+            Max. prijs: {{itemForm.controls['itemPrice'].errors.requiredValue}}
+          </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-3">
           <label for="inputObjectTax">Btw</label>
-          <input type="number" class="form-control" id="inputObjectTax" placeholder="0">
+          <select formControlName="itemTax" type="number" class="form-control" id="inputObjectTax" placeholder="Btw">
+            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+          </select>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
           <label for="buttonObjectOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block" id="buttonObjectOk">Artikel</button>
+          <button type="button" class="btn btn-info btn-block" id="buttonObjectOk" [disabled]="!itemForm.valid"
+                  (click)="onAddItemButton()">Artikel toevoegen
+          </button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-1">
+        </div>
+        <div class="form-group col-md-7">
+          <input type="checkbox" class="form-check-input" id="printLabelCount" checked>
+          <label for="printLabelCount">Afdrukken van een bonnnetje</label>
+        </div>
+        <div class="form-group col-md-4">
+          <button type="button" class="btn btn-info btn-block" id="buttonObjectPay" [disabled]="orders.length == 0"
+                  (click)="onPayButton()">Afrekenen
+          </button>
         </div>
       </div>
     </form>
   </div>
 </div>
 <div class="split right">
-  <form>
+  <form #orderwindow class="order">
     <div class="form-group col-md-12">
-      <div class="order">
-        <span class="headerfont" style="display:block"><b>De KinderBoekenTuin</b></span>
-        <span class="headerfont" style="display:block">Speelhuislaan 80</span>
-        <span class="headerfont" style="display:block">4815 CG, Breda</span>
-        <span class="headerfont" style="display:block">info@kinderboekentuin.nl</span>
-        <span class="headerfont" style="display:block">076-737 0099</span>
-        <span style="display:block">&nbsp;</span>
+      <span class="headerfont" style="display:block"><b>De KinderBoekenTuin</b></span>
+      <span class="headerfont" style="display:block">Speelhuislaan 80</span>
+      <span class="headerfont" style="display:block">4815 CG, Breda</span>
+      <span class="headerfont" style="display:block">info@kinderboekentuin.nl</span>
+      <span class="headerfont" style="display:block">076-737 0099</span>
+      <span style="display:block">&nbsp;</span>
+      <ng-container *ngIf="priceTotal > 0">
         <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;"></span>
         <span style="display:inline-block;width: 15ch;"><B>ISBN</B></span>
-        <span style="display:inline-block;width: 40ch;"><B>Boek/artikel</B></span>
+        <span style="display:inline-block;width: 30ch;"><B>Boek/artikel</B></span>
         <span style="display:inline-block;width: 7ch;"><B>Prijs</B></span>
-        <ul style="list-style-type:none;margin-bottom: 0;padding:0;" *ngFor="let order of orders">
-          <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;">&#x0229D;</span>
-          <span style="display:inline-block;width: 15ch;">{{order.isbn}}</span>
-          <span style="display:inline-block;width: 40ch;">{{order.item}}</span>
+      </ng-container>
+      <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0"
+          *ngFor="let order of orders;let indexOfElement=index;">
+        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;" data-placement="right"
+              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">&#x0229D;</span>
+        <span style="display:inline-block;width: 15ch;">{{order.isbn}}</span>
+        <span style="display:inline-block;width: 30ch;">{{order.description}}</span>
+        <span style="display:inline-block;width: 1ch;">&euro;</span>
+        <span
+          style="display:inline-block;width: 7ch;text-align: right;">{{((order.price * order.amount) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+      </ul>
+      <br>
+      <ng-container *ngIf="priceTotal > 0">
+        <span style="display:inline-block;width: 18ch;"></span>
+        <span style="display:inline-block;width: 30ch;"><b>Totaal te betalen:</b></span>
+        <span style="display:inline-block;width: 1ch;">&euro;</span>
+        <span
+          style="display:inline-block;width: 7ch;text-align: right;"><b>{{priceTotal / 100 | number:'1.2-2'}}</b></span>
+        <ng-container *ngFor="let tax of taxArray">
+          <span style="display:block"></span>
+          <span style="display:inline-block;width: 18ch;"></span>
+          <span style="display:inline-block;width: 30ch;">Totaal Btw {{tax}}
+            %: {{priceTotalTaxMap.get(tax.toString(10)) / 100 | number:'1.2-2'}}</span>
           <span style="display:inline-block;width: 1ch;">&euro;</span>
-          <span style="display:inline-block;width: 7ch;text-align: right;">{{order.price / 100 | number:'1.2-2'}}</span>
-        </ul>
-        <br>
-        <span style="display:inline-block;width: 18ch;"></span>
-        <span style="display:inline-block;width: 40ch;"><b>Totaal te betalen:</b></span>
-        <span style="display:inline-block;width: 1ch;">&euro;</span>
-        <span style="display:inline-block;width: 7ch;text-align: right;"><b>{{6100 / 100 | number:'1.2-2'}}</b></span>
-        <span style="display:block"></span>
-        <span style="display:inline-block;width: 18ch;"></span>
-        <span style="display:inline-block;width: 40ch;">Totaal Btw 21%:</span>
-        <span style="display:inline-block;width: 1ch;">&euro;</span>
-        <span style="display:inline-block;width: 7ch;text-align: right;">{{1005 / 100 | number:'1.2-2'}}</span>
-        <span style="display:block"></span>
-        <span style="display:inline-block;width: 18ch;"></span>
-        <span style="display:inline-block;width: 40ch;">Totaal Btw 9%:</span>
-        <span style="display:inline-block;width: 1ch;">&euro;</span>
-        <span style="display:inline-block;width: 7ch;text-align: right;">{{1232 / 100 | number:'1.2-2'}}</span>
-
-      </div>
+          <span
+            style="display:inline-block;width: 7ch;text-align: right;">{{((priceTotalTaxMap.get(tax.toString(10)) / (100 + tax)) * tax) / 100 | number:'1.2-2'}}</span>
+        </ng-container>
+      </ng-container>
     </div>
   </form>
 </div>

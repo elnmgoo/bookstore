@@ -1,48 +1,57 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import ItemState from '../../../store/items/reducers';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import Item from '../../../store/items/models/item';
-import {map} from 'rxjs/operators';
-import {AddItemAction, GetItemAction} from '../../../store/items/actions/item.actions';
+import {AddItem, DeleteItem, GetItems, ItemError} from '../../../store/items/actions/item.actions';
+import {itemError, selectItemList} from '../../../store/items/selectors/item.selectors';
+import {AppState} from '../../../store/app.state';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AppConstants} from '../../app-constants';
+import {Item} from '../../../store/items/models/item';
 
 @Component({
   selector: 'app-items',
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.scss']
 })
-export class ItemsComponent implements OnInit, OnDestroy {
-  item$: Observable<ItemState>;
-  ItemSubscription: Subscription;
-  ItemList: Item[] = [];
-  itemError: Error = null;
-  Description: '';
-  Tax: number;
+export class ItemsComponent implements OnInit {
+  item$ = this.store.pipe(select(selectItemList));
+  itemError$ = this.store.pipe(select(itemError));
+  taxArray = AppConstants.taxArray;
+  itemForm: FormGroup;
+
   constructor(
-    private store: Store<{ items: ItemState }>) {
-    this.item$ = store.pipe(select('items'));
+    private store: Store<AppState>,
+    private formBuilder: FormBuilder,
+    private elementRef: ElementRef,
+    private renderer: Renderer2
+  ) {
   }
 
   ngOnInit(): void {
-    this.ItemSubscription = this.item$
-      .pipe(
-        map(x => {
-          this.ItemList = x.Items;
-          this.itemError = x.ItemError;
-        })
-      ).subscribe();
+    this.itemForm = this.formBuilder.group({
+      itemDescription: ['', [Validators.required, Validators.minLength(4)]],
+      itemTax: [0, [Validators.required, Validators.min(1)]],
+      itemPrice: ['']
+    });
 
-    this.store.dispatch(GetItemAction());
+    /*console.log('result: ' + result);*/
+    this.store.dispatch(new GetItems());
   }
-  ngOnDestroy() {
-    if (this.ItemSubscription) {
-      this.ItemSubscription.unsubscribe();
-    }
+
+
+  onAddItemButton() {
+    const item = {
+      description: this.itemForm.controls.itemDescription.value, tax: this.itemForm.controls.itemTax.value,
+      price: this.itemForm.controls.itemPrice.value, id: 0
+    };
+    this.store.dispatch(new AddItem(item));
+    this.itemForm.controls.itemDescription.setValue('');
+    this.itemForm.controls.itemTax.setValue('');
   }
-  createItem() {
-    const item = { description: this.Description, tax: this.Tax, id: 0};
-    this.store.dispatch(AddItemAction({ payload: item }));
-    this.Description = '';
-    this.Tax = 0;
+
+  onDeleteItem(item: Item, event) {
+    this.renderer.setStyle(event.target, 'background', 'skyblue');
+    // this.renderer.removeAttribute(event.target, 'data-toggle');
+
+    this.store.dispatch(new DeleteItem(item));
   }
 }

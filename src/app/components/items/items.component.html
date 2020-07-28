@@ -1,46 +1,73 @@
-<div class="Container">
-  <h2>Artikelen:</h2>
+<div>
+  <div class="top">
+    <div class="col">
+      <br>
+      <form [formGroup]="itemForm">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="itemDescription">Artikel</label>
+            <input type="text" class="form-control" formControlName="itemDescription" placeholder="Beschrijving"
+                   name="Description"
+                   id="itemDescription"/>
+          </div>
 
-  <div *ngIf="itemError?.message">
-    <div class="alert alert-danger" role="alert">
-      Some error occurred. Please try again
+          <div class="form-group col-md-2">
+            <label for="inputObjectTax">Btw</label>
+            <select formControlName="itemTax" type="number" class="form-control" id="inputObjectTax" placeholder="Btw">
+              <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="itemPrice">Prijs(optie)</label>
+            <input type="text" class="form-control" formControlName="itemPrice" placeholder="Prijs"
+                   name="Price" mask="separator.2" thousandSeparator="."
+                   id="itemPrice"/>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="buttonObjectOk">Toevoegen</label>
+            <button type="button" class="btn btn-info btn-block" id="buttonObjectOk" [disabled]="!itemForm.valid"
+                    (click)="onAddItemButton()">Artikel toevoegen
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!--
+        <div *ngIf="(itemError$ | async)?.message">
+          <div class="alert alert-danger" role="alert">
+            Some error occurred. Please try again
+          </div>
+        </div>
+        -->
+  </div>
+
+  <div class="between">
+    <div class="col">
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5"><b>Beschrijving</b></div>
+        <div class="col-md-3"><B>Btw</B></div>
+        <div class="col-md-3"><B>Prijs</B></div>
+      </div>
     </div>
   </div>
 
-  <ng-container *ngFor="let item of ItemList">
-    <div class="row">
-      <div class="col-md-2">Beschrijving:</div>
-      <div class="col-md-2 todoItem">{{ item.description }}</div>
-      <div class="col-md-2">Btw:</div>
-      <div class="col-md-2 todoItem">{{ item.tax }}</div>
+  <div class="bottom">
+    <div class="col">
+      <ng-container *ngFor="let item of (item$ | async)">
+        <div class="row">
+          <div class="col-md-1" style="color: red;text-align: center;cursor: pointer;" data-placement="right" data-toggle="tooltip" title="Verwijder artikel" (click)="onDeleteItem(item, $event)">&#x0229D; </div>
+          <div class="col-md-5">{{ item.description }}</div>
+          <div class="col-md-3">{{ item.tax }}</div>
+          <div class="col-md-3">{{ item.price }}</div>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
+  </div>
+
 </div>
-<hr/>
 
-<div class="container form-group" style="margin: 10px;">
-  <h3>Creeer nieuwe artikel</h3>
-  <form (ngSubmit)="createItem()">
-    <div class="row">
-      <div class="form-group col-md-4">
-        <input
-          [(ngModel)]="Description"
-          placeholder="Beschrijving"
-          class="form-control"
-          name="Description"
-          style="min-width: 150px;"
-        />
-      </div>
 
-      <div class="col-md-2 form-check" style="margin-top: 10px; margin-left: 30px;">
-        <input type="number" class="form-check-input" id="Tax" name="Tax" [(ngModel)]="Tax"/>
-      </div>
 
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary" style="Width:70px;">
-          Add
-        </button>
-      </div>
-    </div>
-  </form>
-</div>
