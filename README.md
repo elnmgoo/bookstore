@@ -37,6 +37,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
    npm install @ngrx/store --save
    npm install @ngrx/effects --save
    npm install @ngrx/router-store --save
+   ```
+3. Install ngx-mask for input mask
+   ```   
    npm install --save ngx-mask
    ```
 3. Install bootstrap
@@ -57,7 +60,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
       "node_modules/bootstrap/dist/js/bootstrap.min.js"
    ]
    ```
-5. Add code to enable bootstrap tooltips
+5. Add code to enable bootstrap tooltips in app.component.ts
    ```
    $('body').tooltip({
       selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
@@ -68,5 +71,23 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
     });
    ```    
 6. Add proxy configuration to prevent cors problems  
-   Add /src/proxy.conf.json with reference to the backend server  
-   Add the /src/proxy.json.conf reference in angular.json  
+   - Add /src/proxy.conf.json with reference to the backend server
+     ```
+     {
+         "/api/*": {
+             "target": "http://127.0.0.1:8080",
+             "secure": false,
+             "logLevel": "debug"
+         }
+     }
+     ``` 
+   - Add the '/src/proxy.json.conf' reference in /angular.json  
+     ```
+      "serve": {
+         "builder": "@angular-devkit/build-angular:dev-server",
+         "options": {
+         "browserTarget": "bookstore:build",
+         "proxyConfig": "src/proxy.conf.json"
+       },
+     ```
+7.   ...     
