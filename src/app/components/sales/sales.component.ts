@@ -1,5 +1,5 @@
 import {AfterContentChecked, AfterViewInit, Component, Directive, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Order} from './order';
+import {Order} from '../../../store/orders/models/order';
 import {select, Store} from '@ngrx/store';
 import {selectItemList} from '../../../store/items/selectors/item.selectors';
 import {AppState} from '../../../store/app.state';
@@ -7,6 +7,9 @@ import {GetItems} from '../../../store/items/actions/item.actions';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../../app/app-constants';
 import {PriceValidator} from '../../validators/price.validator';
+import {OrderService} from '../../../store/orders/services/order.service';
+import {selectOrderList, selectOrderTotalPrice, selectOrderTotalPriceTaxMap} from '../../../store/orders/selectors/order.selectors';
+import {AddOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
 
 @Component({
   selector: 'app-sales',
@@ -22,39 +25,19 @@ export class SalesComponent implements OnInit, AfterViewInit {
   taxArray = AppConstants.taxArray;
   itemForm: FormGroup;
   bookForm: FormGroup;
-  priceTotal: number;
   priceTotalTaxMap = new Map();
 
+
   item$ = this.store.pipe(select(selectItemList));
-  public orders: Order[] = [
-    {
-      isbn: '1234567890123',
-      title: 'Boer Boris',
-      price: 1200,
-      amount: 1,
-      author: 'Jaap Verbeek',
-      publisher: 'zwijssen',
-      tax: 21,
-      item: '',
-      description: 'Boer Boris, Jaap Verbeek'
-    },
-    {isbn: '', item: 'Kerstkaart', price: 200, amount: 1, author: '', publisher: '', tax: 9, title: '', description: 'Kerstkaart'},
-    {
-      isbn: '1234567890124',
-      title: 'De Hobbit',
-      price: 2500,
-      amount: 1,
-      author: 'Jaap Verbeek',
-      publisher: 'zwijssen',
-      tax: 21,
-      item: '',
-      description: 'De Hobbit, Jaap Verbeek'
-    },
-    {isbn: '', item: 'potlood', price: 1200, amount: 1, author: '', publisher: '', tax: 9, title: '', description: 'potlood'}
-  ];
+  order$ = this.store.pipe(select(selectOrderList));
+  orderTotalPrice$ = this.store.pipe(select(selectOrderTotalPrice));
+  orderTotalPriceTaxMap$ = this.store.pipe(select(selectOrderTotalPriceTaxMap));
+
+  ordersLength = 0;
 
   constructor(private store: Store<AppState>, private formBuilder: FormBuilder,
-              private element: ElementRef<HTMLInputElement>) {
+              private element: ElementRef<HTMLInputElement>
+  ) {
   }
 
   ngAfterViewInit(): void {
@@ -66,7 +49,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.bookForm = this.formBuilder.group({
       isbn: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12)]],
       title: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
-
+      author: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
     });
 
     this.itemForm = this.formBuilder.group({
@@ -75,9 +58,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
       itemPrice: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceArticle)]],
       itemTax: ['', [Validators.required, Validators.min(1)]]
     });
-    this.setTotals();
+    //this.setTotals();
     this.store.dispatch(new GetItems());
-
+    this.store.dispatch(new GetOrders());
   }
 
   onInputArticleSelected(event) {
@@ -107,10 +90,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
       title: '',
       description: descript
     } as Order;
-    this.orders.push(order);
-    this.setTotals();
+    this.store.dispatch(new AddOrder(order));
     setTimeout(() => this.scrollOrderWindow(), 1000);
-
   }
 
   onPayButton() {
@@ -126,6 +107,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     return ('');
   }
 
+  /*
   setTotals() {
     this.priceTotal = 0;
     this.taxArray.forEach((tax) => {
@@ -139,9 +121,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  */
 
   onDelete(indexOfElement: number, order: Order, event) {
-    this.orders.splice(indexOfElement, 1);
-    this.setTotals();
+    this.store.dispatch(new DeleteOrder(order));
   }
 }

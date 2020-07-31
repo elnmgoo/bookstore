@@ -14,6 +14,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import {ItemService} from '../store/items/services/item.service';
 import {appReducers} from '../store/app.reducers';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import {OrderService} from '../store/orders/services/order.service';
+import {OrderEffects} from '../store/orders/effects/order.effects';
 
 @NgModule({
   declarations: [
@@ -29,10 +31,10 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     FormsModule,
     NgxMaskModule.forRoot(),
     StoreModule.forRoot(appReducers),
-    EffectsModule.forRoot([ItemEffects]),
+    EffectsModule.forRoot([ItemEffects, OrderEffects]),
     ReactiveFormsModule
   ],
-  providers: [ItemService],
+  providers: [ItemService, OrderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

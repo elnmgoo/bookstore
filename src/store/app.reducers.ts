@@ -1,11 +1,11 @@
 import { ActionReducerMap } from '@ngrx/store';
-import { routerReducer } from '@ngrx/router-store';
 import { AppState } from './app.state';
-/*import { configReducers } from './config.reducers';*/
 import { itemReducers } from './items/reducers/item.reducers';
+import {orderReducers} from './orders/reducers/order.reducers';
 
 export const appReducers: ActionReducerMap<AppState, any> = {
-  router: routerReducer,
-  items: itemReducers
+
+  items: itemReducers,
+  orders: orderReducers
   /*config: configReducers*/
 };

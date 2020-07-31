@@ -3,7 +3,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
 import {Item} from '../models/item';
-import {AddItem, AddItemSuccess, DeleteItemSuccess, EItemActions, GetItemsSuccess, ItemError} from '../actions/item.actions';
+import {AddItem, AddItemSuccess, DeleteItem, DeleteItemSuccess, EItemActions, GetItemsSuccess, ItemError} from '../actions/item.actions';
 import {ItemService} from '../services/item.service';
 import {AppConstants} from '../../../app/app-constants';
 
@@ -48,7 +48,7 @@ export class ItemEffects {
 
   @Effect()
   DeleteItems$ = this.action$.pipe(
-    ofType<AddItem>(EItemActions.DeleteItem),
+    ofType<DeleteItem>(EItemActions.DeleteItem),
     mergeMap(action =>
       this.itemService.deleteItem(action.payload)
         .pipe(

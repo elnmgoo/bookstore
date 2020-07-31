@@ -1,4 +1,5 @@
 export interface Order {
+  id: number;
   isbn: string;
   title: string;
   author: string;
