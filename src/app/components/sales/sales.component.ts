@@ -26,6 +26,7 @@ import {Book} from '../../../store/book/models/book';
 export class SalesComponent implements OnInit, AfterViewInit {
   @ViewChild('orderwindow') private myScrollContainer: ElementRef;
   @ViewChild('autofocus') private autofocusField: ElementRef;
+  @ViewChild('autofocusPrijs') private autofocusPrijsField: ElementRef;
 
   taxArray = AppConstants.taxArray;
   itemForm: FormGroup;
@@ -77,6 +78,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
     this.itemForm.controls.itemAmount.setValue(1);
+    if (this.itemForm.controls.itemPrice.value.length === 0) {
+      this.autofocusPrijsField.nativeElement.focus();
+    }
   }
 
   onAddItemButton() {
