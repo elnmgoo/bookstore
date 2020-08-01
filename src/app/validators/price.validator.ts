@@ -11,7 +11,7 @@ export function PriceValidator(price: number): ValidatorFn {
       return {priceValidator: true, requiredValue: price};
     }
 
-    if (value > (price * 100)) {
+    if (value > (price * 100) || value <= 0) {
       return {priceValidator: true, requiredValue: price};
     }
 

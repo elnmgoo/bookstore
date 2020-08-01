@@ -12,6 +12,9 @@ import {selectOrderList, selectOrderTotalPrice, selectOrderTotalPriceTaxMap} fro
 import {AddOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
+import {Observable} from 'rxjs';
+import {BookService} from '../../../store/book/service/book.service';
+import {Book} from '../../../store/book/models/book';
 
 @Component({
   selector: 'app-sales',
@@ -34,8 +37,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
   orderTotalPrice$ = this.store.pipe(select(selectOrderTotalPrice));
   orderTotalPriceTaxMap$ = this.store.pipe(select(selectOrderTotalPriceTaxMap));
 
-  constructor(private store: Store<AppState>, private formBuilder: FormBuilder,
-              private element: ElementRef<HTMLInputElement>
+  constructor(private store: Store<AppState>,
+              private formBuilder: FormBuilder,
+              private element: ElementRef<HTMLInputElement>,
+              private bookService: BookService
   ) {
   }
 
@@ -46,10 +51,13 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.bookForm = this.formBuilder.group({
-      isbn: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12)]],
+      isbn: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(13)]],
       title: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       author: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
-      publisher: ['', Validators.required]
+      publisher: ['', Validators.required],
+      price: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
+      amount: [1, [Validators.required, Validators.min(1), Validators.max(99)]],
+      tax: ['21', [Validators.required, Validators.min(1)]]
     });
 
     this.itemForm = this.formBuilder.group({
@@ -89,6 +97,29 @@ export class SalesComponent implements OnInit, AfterViewInit {
       description: descript
     } as Order;
     this.store.dispatch(new AddOrder(order));
+    this.itemForm.reset();
+    setTimeout(() => this.scrollOrderWindow(), 1000);
+  }
+
+  onAddBookButton(){
+    let descript = this.bookForm.controls.title.value + ', ' + this.bookForm.controls.author.value;
+    if (this.bookForm.controls.amount.value > 1) {
+      descript = '' + this.bookForm.controls.amount.value + ' x ' + descript;
+    }
+    console.log('bookprice = ' + this.bookForm.controls.price.value);
+    const order = {
+      isbn: this.bookForm.controls.isbn.value,
+      item: '',
+      price: (parseFloat(this.bookForm.controls.price.value.replace(',', '.')) * 100.0),
+      amount: this.bookForm.controls.amount.value,
+      author: this.bookForm.controls.author.value,
+      publisher: this.bookForm.controls.publisher.value,
+      tax: this.bookForm.controls.tax.value,
+      title: this.bookForm.controls.title.value,
+      description: descript
+    } as Order;
+    this.store.dispatch(new AddOrder(order));
+    this.bookForm.reset();
     setTimeout(() => this.scrollOrderWindow(), 1000);
   }
 
@@ -107,5 +138,20 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onDelete(indexOfElement: number, order: Order, event) {
     this.store.dispatch(new DeleteOrder(order));
+  }
+
+  onChangeIsbn(event: Event) {
+    const isbn = this.bookForm.controls.isbn.value;
+    console.log('isbn: ' + isbn);
+    if (isbn.length === 13) {
+      this.bookService.getBook(isbn).subscribe((book: Book) => {
+        this.bookForm.controls.title.setValue(book.title);
+        this.bookForm.controls.author.setValue(book.author);
+        this.bookForm.controls.publisher.setValue(book.publisher.id);
+        this.bookForm.controls.price.setValue(book.price.toString(10).replace('.', ','));
+        this.bookForm.controls.amount.setValue(1);
+        this.bookForm.controls.tax.setValue(21);
+      });
+    }
   }
 }

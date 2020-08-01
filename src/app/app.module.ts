@@ -18,6 +18,7 @@ import {OrderService} from '../store/orders/services/order.service';
 import {OrderEffects} from '../store/orders/effects/order.effects';
 import {PublisherEffects} from '../store/publishers/effects/publisher.effects';
 import {PublisherService} from '../store/publishers/services/publisher.service';
+import {BookService} from '../store/book/service/book.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import {PublisherService} from '../store/publishers/services/publisher.service';
     EffectsModule.forRoot([ItemEffects, OrderEffects, PublisherEffects]),
     ReactiveFormsModule
   ],
-  providers: [ItemService, OrderService, PublisherService],
+  providers: [ItemService, OrderService, PublisherService, BookService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

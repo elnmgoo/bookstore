@@ -5,7 +5,7 @@
         <div class="form-group col-md-4">
           <label for="inputISBN">ISBN</label>
           <input #autofocus formControlName="isbn" type="text" class="form-control" id="inputISBN" placeholder="Number"
-                 mask="000000000000">
+                 mask="0000000000000" (keyup)="onChangeIsbn($event)">
         </div>
       </div>
       <div class="form-row">
@@ -32,20 +32,22 @@
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputAmount">Aantal</label>
-          <input type="number" class="form-control" id="inputAmount" placeholder="1"  min="1">
+          <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1"  min="1">
         </div>
         <div class="form-group col-md-3">
           <label for="inputPrice">Prijs</label>
-          <input type="text" class="form-control" id="inputPrice" placeholder="0" mask="separator.2"
+          <input formControlName="price" type="text" class="form-control" id="inputPrice" placeholder="0" mask="separator.2"
                  thousandSeparator=".">
         </div>
         <div class="form-group col-md-3">
           <label for="inputTax">Btw</label>
-          <input type="number" class="form-control" id="inputTax" placeholder="0">
+          <select formControlName="tax" type="number" class="form-control" id="inputTax">
+            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+          </select>
         </div>
         <div class="form-group col-md-4">
           <label for="buttonOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid">Boek
+          <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid"  (click)="onAddBookButton()">Boek
             toevoegen
           </button>
         </div>
@@ -141,15 +143,15 @@
           <span style="display:inline-block;width: 30ch;"><B>Boek/artikel</B></span>
           <span style="display:inline-block;width: 7ch;"><B>Prijs</B></span>
         </ng-container>
-        <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0"
+        <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0;"
             *ngFor="let order of (order$ | async);let indexOfElement=index;">
-        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;" data-placement="right"
+        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;vertical-align:top" data-placement="right"
               data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">&#x0229D;</span>
-          <span style="display:inline-block;width: 15ch;">{{order.isbn}}</span>
-          <span style="display:inline-block;width: 30ch;">{{order.description}}</span>
-          <span style="display:inline-block;width: 1ch;">&euro;</span>
+          <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
+          <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
+          <span style="display:inline-block;width: 1ch;vertical-align:top">&euro;</span>
           <span
-            style="display:inline-block;width: 7ch;text-align: right;">{{((order.price * order.amount) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+            style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.price * order.amount) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
         <br>
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
