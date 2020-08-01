@@ -22,14 +22,17 @@
         </div>
         <div class="form-group col-md-6">
           <label for="inputPublisher">Uitgever</label>
-          <input type="text" class="form-control" id="inputPublisher" placeholder="Uitgever">
+          <select formControlName="publisher" name="publisher" class="form-control" id="inputPublisher">
+            <option *ngFor="let publisher of (publisher$ | async)" [ngValue]="publisher.id">{{publisher.publisher}}
+            </option>
+          </select>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputAmount">Aantal</label>
-          <input type="number" class="form-control" id="inputAmount" placeholder="1" default="1" min="1">
+          <input type="number" class="form-control" id="inputAmount" placeholder="1"  min="1">
         </div>
         <div class="form-group col-md-3">
           <label for="inputPrice">Prijs</label>
@@ -105,11 +108,18 @@
           <input type="checkbox" class="form-check-input" id="printLabelCount" checked>
           <label for="printLabelCount">Afdrukken van een bonnnetje</label>
         </div>
+
         <div class="form-group col-md-4">
-          <button type="button" class="btn btn-info btn-block" id="buttonObjectPay"
-                  [disabled]="ordersLength == (0 || undefined)"
-                  (click)="onPayButton()">Afrekenen
-          </button>
+          <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice; else disabledbutton">
+            <button type="button" class="btn btn-info btn-block" id="buttonObjectPay"
+                    (click)="onPayButton()">Afrekenen
+            </button>
+          </ng-container>
+          <ng-template #disabledbutton>
+            <button type="button" class="btn btn-info btn-block"
+                    [disabled]="true">Afrekenen
+            </button>
+          </ng-template>
         </div>
       </div>
     </form>
@@ -142,22 +152,24 @@
             style="display:inline-block;width: 7ch;text-align: right;">{{((order.price * order.amount) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
         <br>
-        <ng-container *ngIf="orderTotalPrice > 0">
-          <span style="display:inline-block;width: 18ch;"></span>
-          <span style="display:inline-block;width: 30ch;"><b>Totaal te betalen:</b></span>
-          <span style="display:inline-block;width: 1ch;">&euro;</span>
-          <span
-            style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}}</b></span>
-          <ng-container *ngIf="orderTotalPriceTaxMap$ | async as orderTotalPriceTaxMap">
-            <ng-container *ngFor="let tax of taxArray">
-              <ng-container *ngIf="orderTotalPriceTaxMap.get(tax) > 0">
-                <span style="display:block"></span>
-                <span style="display:inline-block;width: 18ch;"></span>
-                <span style="display:inline-block;width: 30ch;">Totaal Btw {{tax | number: '2.0'}}
-                  %: {{(orderTotalPriceTaxMap.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
-                <span style="display:inline-block;width: 1ch;">&euro;</span>
-                <span
-                  style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMap.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+        <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
+          <ng-container *ngIf="orderTotalPrice > 0">
+            <span style="display:inline-block;width: 18ch;"></span>
+            <span style="display:inline-block;width: 30ch;"><b>Totaal te betalen:</b></span>
+            <span style="display:inline-block;width: 1ch;">&euro;</span>
+            <span
+              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}}</b></span>
+            <ng-container *ngIf="orderTotalPriceTaxMap$ | async as orderTotalPriceTaxMap">
+              <ng-container *ngFor="let tax of taxArray">
+                <ng-container *ngIf="orderTotalPriceTaxMap.get(tax) > 0">
+                  <span style="display:block"></span>
+                  <span style="display:inline-block;width: 18ch;"></span>
+                  <span style="display:inline-block;width: 30ch;">Totaal Btw {{tax | number: '2.0'}}
+                    %: {{(orderTotalPriceTaxMap.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+                  <span style="display:inline-block;width: 1ch;">&euro;</span>
+                  <span
+                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMap.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+                </ng-container>
               </ng-container>
             </ng-container>
           </ng-container>

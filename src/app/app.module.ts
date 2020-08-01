@@ -16,6 +16,8 @@ import {appReducers} from '../store/app.reducers';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import {OrderService} from '../store/orders/services/order.service';
 import {OrderEffects} from '../store/orders/effects/order.effects';
+import {PublisherEffects} from '../store/publishers/effects/publisher.effects';
+import {PublisherService} from '../store/publishers/services/publisher.service';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,10 @@ import {OrderEffects} from '../store/orders/effects/order.effects';
     FormsModule,
     NgxMaskModule.forRoot(),
     StoreModule.forRoot(appReducers),
-    EffectsModule.forRoot([ItemEffects, OrderEffects]),
+    EffectsModule.forRoot([ItemEffects, OrderEffects, PublisherEffects]),
     ReactiveFormsModule
   ],
-  providers: [ItemService, OrderService],
+  providers: [ItemService, OrderService, PublisherService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

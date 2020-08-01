@@ -10,6 +10,8 @@ import {PriceValidator} from '../../validators/price.validator';
 import {OrderService} from '../../../store/orders/services/order.service';
 import {selectOrderList, selectOrderTotalPrice, selectOrderTotalPriceTaxMap} from '../../../store/orders/selectors/order.selectors';
 import {AddOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
+import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
+import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
 
 @Component({
   selector: 'app-sales',
@@ -25,15 +27,12 @@ export class SalesComponent implements OnInit, AfterViewInit {
   taxArray = AppConstants.taxArray;
   itemForm: FormGroup;
   bookForm: FormGroup;
-  priceTotalTaxMap = new Map();
-
 
   item$ = this.store.pipe(select(selectItemList));
   order$ = this.store.pipe(select(selectOrderList));
+  publisher$ = this.store.pipe(select(selectPublisherList));
   orderTotalPrice$ = this.store.pipe(select(selectOrderTotalPrice));
   orderTotalPriceTaxMap$ = this.store.pipe(select(selectOrderTotalPriceTaxMap));
-
-  ordersLength = 0;
 
   constructor(private store: Store<AppState>, private formBuilder: FormBuilder,
               private element: ElementRef<HTMLInputElement>
@@ -50,6 +49,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       isbn: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12)]],
       title: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       author: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+      publisher: ['', Validators.required]
     });
 
     this.itemForm = this.formBuilder.group({
@@ -58,9 +58,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
       itemPrice: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceArticle)]],
       itemTax: ['', [Validators.required, Validators.min(1)]]
     });
-    //this.setTotals();
     this.store.dispatch(new GetItems());
     this.store.dispatch(new GetOrders());
+    this.store.dispatch(new GetPublishers());
   }
 
   onInputArticleSelected(event) {
@@ -69,8 +69,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
     this.itemForm.controls.itemAmount.setValue(1);
-    /* console.log(this.selectedArticle.tax);
-    this.tax = this.selectedArticle.tax;*/
   }
 
   onAddItemButton() {
@@ -106,22 +104,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     });
     return ('');
   }
-
-  /*
-  setTotals() {
-    this.priceTotal = 0;
-    this.taxArray.forEach((tax) => {
-      this.priceTotalTaxMap.set(tax.toString(10), 0);
-    });
-    this.orders.forEach((order) => {
-        const tax: string = order.tax.toString(10);
-        const price = order.amount * order.price;
-        this.priceTotal += price;
-        this.priceTotalTaxMap.set(tax, this.priceTotalTaxMap.get(tax) + price);
-      }
-    );
-  }
-  */
 
   onDelete(indexOfElement: number, order: Order, event) {
     this.store.dispatch(new DeleteOrder(order));

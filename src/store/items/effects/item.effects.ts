@@ -1,11 +1,12 @@
-import {Injectable, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
-import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {Item} from '../models/item';
-import {AddItem, AddItemSuccess, DeleteItem, DeleteItemSuccess, EItemActions, GetItemsSuccess, ItemError} from '../actions/item.actions';
+import {AddItem, AddItemSuccess, DeleteItem, DeleteItemSuccess, EItemActions, GetItemsSuccess,
+  ItemError} from '../actions/item.actions';
 import {ItemService} from '../services/item.service';
-import {AppConstants} from '../../../app/app-constants';
+
 
 @Injectable()
 export class ItemEffects {
