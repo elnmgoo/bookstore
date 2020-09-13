@@ -8,6 +8,9 @@ export enum EOrderActions {
   AddOrderSuccess = '[Order] - Add order success',
   DeleteOrder = '[Order] - Delete order',
   DeleteOrderSuccess = '[Order] - Delete order success',
+  BookOrder = '[Order] - Book order',
+  BookOrderSuccess = '[Order] - Book order success',
+
   OrderError = '[Order] - Error'
 }
 
@@ -40,10 +43,23 @@ export class DeleteOrderSuccess implements Action {
   constructor(public payload: Order) {}
 }
 
+export class BookOrder implements Action {
+  public readonly type = EOrderActions.BookOrder;
+  constructor(public payload: Order) {}
+}
+
+export class BookOrderSuccess implements Action {
+  public readonly type = EOrderActions.BookOrderSuccess;
+  constructor(public payload: Order) {}
+}
+
+
 
 export class OrderError implements Action {
   public readonly type = EOrderActions.OrderError;
   constructor(public error: Error) {}
 }
 
-export type OrderActions = GetOrders | GetOrdersSuccess | AddOrder | AddOrderSuccess | DeleteOrder | DeleteOrderSuccess| OrderError;
+
+export type OrderActions = GetOrders | GetOrdersSuccess | AddOrder | AddOrderSuccess | DeleteOrder | DeleteOrderSuccess| BookOrder |
+  BookOrderSuccess | OrderError;

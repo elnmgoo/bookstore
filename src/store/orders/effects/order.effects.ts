@@ -5,7 +5,7 @@ import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
 import {Order} from '../models/order';
 import {
   AddOrder,
-  AddOrderSuccess,
+  AddOrderSuccess, BookOrder,
   DeleteOrder,
   DeleteOrderSuccess,
   EOrderActions,
@@ -13,7 +13,8 @@ import {
   OrderError
 } from '../actions/order.actions';
 import {OrderService} from '../services/order.service';
-import {AppConstants} from '../../../app/app-constants';
+
+
 
 @Injectable()
 export class OrderEffects {
@@ -62,6 +63,22 @@ export class OrderEffects {
         .pipe(
           map((order: Order) => {
             return new DeleteOrderSuccess(order);
+          }),
+          catchError((error: Error) => {
+            return of(new OrderError(error));
+          })
+        )
+    )
+  );
+
+  @Effect()
+  BookOrder$ = this.action$.pipe(
+    ofType<BookOrder>(EOrderActions.BookOrder),
+    mergeMap(action =>
+      this.orderService.bookOrder(action.payload)
+        .pipe(
+          map((data: Order) => {
+            return new AddOrderSuccess(data);
           }),
           catchError((error: Error) => {
             return of(new OrderError(error));

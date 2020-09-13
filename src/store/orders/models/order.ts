@@ -6,7 +6,9 @@ export interface Order {
   publisher: string;
   item: string;
   amount: number;
+  amountDepot: number;
   price: number;
   tax: number;
   description: string;
+  dateTime: number;
 }

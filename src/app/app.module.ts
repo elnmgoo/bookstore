@@ -1,24 +1,32 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {LOCALE_ID, NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
-import { SalesComponent } from './components/sales/sales.component';
-import { ItemsComponent } from './components/items/items.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {HeaderComponent} from './components/header/header.component';
+import {SalesComponent} from './components/sales/sales.component';
+import {ItemsComponent} from './components/items/items.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { StoreModule } from '@ngrx/store';
+import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ItemEffects} from '../store/items/effects/item.effects';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 import {ItemService} from '../store/items/services/item.service';
 import {appReducers} from '../store/app.reducers';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import {NgxMaskModule, IConfig} from 'ngx-mask';
 import {OrderService} from '../store/orders/services/order.service';
 import {OrderEffects} from '../store/orders/effects/order.effects';
 import {PublisherEffects} from '../store/publishers/effects/publisher.effects';
 import {PublisherService} from '../store/publishers/services/publisher.service';
 import {BookService} from '../store/book/service/book.service';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {DateFormatPipe2Time} from './components/sales/DateFormatPipe2Time';
+import {DateFormatPipe2Date} from './components/sales/DateFormatPipe2Date';
+import {PrintService} from '../store/book/service/print.service';
+import { registerLocaleData } from '@angular/common';
+import localeNl from '@angular/common/locales/nl';
+
+registerLocaleData(localeNl, 'nl');
 
 @NgModule({
   declarations: [
@@ -35,9 +43,14 @@ import {BookService} from '../store/book/service/book.service';
     NgxMaskModule.forRoot(),
     StoreModule.forRoot(appReducers),
     EffectsModule.forRoot([ItemEffects, OrderEffects, PublisherEffects]),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
-  providers: [ItemService, OrderService, PublisherService, BookService],
+  providers: [{
+    provide: LOCALE_ID,
+    useValue: 'nl'
+  }, ItemService, OrderService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time, PrintService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

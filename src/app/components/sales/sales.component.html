@@ -2,15 +2,23 @@
   <div class="col">
     <form [formGroup]="bookForm">
       <div class="form-row">
+
+        <div class="form-group col-md-5">
+          <label for="inputDate">Datum</label>
+          <div class="input-group">
+            <input formControlName="date" class="form-control" placeholder="dd-mm-yyyy"
+                   name="date"  ngbDatepicker #d="ngbDatepicker" id="inputDate"
+                   >
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
         <div class="form-group col-md-4">
           <label for="inputISBN">ISBN</label>
           <input #autofocus formControlName="isbn" type="text" class="form-control" id="inputISBN" placeholder="Number"
                  mask="0000000000000" (keyup)="onChangeIsbn($event)">
         </div>
-        <div class="form-group col-md-4">
-        
-        </div>
-
       </div>
       <div class="form-row">
         <div class="form-group col-md-12">
@@ -36,11 +44,12 @@
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputAmount">Aantal</label>
-          <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1"  min="1">
+          <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1" min="1">
         </div>
         <div class="form-group col-md-3">
           <label for="inputPrice">Prijs</label>
-          <input formControlName="price" type="text" class="form-control" id="inputPrice" placeholder="0" mask="separator.2"
+          <input formControlName="price" type="text" class="form-control" id="inputPrice" placeholder="0"
+                 mask="separator.2"
                  thousandSeparator=".">
         </div>
         <div class="form-group col-md-3">
@@ -51,7 +60,8 @@
         </div>
         <div class="form-group col-md-4">
           <label for="buttonOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid"  (click)="onAddBookButton()">Boek
+          <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid"
+                  (click)="onAddBookButton()">Boek
             toevoegen
           </button>
         </div>
@@ -149,7 +159,8 @@
         </ng-container>
         <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0;"
             *ngFor="let order of (order$ | async);let indexOfElement=index;">
-        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;vertical-align:top" data-placement="right"
+        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;vertical-align:top"
+              data-placement="right"
               data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">&#x0229D;</span>
           <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
           <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
@@ -177,6 +188,9 @@
                     style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMap.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
                 </ng-container>
               </ng-container>
+            </ng-container>
+            <ng-container *ngIf="time.length > 0">
+              {{time}}
             </ng-container>
           </ng-container>
         </ng-container>
