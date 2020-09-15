@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Injectable,
+  Injectable, OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -26,6 +26,7 @@ import {DateFormatPipe2Date} from './DateFormatPipe2Date';
 import {PrintService} from '../../../store/book/service/print.service';
 import {concatMap, tap} from 'rxjs/operators';
 import {formatNumber} from '@angular/common';
+import {Subscription} from 'rxjs';
 
 /**
  * This Service handles how the date is rendered and parsed from keyboard i.e. in the bound input field.
@@ -59,17 +60,20 @@ export class CustomDateParserFormatter extends NgbDateParserFormatter {
 })
 
 
-export class SalesComponent implements OnInit, AfterViewInit {
+export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('orderwindow') private myScrollContainer: ElementRef;
   @ViewChild('autofocus') private autofocusField: ElementRef;
   @ViewChild('autofocusPrijs') private autofocusPrijsField: ElementRef;
-
+  spaces = '                                    ';
+  subscriptions = new Subscription();
   taxArray = AppConstants.taxArray;
   itemForm: FormGroup;
   bookForm: FormGroup;
   time = '';
   timeStamp = 0;
   order = [];
+  orderTotalPriceTaxMap;
+  orderTotalPrice = 0;
 
   item$ = this.store.pipe(select(selectItemList));
   order$ = this.store.pipe(select(selectOrderList));
@@ -88,6 +92,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
               private dateFormatPipe2Date: DateFormatPipe2Date,
               private printService: PrintService
   ) {
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -116,9 +124,17 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new GetItems());
     this.store.dispatch(new GetOrders());
     this.store.dispatch(new GetPublishers());
-    this.order$.subscribe(order => {
+    this.subscriptions.add(this.order$.subscribe(order => {
       this.order = order;
-    });
+    }));
+
+    this.subscriptions.add(this.orderTotalPrice$.subscribe(orderTotalPrice => {
+      this.orderTotalPrice = orderTotalPrice;
+    }));
+
+    this.subscriptions.add(this.orderTotalPriceTaxMap$.subscribe(orderTotalPriceTaxMap => {
+      this.orderTotalPriceTaxMap = orderTotalPriceTaxMap;
+    }));
   }
 
   onInputArticleSelected(event) {
@@ -139,6 +155,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       descript = '' + this.itemForm.controls.itemAmount.value + ' x ' + this.itemForm.controls.item.value.description;
     }
     console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
+    console.log('totalPrice: ' + this.orderTotalPrice);
     const order = {
       isbn: '',
       item: this.itemForm.controls.item.value.description,
@@ -182,10 +199,30 @@ export class SalesComponent implements OnInit, AfterViewInit {
     setTimeout(() => this.scrollOrderWindow(), 1000);
   }
 
+  formatDescription(description, size) {
+    const arrayDescription = [];
+    const splittedDescription = description.split(' ');
+    let line = '';
+    splittedDescription.forEach(word => {
+      const subword = word.substr(0, Math.min(word.length, size));
+      if (line.length === 0) {
+        line = subword;
+      } else {
+        if (line.length + subword.length >= (size - 1)) {
+          arrayDescription.push(line + this.spaces.substr(0, size - line.length));
+          line = subword;
+        } else {
+          line += ' ' + subword;
+        }
+      }
+    });
+    if (line.length > 0) {
+      arrayDescription.push(line + this.spaces.substr(0, size - line.length));
+    }
+    return arrayDescription;
+  }
+
   onPayButton() {
-    const spaces = '                                    ';
-    let total = 0;
-    /*let totalTax[];*/
     console.log('Afrekenen en een bonnetje afdrukken');
     this.order.forEach(myOrder => {
       console.log('Order: ' + myOrder.description);
@@ -197,21 +234,40 @@ export class SalesComponent implements OnInit, AfterViewInit {
     let buffer = '';
     let description = '';
     this.order.forEach(myOrder => {
-      if (buffer.length > 0) {
-        buffer += '\n';
-      }
-      buffer += ' - ';
       if (myOrder.isbn.length > 0) {
         description = myOrder.description + ' [' + myOrder.isbn + ']';
       } else {
         description = myOrder.description;
       }
-      description = description.substr(0, Math.min(description.length, 35));
-      buffer += description + spaces.substr(0, 36 - description.length);
-      buffer += '€';
-      const price = formatNumber((myOrder.price * myOrder.amount) / 100, 'nl', '1.2-2');
-      buffer += spaces.substr(0, 7 - price.length) + price;
-      total += (myOrder.price * myOrder.amount) / 100;
+      let descriptionBuffer = '';
+      const descriptionArray = this.formatDescription(description, 36);
+      descriptionArray.forEach(line => {
+          if (descriptionBuffer.length === 0) {
+            descriptionBuffer += '\n - ' + line + '€';
+            const price = formatNumber((myOrder.price * myOrder.amount) / 100, 'nl', '1.2-2');
+            descriptionBuffer += this.spaces.substr(0, 8 - price.length) + price;
+          } else {
+            descriptionBuffer += '\n   ' + line;
+          }
+        }
+      );
+      buffer += descriptionBuffer;
+    });
+    const totalPrice = formatNumber(this.orderTotalPrice / 100, 'nl', '1.2-2');
+    const totalReceipt = '   Totaal te betalen                   €' + this.spaces.substr(0, 8 - totalPrice.length) + totalPrice;
+    let taxReceipt = '';
+    this.taxArray.forEach(tax => {
+      if (this.orderTotalPriceTaxMap.get(tax) > 0) {
+        if (taxReceipt.length > 0) {
+          taxReceipt += '\n';
+        }
+        let taxString = '   Totaal Btw ' + formatNumber(tax, 'nl', '2.0') + '%: € ' +
+          formatNumber(this.orderTotalPriceTaxMap.get(tax) / 100, 'nl', '1.2-2');
+        const taxPrice = formatNumber(((this.orderTotalPriceTaxMap.get(tax) / (100 + tax)) * tax) / 100, 'nl', '1.2-2');
+        taxString += this.spaces.substr(0, 39 - taxString.length) +
+          '€' + this.spaces.substr(0, 8 - taxPrice.length) + taxPrice;
+        taxReceipt += taxString;
+      }
     });
     this.printService.initPrinter().pipe(
       tap(res => console.log('initPrinter ', res)),
@@ -221,6 +277,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
       tap(res => console.log('printStringNewLine ', res)),
       concatMap(res => this.printService.printSolidLine()),
       tap(res => console.log('printSolidLine ', res)),
+      concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
+      tap(res => console.log('printStringNewLine ', res)),
+      concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
+      tap(res => console.log('printStringNewLine ', res)),
+      concatMap(res => this.printService.printSolidLine()),
+      tap(res => console.log('printSolidLine ', res)),
+      concatMap(res => this.printService.printStringNewLine(this.time, false, true)),
+      tap(res => console.log('printStringNewLine ', res)),
       concatMap(res => this.printService.printToPrinter())
     ).subscribe(res => console.log('printToPrinter', res));
   }

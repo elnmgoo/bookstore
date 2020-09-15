@@ -13,26 +13,26 @@ export const orderReducers = (
       /* const newPriceTotalTaxMap: Map<number, number> = { ...state.priceTotalTaxMap};*/
       if (state.priceTotalTaxMap.has(action.payload.tax)) {
         state.priceTotalTaxMap.set(action.payload.tax,
-          state.priceTotalTaxMap.get(action.payload.tax) + action.payload.price);
+          state.priceTotalTaxMap.get(action.payload.tax) + (action.payload.price * action.payload.amount));
       } else {
-        state.priceTotalTaxMap.set(action.payload.tax, action.payload.price);
+        state.priceTotalTaxMap.set(action.payload.tax, (action.payload.price * action.payload.amount));
       }
       return {
-        ...state, orders: [...state.orders, action.payload], priceTotal: state.priceTotal + action.payload.price,
+        ...state, orders: [...state.orders, action.payload], priceTotal: state.priceTotal + (action.payload.price * action.payload.amount) ,
         priceTotalTaxMap: state.priceTotalTaxMap
       };
     }
     case EOrderActions.DeleteOrderSuccess: {
       if (state.priceTotalTaxMap.has(action.payload.tax)) {
         state.priceTotalTaxMap.set(action.payload.tax,
-          state.priceTotalTaxMap.get(action.payload.tax) - action.payload.price);
+          state.priceTotalTaxMap.get(action.payload.tax) - (action.payload.price * action.payload.amount));
       } else {
         state.priceTotalTaxMap.set(action.payload.tax, 0);
       }
       return {
         ...state,
         orders: [...state.orders.filter(order => order.id !== action.payload.id)],
-        priceTotal: state.priceTotal - action.payload.price,
+        priceTotal: state.priceTotal - (action.payload.price * action.payload.amount),
         priceTotalTaxMap: state.priceTotalTaxMap
       };
     }
@@ -40,6 +40,7 @@ export const orderReducers = (
       console.log(action.error);
       return state;
     }
+    case EOrderActions.BookOrderSuccess:
     default: {
       return state;
     }

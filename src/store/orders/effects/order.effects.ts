@@ -5,7 +5,7 @@ import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
 import {Order} from '../models/order';
 import {
   AddOrder,
-  AddOrderSuccess, BookOrder,
+  AddOrderSuccess, BookOrder, BookOrderSuccess,
   DeleteOrder,
   DeleteOrderSuccess,
   EOrderActions,
@@ -78,7 +78,7 @@ export class OrderEffects {
       this.orderService.bookOrder(action.payload)
         .pipe(
           map((data: Order) => {
-            return new AddOrderSuccess(data);
+            return new BookOrderSuccess(data);
           }),
           catchError((error: Error) => {
             return of(new OrderError(error));
