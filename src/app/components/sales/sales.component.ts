@@ -150,10 +150,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onAddItemButton() {
     this.setTimeStamp();
-    let descript = this.itemForm.controls.item.value.description;
-    if (this.itemForm.controls.itemAmount.value > 1) {
-      descript = '' + this.itemForm.controls.itemAmount.value + ' x ' + this.itemForm.controls.item.value.description;
-    }
     console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
     console.log('totalPrice: ' + this.orderTotalPrice);
     const order = {
@@ -165,7 +161,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: '',
       tax: this.itemForm.controls.itemTax.value,
       title: '',
-      description: descript,
+      description: this.itemForm.controls.item.value.description,
       dateTime: 0
     } as Order;
     this.store.dispatch(new AddOrder(order));
@@ -243,7 +239,11 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       const descriptionArray = this.formatDescription(description, 36);
       descriptionArray.forEach(line => {
           if (descriptionBuffer.length === 0) {
-            descriptionBuffer += '\n - ' + line + '€';
+            if (buffer.length === 0) {
+              descriptionBuffer += ' - ' + line + '€';
+            } else {
+              descriptionBuffer += '\n - ' + line + '€';
+            }
             const price = formatNumber((myOrder.price * myOrder.amount) / 100, 'nl', '1.2-2');
             descriptionBuffer += this.spaces.substr(0, 8 - price.length) + price;
           } else {
@@ -272,19 +272,15 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.printService.initPrinter().pipe(
       tap(res => console.log('initPrinter ', res)),
       concatMap(res => this.printService.printLogoAndAddress()),
-      tap(res => console.log('printLogoAndAddress ', res)),
       concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
-      tap(res => console.log('printStringNewLine ', res)),
       concatMap(res => this.printService.printSolidLine()),
-      tap(res => console.log('printSolidLine ', res)),
       concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
-      tap(res => console.log('printStringNewLine ', res)),
       concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
-      tap(res => console.log('printStringNewLine ', res)),
       concatMap(res => this.printService.printSolidLine()),
-      tap(res => console.log('printSolidLine ', res)),
       concatMap(res => this.printService.printStringNewLine(this.time, false, true)),
-      tap(res => console.log('printStringNewLine ', res)),
+      concatMap(res => this.printService.printStringNewLine('', false, false)),
+      concatMap(res => this.printService.printStringNewLine('Ruilen binnen 14 dagen met bon.', false, true)),
+      concatMap(res => this.printService.printStringNewLine('Bedankt voor uw aankoop en graag tot ziens!', false, true)),
       concatMap(res => this.printService.printToPrinter())
     ).subscribe(res => console.log('printToPrinter', res));
   }

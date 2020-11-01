@@ -23,8 +23,13 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DateFormatPipe2Time} from './components/sales/DateFormatPipe2Time';
 import {DateFormatPipe2Date} from './components/sales/DateFormatPipe2Date';
 import {PrintService} from '../store/book/service/print.service';
-import { registerLocaleData } from '@angular/common';
+import {registerLocaleData} from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
+import {LoginComponent} from './components/login/login.component';
+import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
+import {PurchaseOrdersService} from './services/purchase-orders.service';
+import {NgbdSortableHeaderDirective} from './directives/ngbd-sortable-header.directive';
+
 
 registerLocaleData(localeNl, 'nl');
 
@@ -33,7 +38,10 @@ registerLocaleData(localeNl, 'nl');
     AppComponent,
     HeaderComponent,
     SalesComponent,
-    ItemsComponent
+    ItemsComponent,
+    LoginComponent,
+    PurchaseOrdersComponent,
+    NgbdSortableHeaderDirective
   ],
   imports: [
     BrowserModule,
@@ -49,7 +57,8 @@ registerLocaleData(localeNl, 'nl');
   providers: [{
     provide: LOCALE_ID,
     useValue: 'nl'
-  }, ItemService, OrderService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time, PrintService],
+  }, ItemService, OrderService, PurchaseOrdersService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time,
+    PrintService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
