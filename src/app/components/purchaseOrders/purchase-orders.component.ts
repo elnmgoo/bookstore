@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {PurchaseOrder} from '../../models/purchaseOrder';
 import {PurchaseOrdersService} from '../../services/purchase-orders.service';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
+import {ConfirmDialogService} from '../../modules/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-orders',
@@ -13,15 +14,17 @@ import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sort
   providers: [PurchaseOrdersService, DecimalPipe]
 })
 export class PurchaseOrdersComponent implements OnInit {
+
   purchaseOrders$: Observable<PurchaseOrder[]>;
   total$: Observable<number>;
 
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
-  constructor(public service: PurchaseOrdersService) {
+  constructor(public service: PurchaseOrdersService, private confirmDialogService: ConfirmDialogService) {
     this.purchaseOrders$ = service.purchaseOrders$;
     this.total$ = service.total$;
   }
+
   onSort({column, direction}: SortEvent) {
     // resetting other headers
     this.headers.forEach(header => {
@@ -33,8 +36,16 @@ export class PurchaseOrdersComponent implements OnInit {
     this.service.sortDirection = direction;
   }
 
-  handleDete(purchaseOrder){
+  handleDelete(purchaseOrder) {
     console.log('Delete ' + purchaseOrder.id + ' ' + purchaseOrder.description);
+    const item = (purchaseOrder.description == null ||
+      purchaseOrder.description.length < 1) ? purchaseOrder.title : purchaseOrder.description;
+    const text = 'Verwijder "' + item + '"';
+    this.confirmDialogService.confirmThis(text, () => {
+      this.service.delete(purchaseOrder.id);
+    }, () => {
+      alert('No clicked');
+    });
   }
 
   ngOnInit(): void {

@@ -1,13 +1,39 @@
+<app-confirm-dialog></app-confirm-dialog>
+
 <form>
-  <div class="form-group form-inline">
-    Full text search: <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
+  <div class="form-row formTable col" >
+    <div class="form-group col-md-2">
+      <label for="searchTerm">Zoeken op term</label>
+      <input id="searchTerm" class="form-control" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputDate1">vanaf</label>
+      <div class="input-group">
+        <input formControlName="date1" class="form-control" placeholder="dd-mm-yyyy"
+               name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate1"
+        >
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputDate2">tot en met</label>
+      <div class="input-group">
+        <input formControlName="date2" class="form-control" placeholder="dd-mm-yyyy"
+               name="date2" ngbDatepicker #e="ngbDatepicker" id="inputDate2"
+        >
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="e.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
     <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
   </div>
-
   <table class="table table-striped">
     <thead>
     <tr>
-      <th> </th>
+      <th></th>
       <th scope="col" sortable="datetime" (sort)="onSort($event)">Datum</th>
       <th scope="col" sortable="isbn" (sort)="onSort($event)">Isbn</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Beschrijving</th>
@@ -21,12 +47,12 @@
     <tbody>
     <tr *ngFor="let purchaseOrder of purchaseOrders$ | async">
       <td>
-        <img src="assets/delete-24px.svg" (click)="handleDete(purchaseOrder)"/>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)"/>
       </td>
       <td>
-        <ngb-highlight [result]="purchaseOrder.dateTime | date" [term]="2"></ngb-highlight>
+        <ngb-highlight [result]="purchaseOrder.dateTime | date" [term]="service.searchTerm"></ngb-highlight>
       </td>
-      <td>)
+      <td>
         <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
           <ngb-highlight [result]="purchaseOrder.book.isbn" [term]="service.searchTerm"></ngb-highlight>
         </ng-container>

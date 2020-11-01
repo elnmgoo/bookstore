@@ -29,6 +29,8 @@ import {LoginComponent} from './components/login/login.component';
 import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
 import {PurchaseOrdersService} from './services/purchase-orders.service';
 import {NgbdSortableHeaderDirective} from './directives/ngbd-sortable-header.directive';
+import {ConfirmDialogService} from './modules/confirm-dialog/confirm-dialog.service';
+import {ConfirmDialogModule} from './modules/confirm-dialog/confirm-dialog.module';
 
 
 registerLocaleData(localeNl, 'nl');
@@ -41,7 +43,7 @@ registerLocaleData(localeNl, 'nl');
     ItemsComponent,
     LoginComponent,
     PurchaseOrdersComponent,
-    NgbdSortableHeaderDirective
+    NgbdSortableHeaderDirective,
   ],
   imports: [
     BrowserModule,
@@ -52,13 +54,14 @@ registerLocaleData(localeNl, 'nl');
     StoreModule.forRoot(appReducers),
     EffectsModule.forRoot([ItemEffects, OrderEffects, PublisherEffects]),
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    ConfirmDialogModule
   ],
   providers: [{
     provide: LOCALE_ID,
     useValue: 'nl'
   }, ItemService, OrderService, PurchaseOrdersService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time,
-    PrintService],
+    PrintService, ConfirmDialogService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

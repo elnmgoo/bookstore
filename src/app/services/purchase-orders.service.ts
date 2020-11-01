@@ -144,4 +144,15 @@ export class PurchaseOrdersService {
     return throwError(errorMessage);
   }
 
+  delete(purchasOrderId: number) {
+    console.log('remove ' + purchasOrderId);
+    this.httpClient.delete(this.ordersUrl + '/' + purchasOrderId).pipe(
+      map(response => {
+        console.log(response);
+        this.pSearch$.next();
+      }),
+      catchError(this.handleError)).subscribe();
+  }
+
+
 }
