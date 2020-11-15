@@ -7,6 +7,8 @@ import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {SearchResultPurchaseOrder, SearchResultPurchaseOrderAdapter} from '../models/searchResultPurchaseOrder';
 import {DecimalPipe} from '@angular/common';
+import {NgbCalendar, NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import {BtwTotal} from '../models/btwTotal';
 
 interface State {
   page: number;
@@ -14,28 +16,40 @@ interface State {
   searchTerm: string;
   sortColumn: string;
   sortDirection: SortDirection;
+  startFromDate: NgbDateStruct;
+  endUntilDate: NgbDateStruct;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PurchaseOrdersService {
+
+  private static pState: State = {
+    page: 1,
+    pageSize: 10,
+    searchTerm: '',
+    sortColumn: 'datetime',
+    sortDirection: 'desc',
+    startFromDate: NgbDate.from({year: 2000, month: 1, day: 1}),
+    endUntilDate: null
+  };
   private ordersUrl = environment.apiUrl + '/orders';
+  private ordersTotalUrl = environment.apiUrl + '/ordersTotal';
   private pLoading$ = new BehaviorSubject<boolean>(true);
   private pSearch$ = new Subject<void>();
   private pPurchaseOrders$ = new BehaviorSubject<PurchaseOrder[]>([]);
   private pTotal$ = new BehaviorSubject<number>(0);
+  private pSearchTotal$ = new Subject<void>();
+  private pSearchBtwTotal$ = new BehaviorSubject<BtwTotal[]>([]);
 
-  private pState: State = {
-    page: 1,
-    pageSize: 10,
-    searchTerm: '',
-    sortColumn: '',
-    sortDirection: ''
-  };
 
   constructor(private httpClient: HttpClient, private adapter: SearchResultPurchaseOrderAdapter,
-              private pipe: DecimalPipe) {
+              private pipe: DecimalPipe,
+              private calendar: NgbCalendar) {
+    if (PurchaseOrdersService.pState.endUntilDate === null) {
+      PurchaseOrdersService.pState.endUntilDate = calendar.getToday();
+    }
     this.pSearch$.pipe(
       tap(() => this.pLoading$.next(true)),
       debounceTime(200),
@@ -46,8 +60,18 @@ export class PurchaseOrdersService {
       this.pPurchaseOrders$.next(result.purchaseOrders);
       this.pTotal$.next(result.totalElements);
     });
-
     this.pSearch$.next();
+
+    this.pSearchTotal$.pipe(
+      switchMap(() => this.pSearchTotal())
+    ).subscribe(result => {
+      this.pSearchBtwTotal$.next(result);
+    });
+    this.pSearchTotal$.next();
+  }
+
+  get searchBtwTotal$() {
+    return this.pSearchBtwTotal$.asObservable();
   }
 
   get purchaseOrders$() {
@@ -63,7 +87,7 @@ export class PurchaseOrdersService {
   }
 
   get page() {
-    return this.pState.page;
+    return PurchaseOrdersService.pState.page;
   }
 
   set page(page: number) {
@@ -71,7 +95,7 @@ export class PurchaseOrdersService {
   }
 
   get pageSize() {
-    return this.pState.pageSize;
+    return PurchaseOrdersService.pState.pageSize;
   }
 
   set pageSize(pageSize: number) {
@@ -79,11 +103,27 @@ export class PurchaseOrdersService {
   }
 
   get searchTerm() {
-    return this.pState.searchTerm;
+    return PurchaseOrdersService.pState.searchTerm;
   }
 
   set searchTerm(searchTerm: string) {
     this.pSet({searchTerm});
+  }
+
+  get startFromDate() {
+    return PurchaseOrdersService.pState.startFromDate;
+  }
+
+  set startFromDate(startFromDate: NgbDateStruct) {
+    this.pSet({startFromDate});
+  }
+
+  get endUntilDate() {
+    return PurchaseOrdersService.pState.endUntilDate;
+  }
+
+  set endUntilDate(endUntilDate: NgbDateStruct) {
+    this.pSet({endUntilDate});
   }
 
   set sortColumn(sortColumn: string) {
@@ -95,12 +135,13 @@ export class PurchaseOrdersService {
   }
 
   private pSet(patch: Partial<State>) {
-    Object.assign(this.pState, patch);
+    Object.assign(PurchaseOrdersService.pState, patch);
     this.pSearch$.next();
+    this.pSearchTotal$.next();
   }
 
   private pSearch(): Observable<SearchResultPurchaseOrder> {
-    const {sortColumn, sortDirection, pageSize, page, searchTerm} = this.pState;
+    const {sortColumn, sortDirection, pageSize, page, searchTerm, startFromDate, endUntilDate} = PurchaseOrdersService.pState;
     const mapSortColumn = new Map();
     mapSortColumn.set('description', 'beschrijving');
     mapSortColumn.set('datetime', 'datumtijd');
@@ -119,17 +160,35 @@ export class PurchaseOrdersService {
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
     }
+    const fromTime = new Date(startFromDate.year, startFromDate.month - 1, startFromDate.day).getTime();
+    const untilTime = new Date(endUntilDate.year, endUntilDate.month - 1, endUntilDate.day).getTime() + (24 * 60 * 60 * 1000 - 1);
+    const url = this.ordersUrl + '/between/' + fromTime.toString() + '/' + untilTime.toString();
     if (searchTerm.length > 0) {
-      return this.httpClient.get<SearchResultPurchaseOrder>(this.ordersUrl + '/search/' + searchTerm + urlSuffix).pipe(
+      return this.httpClient.get<SearchResultPurchaseOrder>(url + '/search/' + searchTerm + urlSuffix).pipe(
         map((item) => this.adapter.adapt(item)),
         catchError(this.handleError));
     } else {
-      return this.httpClient.get<SearchResultPurchaseOrder>(this.ordersUrl + urlSuffix).pipe(
+      return this.httpClient.get<SearchResultPurchaseOrder>(url + urlSuffix).pipe(
         map((item) => this.adapter.adapt(item)),
         catchError(this.handleError));
-
     }
   }
+
+  private pSearchTotal(): Observable<BtwTotal[]> {
+    const {searchTerm, startFromDate, endUntilDate} = PurchaseOrdersService.pState;
+
+    console.log('searchTermTotal' + searchTerm);
+
+    const fromTime = new Date(startFromDate.year, startFromDate.month - 1, startFromDate.day).getTime();
+    const untilTime = new Date(endUntilDate.year, endUntilDate.month - 1, endUntilDate.day).getTime() + (24 * 60 * 60 * 1000 - 1);
+    const url = this.ordersTotalUrl + '/between/' + fromTime.toString() + '/' + untilTime.toString();
+    if (searchTerm.length > 0) {
+      return this.httpClient.get<BtwTotal[]>(url + '/search/' + searchTerm);
+    } else {
+      return this.httpClient.get<BtwTotal[]>(url);
+    }
+  }
+
 
   handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';
@@ -150,9 +209,8 @@ export class PurchaseOrdersService {
       map(response => {
         console.log(response);
         this.pSearch$.next();
+        this.pSearchTotal$.next();
       }),
       catchError(this.handleError)).subscribe();
   }
-
-
 }
