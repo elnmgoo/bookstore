@@ -1,0 +1,12 @@
+@import "src/assets/styles/variables";
+$padding-height: 20px;
+$margin-width: 20px;
+.dialog {
+  padding-top: $padding-height;
+  padding-bottom: $padding-height;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: aquamarine;
+  font-family:"Arial", Helvetica, sans-serif;
+}
+

@@ -20,13 +20,29 @@ export class Book {
     this.publisher = (publisher != null) ? publisher : new Publisher('', '');
     this.price = (price != null) ? price : 0;
   }
+
+
+  public static getBoek(book: Book) {
+    console.log('modify ' + book.isbn);
+    const boek: any = new Object();
+    const uitgever: any = new Object();
+    uitgever.id = book.publisher.id;
+    uitgever.uitgever = book.publisher.publisher;
+    boek.isbn = book.isbn;
+    boek.titel = book.title;
+    boek.auteur = book.author;
+    boek.uitgever = uitgever;
+    boek.prijs = book.price;
+    boek.voorraad = book.supply;
+    boek.voorraadDepot = book.supplyDepot;
+    return (boek);
+  }
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookAdapter implements Adapter<Book> {
-
   adapt(item: any): Book {
     let publisher = null;
     if (item.uitgever != null) {

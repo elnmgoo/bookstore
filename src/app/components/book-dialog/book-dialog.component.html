@@ -1,0 +1,78 @@
+<div class="dialog">
+  <form [formGroup]="bookForm">
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label for="inputISBN">ISBN</label>
+        <input #autofocus formControlName="isbn" type="text" class="form-control" id="inputISBN" placeholder="Number"
+               mask="0000000000000" (keyup)="onChangeIsbn($event)">
+      </div>
+      <div class="form-group col-md-9">
+        <label for="inputTitle">Titel</label>
+        <input formControlName="title" type="text" class="form-control" id="inputTitle" placeholder="Titel">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-5">
+        <label for="inputAuthor">Auteur</label>
+        <input formControlName="author" type="text" class="form-control" id="inputAuthor" placeholder="Auteur">
+      </div>
+      <div class="form-group col-md-5">
+        <label for="inputPublisher">Uitgever</label>
+        <select formControlName="publisher" name="publisher" #publisher class="form-control" id="inputPublisher"
+                (change)="onChange($event)">
+          <option *ngFor="let publisher of (publisher$ | async)" [value]="publisher.id">{{publisher.publisher}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group col-md-2">
+        <label for="inputPrice">Prijs</label>
+        <input formControlName="price" type="text" class="form-control" id="inputPrice" placeholder="0"
+               mask="separator.2"
+               thousandSeparator=".">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-1">
+        <label for="inputAmount">Voorraad</label>
+        <input formControlName="supply" type="number" class="form-control" id="inputAmount" placeholder="1" min="0" [readonly]="bNew===true">
+      </div>
+      <div class="form-group col-md-1">
+        <label for="inputDepot">Depot</label>
+        <input formControlName="supplyDepot" type="number" class="form-control" id="inputDepot" placeholder="1" min="0"  [readonly]="bNew===true">
+      </div>
+      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
+      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
+      <div *ngIf="bNew===true" class="form-group col-md-1">
+        <label for="addAmount">+ Voorraad</label>
+        <input formControlName="amount" type="number" class="form-control" id="addAmount" placeholder="1" min="0">
+      </div>
+      <div *ngIf="bNew===true"class="form-group col-md-1">
+        <label for="addDepot">+ Depot</label>
+        <input formControlName="amountDepot" type="number" class="form-control" id="addDepot" placeholder="1" min="0">
+      </div>
+
+      <div class="form-group col-md-2"></div>
+      <div *ngIf="bNew===false" class="form-group col-md-2">
+        <label for="buttonCancel">&nbsp;</label>
+        <button type="button" class="btn btn-info btn-block" id="buttonCancel"
+                (click)="onCancelButton()">Cancel
+        </button>
+      </div>
+      <div *ngIf="bNew===true" class="form-group col-md-2">
+        <label for="buttonAddOk">&nbsp;</label>
+        <button type="button" class="btn btn-info btn-block" id="buttonAddOk" [disabled]="bookForm.invalid"
+                (click)="onAddBookButton()">Boek toevoegen
+        </button>
+      </div>
+
+      <div *ngIf="bNew===false" class="form-group col-md-2">
+        <label for="buttonEditOk">&nbsp;</label>
+        <button type="button" class="btn btn-info btn-block" id="buttonEditOk" [disabled]="bookForm.invalid"
+                (click)="onEditBookButton()">Boek wijzigen
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

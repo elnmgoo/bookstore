@@ -308,7 +308,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.publisher.setValue(book.publisher.id);
         this.bookForm.controls.price.setValue(book.price.toString(10).replace('.', ','));
         this.bookForm.controls.amount.setValue(1);
-        this.bookForm.controls.tax.setValue(21);
+        this.bookForm.controls.tax.setValue(9);
       });
     }
   }

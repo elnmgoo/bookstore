@@ -7,6 +7,8 @@ import {PurchaseOrder} from '../../models/purchaseOrder';
 import {Book} from '../../../store/book/models/book';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
 import {DecimalPipe} from '@angular/common';
+import {BookDialogComponent} from '../book-dialog/book-dialog.component';
+import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-books',
@@ -20,12 +22,18 @@ export class BooksComponent implements OnInit {
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
   constructor(public service: BooksService,
-              private confirmDialogService: ConfirmDialogService) {
+              private confirmDialogService: ConfirmDialogService,
+              private config: NgbModalConfig,
+              private modalService: NgbModal) {
+    config.backdrop = 'static';
+    config.keyboard = true;
+    config.size = 'xl';
   }
 
   ngOnInit(): void {
     this.books$ = this.service.books$;
     this.total$ = this.service.total$;
+
   }
 
   onSort({column, direction}: SortEvent) {
@@ -39,14 +47,23 @@ export class BooksComponent implements OnInit {
     this.service.sortDirection = direction;
   }
 
-  onButtonAdd(){
-
+  onButtonAdd() {
+    const book: Book = new Book('', '', '', 0, 0, null, 0);
+    const modalRef = this.modalService.open(BookDialogComponent);
+    modalRef.componentInstance.book = book;
+    modalRef.componentInstance.bNew = true;
+    modalRef.componentInstance.service = this.service;
   }
 
   handleDelete(book) {
+    this.modalService.open(BookDialogComponent);
   }
-  handleEdit(book){
 
+  handleEdit(book) {
+    const modalRef = this.modalService.open(BookDialogComponent);
+    modalRef.componentInstance.book = book;
+    modalRef.componentInstance.bNew = false;
+    modalRef.componentInstance.service = this.service;
   }
 
 }

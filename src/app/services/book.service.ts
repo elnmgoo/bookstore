@@ -32,15 +32,17 @@ export class BooksService {
     sortColumn: 'isbn',
     sortDirection: 'desc',
   };
-  private booksUrl = environment.apiUrl + '/boeken';
+  private booksUrl = environment.apiUrl ;
   private pLoading$ = new BehaviorSubject<boolean>(true);
   private pSearch$ = new Subject<void>();
   private pBooks$ = new BehaviorSubject<Book[]>([]);
   private pTotal$ = new BehaviorSubject<number>(0);
 
 
-  constructor(private httpClient: HttpClient, private adapter: SearchResultBookAdapter,
-              private pipe: DecimalPipe
+  constructor(private httpClient: HttpClient,
+              private adapter: SearchResultBookAdapter,
+              private pipe: DecimalPipe,
+              private bookAdapter: BookAdapter
   ) {
     this.pSearch$.pipe(
       tap(() => this.pLoading$.next(true)),
@@ -124,7 +126,7 @@ export class BooksService {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
     }
 
-    const url = this.booksUrl;
+    const url = this.booksUrl + '/boeken';
     let theUrl = url + urlSuffix;
     if (searchTerm.length > 0) {
       theUrl = url + '/search/' + searchTerm + urlSuffix;
@@ -147,13 +149,27 @@ export class BooksService {
     return throwError(errorMessage);
   }
 
+  getBook(isbn: string): Observable<Book> {
+    return this.httpClient.get<Book>(this.booksUrl + '/boeken/' + isbn).pipe(
+      map((item) => this.bookAdapter.adapt(item)),
+      catchError(this.handleError));
+  }
+
   delete(isbn: number) {
     console.log('remove ' + isbn);
-    this.httpClient.delete(this.booksUrl + '/' + isbn).pipe(
+    this.httpClient.delete(this.booksUrl + '/boeken/' + isbn).pipe(
       map(response => {
         console.log(response);
         this.pSearch$.next();
       }),
       catchError(this.handleError)).subscribe();
+  }
+
+  public update(book: Book){
+    const boek = Book.getBoek(book);
+    const url = this.booksUrl + '/uitgevers/' + boek.uitgever.id + '/boeken/' + boek.isbn;
+    return this.httpClient.put(url, boek).pipe(
+      tap(() => this.pSearch$.next())
+      );
   }
 }
