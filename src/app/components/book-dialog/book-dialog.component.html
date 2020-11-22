@@ -42,8 +42,6 @@
         <label for="inputDepot">Depot</label>
         <input formControlName="supplyDepot" type="number" class="form-control" id="inputDepot" placeholder="1" min="0"  [readonly]="bNew===true">
       </div>
-      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
-      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
       <div *ngIf="bNew===true" class="form-group col-md-1">
         <label for="addAmount">+ Voorraad</label>
         <input formControlName="amount" type="number" class="form-control" id="addAmount" placeholder="1" min="0">
@@ -52,9 +50,12 @@
         <label for="addDepot">+ Depot</label>
         <input formControlName="amountDepot" type="number" class="form-control" id="addDepot" placeholder="1" min="0">
       </div>
+      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
 
       <div class="form-group col-md-2"></div>
-      <div *ngIf="bNew===false" class="form-group col-md-2">
+
+      <div class="form-group col-md-2"></div>
+      <div class="form-group col-md-2">
         <label for="buttonCancel">&nbsp;</label>
         <button type="button" class="btn btn-info btn-block" id="buttonCancel"
                 (click)="onCancelButton()">Cancel
@@ -72,6 +73,12 @@
         <button type="button" class="btn btn-info btn-block" id="buttonEditOk" [disabled]="bookForm.invalid"
                 (click)="onEditBookButton()">Boek wijzigen
         </button>
+      </div>
+    </div>
+    <div *ngIf="bNew===true" class="form-row">
+      <div class="form-group col-md-12">
+        <label for="inputAdded">Laatst toegevoegd</label>
+        <input formControlName="added" type="text" class="form-control added" id="inputAdded"   readonly>
       </div>
     </div>
   </form>

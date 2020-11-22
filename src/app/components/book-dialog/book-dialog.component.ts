@@ -43,7 +43,8 @@ export class BookDialogComponent implements OnInit {
       supply: [this.book.supply, [Validators.required, Validators.min(0), Validators.max(99)]],
       supplyDepot: [this.book.supplyDepot, [Validators.required, Validators.min(0), Validators.max(99)]],
       amount: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
-      amountDepot: [0, [Validators.required, Validators.min(0), Validators.max(99)]]
+      amountDepot: [0, [Validators.required, Validators.min(0), Validators.max(99)]],
+      added: ['', [Validators.minLength(0), Validators.maxLength(100)]]
     });
     this.publisher = this.book.publisher;
   }
@@ -80,6 +81,11 @@ export class BookDialogComponent implements OnInit {
       Number(this.bookForm.controls.price.value.replace(',', '.'))
     );
     this.service.update(book).subscribe(() => {
+        this.bookForm.controls.added.setValue(
+          book.title + ', ' + book.author + ' (' +
+          this.bookForm.controls.amount.value + ',' +
+          this.bookForm.controls.amountDepot.value + ')'
+        );
         this.bookForm.controls.isbn.setValue('');
         this.bookForm.controls.title.setValue('');
         this.bookForm.controls.author.setValue('');
