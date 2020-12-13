@@ -19,6 +19,8 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 export class BooksComponent implements OnInit {
   books$: Observable<Book[]>;
   total$: Observable<number>;
+  warningText: string;
+
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
   constructor(public service: BooksService,
@@ -55,8 +57,16 @@ export class BooksComponent implements OnInit {
     modalRef.componentInstance.service = this.service;
   }
 
-  handleDelete(book) {
-    this.modalService.open(BookDialogComponent);
+  handleDelete(content, book) {
+    console.log('Delete ' + book.title);
+    this.service.getNrOfOrders(book).subscribe(nrOfOrders => {
+      if (nrOfOrders === 0) {
+        this.service.delete(book.isbn);
+      } else {
+        this.warningText = 'Boek is nog aan ' + nrOfOrders + ' verkopen gekoppeld.';
+        this.modalService.open(content, { size: 'lg' });
+      }
+    });
   }
 
   handleEdit(book) {

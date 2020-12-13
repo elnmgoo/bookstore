@@ -159,9 +159,11 @@
         </ng-container>
         <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0;"
             *ngFor="let order of (order$ | async);let indexOfElement=index;">
-        <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;vertical-align:top"
+        <span style="display:inline-block;width: 3ch;cursor: pointer;vertical-align:top"
               data-placement="right"
-              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">&#x0229D;</span>
+              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">
+           <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
+        </span>
           <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
           <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
           <span style="display:inline-block;width: 1ch;vertical-align:top">&euro;</span>

@@ -5,9 +5,8 @@ import {Observable, Subscription} from 'rxjs';
 import {PurchaseOrder} from '../../models/purchaseOrder';
 import {PurchaseOrdersService} from '../../services/purchase-orders.service';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
-import {ConfirmDialogService} from '../../modules/confirm-dialog/confirm-dialog.service';
-import {NgbCalendar, NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {FormGroup, Validators} from '@angular/forms';
+import {NgbCalendar, NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {FormGroup} from '@angular/forms';
 import {BtwTotal} from '../../models/btwTotal';
 
 @Component({
@@ -27,7 +26,6 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
   constructor(public service: PurchaseOrdersService,
-              private confirmDialogService: ConfirmDialogService,
               private calendar: NgbCalendar) {
     this.purchaseOrders$ = service.purchaseOrders$;
     this.searchBtwTotal$ = service.searchBtwTotal$;
@@ -62,15 +60,7 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
   }
 
   handleDelete(purchaseOrder) {
-    console.log('Delete ' + purchaseOrder.id + ' ' + purchaseOrder.description);
-    const item = (purchaseOrder.description == null ||
-      purchaseOrder.description.length < 1) ? purchaseOrder.title : purchaseOrder.description;
-    const text = 'Verwijder "' + item + '"';
-    this.confirmDialogService.confirmThis(text, () => {
-      this.service.delete(purchaseOrder.id);
-    }, () => {
-      alert('No clicked');
-    });
+    this.service.delete(purchaseOrder.id);
   }
 
   onButtonToday() {
@@ -84,6 +74,5 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
   }
 }

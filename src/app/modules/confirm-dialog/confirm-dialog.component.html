@@ -3,21 +3,30 @@
     <div class="modal-content">
 
       <div *ngIf="message?.type == 'confirm'" class="modal-body">
-        <div class="row">
+        <div class="row header" >
           <div class="col-md-12">
-            <p class="text-center confirm-message">{{message.text}}</p>
+            <p class="text-center ">{{message.title}}</p>
           </div>
         </div>
-        <div class="row">
+        <div class="row" >
           <div class="col-md-12">
-            <p class="confirm-button">
-              <a class="mr-2" (click)="message.yesFn()">
-                <button class="btn btn-yes">Ja</button>
+            <p class="text-left confirm-message">{{message.text}}</p>
+          </div>
+        </div>
+        <div class="row" >
+          <div class="col-md-6"></div>
+
+          <div class="col-md-2" class="confirm-button">
+
+              <a *ngIf="message.no.length > 0" (click)="message.noFn()">
+                <button class="btn btn-no">{{message.no}}</button>
               </a>
-              <a (click)="message.noFn()">
-                <button class="btn btn-no">Nee</button>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-2" class="confirm-button">
+              <a *ngIf="message.yes.length > 0" class="mr-2" (click)="message.yesFn()">
+                <button class="btn btn-yes">{{message.yes}}</button>
               </a>
-            </p>
           </div>
         </div>
       </div>

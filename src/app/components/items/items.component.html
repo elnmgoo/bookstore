@@ -58,7 +58,9 @@
     <div class="col">
       <ng-container *ngFor="let item of (item$ | async)">
         <div class="row">
-          <div class="col-md-1" style="color: red;text-align: center;cursor: pointer;" data-placement="right" data-toggle="tooltip" title="Verwijder artikel" (click)="onDeleteItem(item, $event)">&#x0229D; </div>
+          <div class="col-md-1" style="color: grey;text-align: center;cursor: pointer;" data-placement="right" data-toggle="tooltip" title="Verwijder artikel" (click)="onDeleteItem(item, $event)">
+            <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
+          </div>
           <div class="col-md-5">{{ item.description }}</div>
           <div class="col-md-3">{{ item.tax }}</div>
           <div class="col-md-3">{{ item.price }}</div>

@@ -20,7 +20,7 @@ export class PublisherService {
   }
 
   addPublisher(publisher: Publisher): Observable<Publisher> {
-    return this.httpClient.put<Publisher>(this.publishersUrl, publisher).pipe(
+    return this.httpClient.put<Publisher>(this.publishersUrl, Publisher.getUitgever(publisher)).pipe(
       map((item) => this.adapter.adapt(item))
     );
   }
@@ -28,5 +28,9 @@ export class PublisherService {
   deletePublisher(publisher: Publisher): Observable<Publisher> {
     return this.httpClient.delete<Publisher>(this.publishersUrl + '/' + publisher.id).pipe(
       map((item) => publisher));
+  }
+
+  getNrOfBooks(publisher: Publisher){
+    return this.httpClient.get<number>(this.publishersUrl + '/' + publisher.id + '/nrofbooks');
   }
 }

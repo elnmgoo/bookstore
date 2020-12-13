@@ -50,7 +50,6 @@ export class ItemsComponent implements OnInit {
 
   onDeleteItem(item: Item, event) {
     this.renderer.setStyle(event.target, 'background', 'skyblue');
-    // this.renderer.removeAttribute(event.target, 'data-toggle');
 
     this.store.dispatch(new DeleteItem(item));
   }

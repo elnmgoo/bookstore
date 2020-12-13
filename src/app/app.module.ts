@@ -34,6 +34,7 @@ import {ConfirmDialogModule} from './modules/confirm-dialog/confirm-dialog.modul
 import { BooksComponent } from './components/books/books.component';
 import {BooksService} from './services/book.service';
 import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
+import { PublishersComponent } from './components/publishers/publishers.component';
 
 
 registerLocaleData(localeNl, 'nl');
@@ -49,6 +50,7 @@ registerLocaleData(localeNl, 'nl');
     NgbdSortableHeaderDirective,
     BooksComponent,
     BookDialogComponent,
+    PublishersComponent,
   ],
   imports: [
     BrowserModule,

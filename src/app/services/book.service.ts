@@ -172,4 +172,9 @@ export class BooksService {
       tap(() => this.pSearch$.next())
       );
   }
+
+  public getNrOfOrders(book: Book){
+    return this.httpClient.get<number>(this.booksUrl + '/boeken/' + book.isbn + '/nroforders');
+  }
+
 }

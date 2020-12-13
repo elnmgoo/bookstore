@@ -60,7 +60,7 @@
     <tbody>
     <tr *ngFor="let purchaseOrder of purchaseOrders$ | async">
       <td>
-        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)"/>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)" style="opacity: 0.25;"/>
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.dateTime | date" [term]="service.searchTerm"></ngb-highlight>

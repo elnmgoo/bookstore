@@ -1,4 +1,17 @@
-<app-confirm-dialog></app-confirm-dialog>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Verwijderen boek</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{ warningText }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
 
 <form>
   <div class="form-row formTable col">
@@ -31,8 +44,8 @@
     <tbody>
     <tr *ngFor="let book of books$ | async">
       <td>
-        <img src="assets/delete-24px.svg" (click)="handleDelete(book)"/>
-        <img src="assets/edit-24px.svg" (click)="handleEdit(book)"/>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(content, book)" style="opacity: 0.25;"/>
+        <img src="assets/edit-24px.svg" (click)="handleEdit(book)" style="opacity: 0.25;" />
       </td>
       <td>
         <ng-container *ngIf="book.isbn != '0000000000000'">
