@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {PurchaseOrder} from '../models/purchaseOrder';
-import {SortDirection} from '../directives/ngbd-sortable-header.directive';
-import {catchError, debounceTime, delay, map, switchMap, tap} from 'rxjs/operators';
-import {environment} from '../../environments/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {SearchResultPurchaseOrder, SearchResultPurchaseOrderAdapter} from '../models/searchResultPurchaseOrder';
-import {DecimalPipe} from '@angular/common';
+import { Injectable } from '@angular/core';
 import {NgbCalendar, NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {BtwTotal} from '../models/btwTotal';
+import {environment} from '../../environments/environment';
+import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {DecimalPipe} from '@angular/common';
+import {catchError, debounceTime, delay, map, switchMap, tap} from 'rxjs/operators';
+import {SortDirection} from '../directives/ngbd-sortable-header.directive';
+import {SearchResultProcurement, SearchResultProcurementAdapter} from '../models/searchResultProcurement';
+import {Procurement} from '../models/procurement';
 
 interface State {
   page: number;
@@ -19,11 +18,10 @@ interface State {
   startFromDate: NgbDateStruct;
   endUntilDate: NgbDateStruct;
 }
-
 @Injectable({
   providedIn: 'root'
 })
-export class PurchaseOrdersService {
+export class ProcurementService {
 
   private static pState: State = {
     page: 1,
@@ -34,24 +32,25 @@ export class PurchaseOrdersService {
     startFromDate: null,
     endUntilDate: null
   };
-  private ordersUrl = environment.apiUrl + '/orders';
-  private ordersTotalUrl = environment.apiUrl + '/ordersTotal';
+  private ordersUrl = environment.api2Url + '/inkopen';
+  private procurementUrl = environment.api2Url + '/boeken/';
+  private ordersTotalUrl = environment.api2Url + '/inkopenTotal';
   private pLoading$ = new BehaviorSubject<boolean>(true);
   private pSearch$ = new Subject<void>();
-  private pPurchaseOrders$ = new BehaviorSubject<PurchaseOrder[]>([]);
+  private pProcurement$ = new BehaviorSubject<Procurement[]>([]);
   private pTotal$ = new BehaviorSubject<number>(0);
   private pSearchTotal$ = new Subject<void>();
-  private pSearchBtwTotal$ = new BehaviorSubject<BtwTotal[]>([]);
+  private pSearchPriceTotal$ = new BehaviorSubject<number>(0);
 
 
-  constructor(private httpClient: HttpClient, private adapter: SearchResultPurchaseOrderAdapter,
+  constructor(private httpClient: HttpClient, private adapter: SearchResultProcurementAdapter,
               private pipe: DecimalPipe,
               private calendar: NgbCalendar) {
-    if (PurchaseOrdersService.pState.endUntilDate === null) {
-      PurchaseOrdersService.pState.endUntilDate = calendar.getToday();
+    if (ProcurementService.pState.endUntilDate === null) {
+      ProcurementService.pState.endUntilDate = calendar.getToday();
     }
-    if (PurchaseOrdersService.pState.startFromDate === null) {
-      PurchaseOrdersService.pState.startFromDate = calendar.getToday();
+    if (ProcurementService.pState.startFromDate === null) {
+      ProcurementService.pState.startFromDate = calendar.getToday();
     }
     this.pSearch$.pipe(
       tap(() => this.pLoading$.next(true)),
@@ -60,7 +59,7 @@ export class PurchaseOrdersService {
       delay(200),
       tap(() => this.pLoading$.next(false))
     ).subscribe(result => {
-      this.pPurchaseOrders$.next(result.purchaseOrders);
+      this.pProcurement$.next(result.procurement);
       this.pTotal$.next(result.totalElements);
     });
     this.pSearch$.next();
@@ -68,17 +67,17 @@ export class PurchaseOrdersService {
     this.pSearchTotal$.pipe(
       switchMap(() => this.pSearchTotal())
     ).subscribe(result => {
-      this.pSearchBtwTotal$.next(result);
+      this.pSearchPriceTotal$.next(result);
     });
     this.pSearchTotal$.next();
   }
 
-  get searchBtwTotal$() {
-    return this.pSearchBtwTotal$.asObservable();
+  get searchPriceTotal$() {
+    return this.pSearchPriceTotal$.asObservable();
   }
 
-  get purchaseOrders$() {
-    return this.pPurchaseOrders$.asObservable();
+  get procurement$() {
+    return this.pProcurement$.asObservable();
   }
 
   get total$() {
@@ -90,7 +89,7 @@ export class PurchaseOrdersService {
   }
 
   get page() {
-    return PurchaseOrdersService.pState.page;
+    return ProcurementService.pState.page;
   }
 
   set page(page: number) {
@@ -98,7 +97,7 @@ export class PurchaseOrdersService {
   }
 
   get pageSize() {
-    return PurchaseOrdersService.pState.pageSize;
+    return ProcurementService.pState.pageSize;
   }
 
   set pageSize(pageSize: number) {
@@ -106,7 +105,7 @@ export class PurchaseOrdersService {
   }
 
   get searchTerm() {
-    return PurchaseOrdersService.pState.searchTerm;
+    return ProcurementService.pState.searchTerm;
   }
 
   set searchTerm(searchTerm: string) {
@@ -114,7 +113,7 @@ export class PurchaseOrdersService {
   }
 
   get startFromDate() {
-    return PurchaseOrdersService.pState.startFromDate;
+    return ProcurementService.pState.startFromDate;
   }
 
   set startFromDate(startFromDate: NgbDateStruct) {
@@ -122,7 +121,7 @@ export class PurchaseOrdersService {
   }
 
   get endUntilDate() {
-    return PurchaseOrdersService.pState.endUntilDate;
+    return ProcurementService.pState.endUntilDate;
   }
 
   set endUntilDate(endUntilDate: NgbDateStruct) {
@@ -138,7 +137,7 @@ export class PurchaseOrdersService {
   }
 
   private pSet(patch: Partial<State>) {
-    Object.assign(PurchaseOrdersService.pState, patch);
+    Object.assign(ProcurementService.pState, patch);
     this.pSearch$.next();
     this.pSearchTotal$.next();
   }
@@ -156,14 +155,13 @@ export class PurchaseOrdersService {
     return '/between/' + fromTime.toString() + '/' + untilTime.toString();
   }
 
-
-  private pSearch(): Observable<SearchResultPurchaseOrder> {
-    const {sortColumn, sortDirection, pageSize, page, searchTerm, startFromDate, endUntilDate} = PurchaseOrdersService.pState;
+  private pSearch(): Observable<SearchResultProcurement> {
+    const {sortColumn, sortDirection, pageSize, page, searchTerm, startFromDate, endUntilDate} = ProcurementService.pState;
     const mapSortColumn = new Map();
-    mapSortColumn.set('description', 'beschrijving');
+    mapSortColumn.set('title', 'titel');
     mapSortColumn.set('datetime', 'datumtijd');
-    mapSortColumn.set('book.uitgever', 'boek.uitgever.naam');
-    mapSortColumn.set('totalPrice', 'totaal');
+    mapSortColumn.set('book.publisher', 'boek.uitgever.naam');
+    mapSortColumn.set('book.title', 'boek.titel');
     mapSortColumn.set('price', 'prijs');
     mapSortColumn.set('isbn', 'boek.isbn');
     mapSortColumn.set('author', 'boek.auteur');
@@ -179,23 +177,24 @@ export class PurchaseOrdersService {
     }
     const url = this.ordersUrl + this.formatBetweenPartUrl(startFromDate, endUntilDate);
     if (searchTerm.length > 0) {
-      return this.httpClient.get<SearchResultPurchaseOrder>(url + '/search/' + searchTerm + urlSuffix).pipe(
+      return this.httpClient.get<SearchResultProcurement>(url + '/search/' + searchTerm + urlSuffix).pipe(
         map((item) => this.adapter.adapt(item)),
         catchError(this.handleError));
     } else {
-      return this.httpClient.get<SearchResultPurchaseOrder>(url + urlSuffix).pipe(
+      return this.httpClient.get<SearchResultProcurement>(url + urlSuffix).pipe(
         map((item) => this.adapter.adapt(item)),
         catchError(this.handleError));
     }
   }
 
-  private pSearchTotal(): Observable<BtwTotal[]> {
-    const {searchTerm, startFromDate, endUntilDate} = PurchaseOrdersService.pState;
+  private pSearchTotal(): Observable<number> {
+    const {searchTerm, startFromDate, endUntilDate} = ProcurementService.pState;
+
     const url = this.ordersTotalUrl + this.formatBetweenPartUrl(startFromDate, endUntilDate);
     if (searchTerm.length > 0) {
-      return this.httpClient.get<BtwTotal[]>(url + '/search/' + searchTerm);
+      return this.httpClient.get<number>(url + '/search/' + searchTerm);
     } else {
-      return this.httpClient.get<BtwTotal[]>(url);
+      return this.httpClient.get<number>(url);
     }
   }
 
@@ -222,5 +221,17 @@ export class PurchaseOrdersService {
         this.pSearchTotal$.next();
       }),
       catchError(this.handleError)).subscribe();
+  }
+
+  add(procurement: Procurement) {
+    console.log('add ' + procurement.book.isbn);
+    const inkoop = procurement.getInkoop();
+    return this.httpClient.post(this.procurementUrl + procurement.book.isbn + '/inkopen', inkoop ).pipe(
+      map(response => {
+        console.log(response);
+        this.pSearch$.next();
+        this.pSearchTotal$.next();
+      }),
+      catchError(this.handleError));
   }
 }

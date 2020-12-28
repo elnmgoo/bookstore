@@ -16,7 +16,7 @@ export class AppComponent {
       selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
       trigger: 'hover',
       container: 'body'
-    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',function() {
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function() {
       $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('dispose');
     });
   }

@@ -6,6 +6,7 @@ import {PurchaseOrder} from './models/purchaseOrder';
 import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
 import {BooksComponent} from './components/books/books.component';
 import {PublishersComponent} from './components/publishers/publishers.component';
+import {ProcurementComponent} from './components/procurement/procurement.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: 'items', component: ItemsComponent },
   { path: 'purchaseOrders', component: PurchaseOrdersComponent},
   { path: 'books', component: BooksComponent},
-  { path: 'publishers', component: PublishersComponent}
+  { path: 'publishers', component: PublishersComponent},
+  { path: 'procurement', component: ProcurementComponent}
 ];
 
 @NgModule({

@@ -13,8 +13,7 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss'],
-  providers: [BooksService, DecimalPipe]
+  styleUrls: ['./books.component.scss']
 })
 export class BooksComponent implements OnInit {
   books$: Observable<Book[]>;
@@ -49,14 +48,6 @@ export class BooksComponent implements OnInit {
     this.service.sortDirection = direction;
   }
 
-  onButtonAdd() {
-    const book: Book = new Book('', '', '', 0, 0, null, 0);
-    const modalRef = this.modalService.open(BookDialogComponent);
-    modalRef.componentInstance.book = book;
-    modalRef.componentInstance.bNew = true;
-    modalRef.componentInstance.service = this.service;
-  }
-
   handleDelete(content, book) {
     console.log('Delete ' + book.title);
     this.service.getNrOfOrders(book).subscribe(nrOfOrders => {
@@ -74,6 +65,7 @@ export class BooksComponent implements OnInit {
     modalRef.componentInstance.book = book;
     modalRef.componentInstance.bNew = false;
     modalRef.componentInstance.service = this.service;
+    modalRef.componentInstance.procurementService = null;
   }
 
 }

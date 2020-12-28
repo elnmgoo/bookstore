@@ -115,7 +115,8 @@ export class BooksService {
     mapSortColumn.set('price', 'prijs');
     mapSortColumn.set('isbn', 'isbn');
     mapSortColumn.set('author', 'auteur');
-    mapSortColumn.set('depot', 'depot');
+    mapSortColumn.set('supply', 'voorraad');
+    mapSortColumn.set('supplyDepot', 'voorraadDepot');
     console.log('sortColumn ' + sortColumn + ', ' + mapSortColumn.get(sortColumn));
     console.log('sortOrder ' + sortDirection);
     console.log('searchTerm ' + searchTerm);

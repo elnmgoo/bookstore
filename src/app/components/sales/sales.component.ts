@@ -15,7 +15,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {PriceValidator} from '../../validators/price.validator';
 import {selectOrderList, selectOrderTotalPrice, selectOrderTotalPriceTaxMap} from '../../../store/orders/selectors/order.selectors';
-import {AddOrder, BookOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
+import {AddOrder, BookOrder, DeleteAllOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
 import {BookService} from '../../../store/book/service/book.service';
@@ -74,6 +74,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   order = [];
   orderTotalPriceTaxMap;
   orderTotalPrice = 0;
+  printOrder = true;
+  payed = false;
 
   item$ = this.store.pipe(select(selectItemList));
   order$ = this.store.pipe(select(selectOrderList));
@@ -87,7 +89,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
               private element: ElementRef<HTMLInputElement>,
               private bookService: BookService,
               private calendar: NgbCalendar,
-              public formatter: NgbDateParserFormatter,
               private dateFormatPipe2Time: DateFormatPipe2Time,
               private dateFormatPipe2Date: DateFormatPipe2Date,
               private printService: PrintService
@@ -111,7 +112,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: ['', Validators.required],
       price: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
       amount: [1, [Validators.required, Validators.min(1), Validators.max(99)]],
-      tax: ['21', [Validators.required, Validators.min(1)]],
+      tax: ['9', [Validators.required, Validators.min(1)]],
       date: [this.calendar.getToday()]
     });
 
@@ -149,6 +150,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddItemButton() {
+    if (this.payed){
+      this.payed = false;
+    }
     this.setTimeStamp();
     console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
     console.log('totalPrice: ' + this.orderTotalPrice);
@@ -170,6 +174,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddBookButton() {
+    if (this.payed){
+      this.payed = false;
+    }
     this.setTimeStamp();
     let descript = this.bookForm.controls.title.value + ', ' + this.bookForm.controls.author.value;
     if (this.bookForm.controls.amount.value > 1) {
@@ -226,7 +233,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       order.dateTime = this.timeStamp;
       this.store.dispatch(new BookOrder(order));
     });
-    console.log('bonnetje afdrukken');
     let buffer = '';
     let description = '';
     this.order.forEach(myOrder => {
@@ -269,20 +275,26 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         taxReceipt += taxString;
       }
     });
-    this.printService.initPrinter().pipe(
-      tap(res => console.log('initPrinter ', res)),
-      concatMap(res => this.printService.printLogoAndAddress()),
-      concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
-      concatMap(res => this.printService.printSolidLine()),
-      concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
-      concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
-      concatMap(res => this.printService.printSolidLine()),
-      concatMap(res => this.printService.printStringNewLine(this.time, false, true)),
-      concatMap(res => this.printService.printStringNewLine('', false, false)),
-      concatMap(res => this.printService.printStringNewLine('Ruilen binnen 14 dagen met bon.', false, true)),
-      concatMap(res => this.printService.printStringNewLine('Bedankt voor uw aankoop en graag tot ziens!', false, true)),
-      concatMap(res => this.printService.printToPrinter())
-    ).subscribe(res => console.log('printToPrinter', res));
+    if (this.printOrder === true) {
+      console.log('bonnetje afdrukken');
+      this.printService.initPrinter().pipe(
+        tap(res => console.log('initPrinter ', res)),
+        concatMap(res => this.printService.printLogoAndAddress()),
+        concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
+        concatMap(res => this.printService.printSolidLine()),
+        concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
+        concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
+        concatMap(res => this.printService.printSolidLine()),
+        concatMap(res => this.printService.printStringNewLine(this.time, false, true)),
+        concatMap(res => this.printService.printStringNewLine('', false, false)),
+        concatMap(res => this.printService.printStringNewLine('Ruilen binnen 14 dagen met bon.', false, true)),
+        concatMap(res => this.printService.printStringNewLine('Bedankt voor uw aankoop en graag tot ziens!', false, true)),
+        concatMap(res => this.printService.printToPrinter())
+      ).subscribe(res => console.log('printToPrinter', res));
+    }
+    this.store.dispatch(new DeleteAllOrder());
+    this.payed = true;
+    setTimeout(() => this.scrollOrderWindow(), 1000);
   }
 
   scrollOrderWindow(): string {
@@ -326,6 +338,11 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.time = formDateStr;
       this.timeStamp = formDate.getTime();
     }
+  }
+
+  onCheckboxChange(event) {
+    this.printOrder = event.target.checked;
+    console.log( 'printOrder ' + this.printOrder);
   }
 
 }

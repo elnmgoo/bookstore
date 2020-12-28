@@ -121,7 +121,7 @@
         <div class="form-group col-md-1">
         </div>
         <div class="form-group col-md-7">
-          <input type="checkbox" class="form-check-input" id="printLabelCount" checked>
+          <input type="checkbox" class="form-check-input" id="printLabelCount" [checked]="this.printOrder" (change)="onCheckboxChange($event)">
           <label for="printLabelCount">Afdrukken van een bonnnetje</label>
         </div>
 
@@ -149,6 +149,10 @@
       <span class="headerfont" style="display:block">4815 CG, Breda</span>
       <span class="headerfont" style="display:block">info@kinderboekentuin.nl</span>
       <span class="headerfont" style="display:block">076-737 0099</span>
+      <ng-container *ngIf="this.payed === true">
+        <span class="headerfont" style="display:block">---------------------------------------</span>
+        <span class="headerfont" style="display:block"><b>Aantal artikelen afgerekend</b></span>
+      </ng-container>
       <span style="display:block">&nbsp;</span>
       <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
         <ng-container *ngIf="orderTotalPrice > 0">
@@ -197,6 +201,7 @@
           </ng-container>
         </ng-container>
       </ng-container>
+
     </div>
   </form>
 </div>

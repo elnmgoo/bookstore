@@ -5,7 +5,7 @@ import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
 import {Order} from '../models/order';
 import {
   AddOrder,
-  AddOrderSuccess, BookOrder, BookOrderSuccess,
+  AddOrderSuccess, BookOrder, BookOrderSuccess, DeleteAllOrder,
   DeleteOrder,
   DeleteOrderSuccess,
   EOrderActions,

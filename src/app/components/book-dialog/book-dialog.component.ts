@@ -10,6 +10,9 @@ import {AppState} from '../../../store/app.state';
 import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
 import {BooksService} from '../../services/book.service';
 import {Publisher} from '../../../store/publishers/models/publisher';
+import {ProcurementService} from '../../services/procurement.service';
+import {PurchaseOrder} from '../../models/purchaseOrder';
+import {Procurement} from '../../models/procurement';
 
 
 @Component({
@@ -21,6 +24,8 @@ export class BookDialogComponent implements OnInit {
   @Input() public book: Book;
   @Input() public bNew: boolean;
   @Input() private service: BooksService;
+  @Input() private procurementService: ProcurementService;
+
   bookForm: FormGroup;
   publisher$ = this.store.pipe(select(selectPublisherList));
   publisher: Publisher;
@@ -69,6 +74,24 @@ export class BookDialogComponent implements OnInit {
     }
   }
 
+  bookSuccesfullyAdded(book: Book){
+    this.bookForm.controls.added.setValue(
+      book.title + ', ' + book.author + ' (' +
+      this.bookForm.controls.amount.value + ',' +
+      this.bookForm.controls.amountDepot.value + ')'
+    );
+    this.bookForm.controls.isbn.setValue('');
+    this.bookForm.controls.title.setValue('');
+    this.bookForm.controls.author.setValue('');
+    this.bookForm.controls.publisher.setValue('');
+    this.bookForm.controls.price.setValue(0);
+    this.bookForm.controls.amount.setValue(0);
+    this.bookForm.controls.supply.setValue(0);
+    this.bookForm.controls.supplyDepot.setValue(0);
+    this.bookForm.controls.amount.setValue(0);
+    this.bookForm.controls.amountDepot.setValue(0);
+  }
+
 
   onAddBookButton() {
     const book: Book = new Book(
@@ -78,26 +101,22 @@ export class BookDialogComponent implements OnInit {
       this.bookForm.controls.supply.value + this.bookForm.controls.amount.value,
       this.bookForm.controls.supplyDepot.value + this.bookForm.controls.amountDepot.value,
       this.publisher,
-      Number(this.bookForm.controls.price.value.replace(',', '.'))
-    );
-    this.service.update(book).subscribe(() => {
-        this.bookForm.controls.added.setValue(
-          book.title + ', ' + book.author + ' (' +
-          this.bookForm.controls.amount.value + ',' +
-          this.bookForm.controls.amountDepot.value + ')'
-        );
-        this.bookForm.controls.isbn.setValue('');
-        this.bookForm.controls.title.setValue('');
-        this.bookForm.controls.author.setValue('');
-        this.bookForm.controls.publisher.setValue('');
-        this.bookForm.controls.price.setValue(0);
-        this.bookForm.controls.amount.setValue(0);
-        this.bookForm.controls.supply.setValue(0);
-        this.bookForm.controls.supplyDepot.setValue(0);
-        this.bookForm.controls.amount.setValue(0);
-        this.bookForm.controls.amountDepot.setValue(0);
-      }
-    );
+      Number(this.bookForm.controls.price.value.replace(',', '.')));
+
+    if (this.procurementService != null){
+      console.log('add order');
+      const procurement: Procurement = new Procurement(  0, new Date().getTime(),
+        Number(this.bookForm.controls.price.value.replace(',', '.')), this.bookForm.controls.amount.value,
+        this.bookForm.controls.amountDepot.value, book);
+      this.procurementService.add(procurement).subscribe(() => {
+        this.bookSuccesfullyAdded(procurement.book);
+      });
+    } else {
+      this.service.update(book).subscribe(() => {
+        this.bookSuccesfullyAdded(book);
+        }
+      );
+    }
   }
 
   onChange($event) {

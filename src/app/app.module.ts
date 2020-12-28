@@ -23,7 +23,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DateFormatPipe2Time} from './components/sales/DateFormatPipe2Time';
 import {DateFormatPipe2Date} from './components/sales/DateFormatPipe2Date';
 import {PrintService} from '../store/book/service/print.service';
-import {registerLocaleData} from '@angular/common';
+import {DecimalPipe, registerLocaleData} from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
 import {LoginComponent} from './components/login/login.component';
 import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
@@ -35,6 +35,7 @@ import { BooksComponent } from './components/books/books.component';
 import {BooksService} from './services/book.service';
 import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
 import { PublishersComponent } from './components/publishers/publishers.component';
+import { ProcurementComponent } from './components/procurement/procurement.component';
 
 
 registerLocaleData(localeNl, 'nl');
@@ -51,6 +52,7 @@ registerLocaleData(localeNl, 'nl');
     BooksComponent,
     BookDialogComponent,
     PublishersComponent,
+    ProcurementComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,7 @@ registerLocaleData(localeNl, 'nl');
     provide: LOCALE_ID,
     useValue: 'nl'
   }, ItemService, OrderService, PurchaseOrdersService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time,
-    PrintService, ConfirmDialogService, BooksService],
+    PrintService, ConfirmDialogService, BooksService, DecimalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

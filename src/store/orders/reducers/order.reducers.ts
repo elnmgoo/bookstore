@@ -36,6 +36,9 @@ export const orderReducers = (
         priceTotalTaxMap: state.priceTotalTaxMap
       };
     }
+    case EOrderActions.DeleteAllOrder: {
+      return initialOrderState;
+    }
     case EOrderActions.OrderError: {
       console.log(action.error);
       return state;
