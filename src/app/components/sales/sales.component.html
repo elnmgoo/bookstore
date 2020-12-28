@@ -7,8 +7,8 @@
           <label for="inputDate">Datum</label>
           <div class="input-group">
             <input formControlName="date" class="form-control" placeholder="dd-mm-yyyy"
-                   name="date"  ngbDatepicker #d="ngbDatepicker" id="inputDate"
-                   >
+                   name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate"
+            >
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -21,9 +21,15 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-10">
           <label for="inputTitle">Titel</label>
           <input formControlName="title" type="text" class="form-control" id="inputTitle" placeholder="Titel">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputTax">Btw</label>
+          <select formControlName="tax" type="number" class="form-control" id="inputTax">
+            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+          </select>
         </div>
       </div>
 
@@ -44,20 +50,28 @@
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputAmount">Aantal</label>
-          <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1" min="1">
+          <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1" min="1"
+                 (change)="calculateTotalPriceBook()">
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="inputPrice">Prijs</label>
           <input formControlName="price" type="text" class="form-control" id="inputPrice" placeholder="0"
                  mask="separator.2"
-                 thousandSeparator=".">
+                 thousandSeparator="." (change)="calculateTotalPriceBook()">
         </div>
-        <div class="form-group col-md-3">
-          <label for="inputTax">Btw</label>
-          <select formControlName="tax" type="number" class="form-control" id="inputTax">
-            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
-          </select>
+        <div class="form-group col-md-2">
+          <label for="inputDiscount">Korting</label>
+          <input formControlName="discount" type="text" class="form-control" id="inputDiscount"
+                 mask="separator.2"
+                 thousandSeparator="." (change)="calculateTotalPriceBook()">
         </div>
+        <div class="form-group col-md-2">
+          <label for="inputTotal">Totaal</label>
+          <input formControlName="total" type="text" class="form-control" id="inputTotal" placeholder="0"
+                 mask="separator.2"
+                 thousandSeparator="." [readonly]=true>
+        </div>
+
         <div class="form-group col-md-4">
           <label for="buttonOk">Toevoegen</label>
           <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid"
@@ -121,7 +135,8 @@
         <div class="form-group col-md-1">
         </div>
         <div class="form-group col-md-7">
-          <input type="checkbox" class="form-check-input" id="printLabelCount" [checked]="this.printOrder" (change)="onCheckboxChange($event)">
+          <input type="checkbox" class="form-check-input" id="printLabelCount" [checked]="this.printOrder"
+                 (change)="onCheckboxChange($event)">
           <label for="printLabelCount">Afdrukken van een bonnnetje</label>
         </div>
 
@@ -172,7 +187,7 @@
           <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
           <span style="display:inline-block;width: 1ch;vertical-align:top">&euro;</span>
           <span
-            style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.price * order.amount) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+            style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
         <br>
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
@@ -196,7 +211,8 @@
               </ng-container>
             </ng-container>
             <ng-container *ngIf="time.length > 0">
-              {{time}}
+              <p></p>
+              <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i></p>
             </ng-container>
           </ng-container>
         </ng-container>

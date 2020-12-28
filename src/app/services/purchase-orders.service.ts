@@ -27,7 +27,7 @@ export class PurchaseOrdersService {
 
   private static pState: State = {
     page: 1,
-    pageSize: 10,
+    pageSize: 8,
     searchTerm: '',
     sortColumn: 'datetime',
     sortDirection: 'desc',
@@ -168,6 +168,7 @@ export class PurchaseOrdersService {
     mapSortColumn.set('isbn', 'boek.isbn');
     mapSortColumn.set('author', 'boek.auteur');
     mapSortColumn.set('amount', 'aantal');
+    mapSortColumn.set('amountInDepot', 'aantalDepot');
     console.log('sortColumn ' + sortColumn + ', ' + mapSortColumn.get(sortColumn));
     console.log('sortOrder ' + sortDirection);
     console.log('searchTerm ' + searchTerm);

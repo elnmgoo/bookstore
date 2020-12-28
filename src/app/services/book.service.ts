@@ -27,7 +27,7 @@ export class BooksService {
 
   private static pState: State = {
     page: 1,
-    pageSize: 10,
+    pageSize: 8,
     searchTerm: '',
     sortColumn: 'isbn',
     sortDirection: 'desc',
@@ -55,6 +55,10 @@ export class BooksService {
       this.pTotal$.next(result.totalElements);
     });
     this.pSearch$.next();
+  }
+
+  refresh(){
+    this.pSearch$.next()
   }
 
 

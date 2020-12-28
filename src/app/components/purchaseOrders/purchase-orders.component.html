@@ -53,6 +53,7 @@
       <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
       <th scope="col" sortable="book.uitgever" (sort)="onSort($event)">Uitgever</th>
       <th scope="col" sortable="amount" (sort)="onSort($event)">Aantal</th>
+      <th scope="col" sortable="amountInDepot" (sort)="onSort($event)">Depot</th>
       <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
       <th scope="col" sortable="totalPrice" (sort)="onSort($event)">Totaal</th>
     </tr>
@@ -85,6 +86,9 @@
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.amount | number" [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.amountInDepot | number" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.price | number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
@@ -137,9 +141,9 @@
                     [boundaryLinks]="true"></ngb-pagination>
 
     <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-      <option [ngValue]="5">5 items per page</option>
-      <option [ngValue]="10">10 items per page</option>
-      <option [ngValue]="25">25 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="8">8 items per page</option>
+      <option [ngValue]="16">16 items per page</option>
     </select>
 
   </div>

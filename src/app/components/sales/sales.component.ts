@@ -112,6 +112,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: ['', Validators.required],
       price: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
       amount: [1, [Validators.required, Validators.min(1), Validators.max(99)]],
+      discount: [''],
+      total: ['', [Validators.required, Validators.minLength(1)]],
       tax: ['9', [Validators.required, Validators.min(1)]],
       date: [this.calendar.getToday()]
     });
@@ -149,6 +151,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  calculateTotalPriceBook(){
+    let totalPrice = this.bookForm.controls.amount.value * parseFloat(this.bookForm.controls.price.value.replace(',', '.'));
+    if (this.bookForm.controls.discount.value.toString().length > 0) {
+      totalPrice -= parseFloat(this.bookForm.controls.discount.value.toString().replace(',', '.'));
+    }
+    this.bookForm.controls.total.setValue(totalPrice.toString(10).replace('.', ','));
+  }
+
   onAddItemButton() {
     if (this.payed){
       this.payed = false;
@@ -163,10 +173,12 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       amount: this.itemForm.controls.itemAmount.value,
       author: '',
       publisher: '',
-      tax: this.itemForm.controls.itemTax.value,
+      tax: parseInt(this.itemForm.controls.itemTax.value, 10),
       title: '',
       description: this.itemForm.controls.item.value.description,
-      dateTime: 0
+      dateTime: 0,
+      total: this.itemForm.controls.itemAmount.value * (parseFloat(this.itemForm.controls.itemPrice.value.replace(',', '.')) * 100.0),
+      discount: 0
     } as Order;
     this.store.dispatch(new AddOrder(order));
     this.itemForm.reset();
@@ -190,10 +202,12 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       amount: this.bookForm.controls.amount.value,
       author: this.bookForm.controls.author.value,
       publisher: this.bookForm.controls.publisher.value,
-      tax: this.bookForm.controls.tax.value,
+      tax: parseInt(this.bookForm.controls.tax.value, 10),
       title: this.bookForm.controls.title.value,
       description: descript,
-      dateTime: 0
+      dateTime: 0,
+      discount: (parseFloat(this.bookForm.controls.discount.value.toString().replace(',', '.')) * 100.0),
+      total: (parseFloat(this.bookForm.controls.total.value.replace(',', '.')) * 100.0)
     } as Order;
     this.store.dispatch(new AddOrder(order));
     const date = this.bookForm.controls.date.value;
@@ -321,6 +335,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.price.setValue(book.price.toString(10).replace('.', ','));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.tax.setValue(9);
+        this.bookForm.controls.discount.setValue('' );
+        this.bookForm.controls.total.setValue(book.price.toString(10).replace('.', ','));
       });
     }
   }

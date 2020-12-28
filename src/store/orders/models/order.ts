@@ -11,4 +11,6 @@ export interface Order {
   tax: number;
   description: string;
   dateTime: number;
+  total: number;
+  discount: number;
 }

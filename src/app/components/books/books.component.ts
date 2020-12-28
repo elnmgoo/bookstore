@@ -1,12 +1,9 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {PurchaseOrdersService} from '../../services/purchase-orders.service';
 import {ConfirmDialogService} from '../../modules/confirm-dialog/confirm-dialog.service';
 import {BooksService} from '../../services/book.service';
 import {Observable} from 'rxjs';
-import {PurchaseOrder} from '../../models/purchaseOrder';
 import {Book} from '../../../store/book/models/book';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
-import {DecimalPipe} from '@angular/common';
 import {BookDialogComponent} from '../book-dialog/book-dialog.component';
 import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 
@@ -34,7 +31,7 @@ export class BooksComponent implements OnInit {
   ngOnInit(): void {
     this.books$ = this.service.books$;
     this.total$ = this.service.total$;
-
+    this.service.refresh();
   }
 
   onSort({column, direction}: SortEvent) {
