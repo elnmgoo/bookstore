@@ -23,8 +23,8 @@ export class Procurement {
       const inkoop: any = new Object();
       const boek: any = new Object();
       const uitgever: any = new Object();
-      uitgever.id = this.book.publisher.id;
-      uitgever.uitgever = this.book.publisher.publisher;
+      uitgever.uitgeverid = this.book.publisher.id;
+      uitgever.naam = this.book.publisher.publisher;
       boek.isbn = this.book.isbn;
       boek.titel = this.book.title;
       boek.auteur = this.book.author;
