@@ -3,7 +3,7 @@
     <form [formGroup]="bookForm">
       <div class="form-row">
 
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-4">
           <label for="inputDate">Datum</label>
           <div class="input-group">
             <input formControlName="date" class="form-control" placeholder="dd-mm-yyyy"
@@ -18,6 +18,14 @@
           <label for="inputISBN">ISBN</label>
           <input #autofocus formControlName="isbn" type="text" class="form-control" id="inputISBN" placeholder="Number"
                  mask="0000000000000" (keyup)="onChangeIsbn($event)">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="supply">Voorraad</label>
+          <input formControlName="supply" type="number" class="form-control" id="supply" [readonly]=true>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="supplyDepot">Depot</label>
+          <input formControlName="supplyDepot" type="number" class="form-control" id="supplyDepot" [readonly]=true>
         </div>
       </div>
       <div class="form-row">

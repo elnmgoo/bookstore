@@ -115,7 +115,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       discount: [''],
       total: ['', [Validators.required, Validators.minLength(1)]],
       tax: ['9', [Validators.required, Validators.min(1)]],
-      date: [this.calendar.getToday()]
+      date: [this.calendar.getToday()],
+      supply: [''],
+      supplyDepot: ['']
     });
 
     this.itemForm = this.formBuilder.group({
@@ -329,6 +331,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('isbn: ' + isbn);
     if (isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
+        this.bookForm.controls.supply.setValue(book.supply);
+        this.bookForm.controls.supplyDepot.setValue(book.supplyDepot);
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);
