@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Book} from '../../../store/book/models/book';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
@@ -20,7 +20,8 @@ import {Procurement} from '../../models/procurement';
   templateUrl: './book-dialog.component.html',
   styleUrls: ['./book-dialog.component.scss']
 })
-export class BookDialogComponent implements OnInit {
+export class BookDialogComponent implements OnInit, AfterViewInit {
+  @ViewChild('autofocus') private autofocusField: ElementRef;
   @Input() public book: Book;
   @Input() public bNew: boolean;
   @Input() private service: BooksService;
@@ -34,6 +35,10 @@ export class BookDialogComponent implements OnInit {
               private store: Store<AppState>,
               private formBuilder: FormBuilder
   ) {
+  }
+
+  ngAfterViewInit(): void {
+    this.autofocusField.nativeElement.focus();
   }
 
   ngOnInit(): void {
@@ -90,6 +95,7 @@ export class BookDialogComponent implements OnInit {
     this.bookForm.controls.supplyDepot.setValue(0);
     this.bookForm.controls.amount.setValue(0);
     this.bookForm.controls.amountDepot.setValue(0);
+    this.autofocusField.nativeElement.focus();
   }
 
 

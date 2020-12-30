@@ -216,6 +216,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bookForm.reset();
     this.bookForm.controls.date.setValue(date);
     setTimeout(() => this.scrollOrderWindow(), 1000);
+    this.autofocusField.nativeElement.focus()
   }
 
   formatDescription(description, size) {
@@ -311,6 +312,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.store.dispatch(new DeleteAllOrder());
     this.payed = true;
     setTimeout(() => this.scrollOrderWindow(), 1000);
+    this.autofocusField.nativeElement.focus()
   }
 
   scrollOrderWindow(): string {
