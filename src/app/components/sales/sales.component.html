@@ -57,7 +57,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-2">
-          <label for="inputAmount">Aantal</label>
+          <label for="inputAmount">Aantal(F8)</label>
           <input formControlName="amount" type="number" class="form-control" id="inputAmount" placeholder="1" min="1"
                  (change)="calculateTotalPriceBook()">
         </div>
@@ -84,7 +84,7 @@
           <label for="buttonOk">Toevoegen</label>
           <button type="button" class="btn btn-info btn-block" id="buttonOk" [disabled]="bookForm.invalid"
                   (click)="onAddBookButton()">Boek
-            toevoegen
+            toevoegen(F1)
           </button>
         </div>
       </div>
@@ -107,7 +107,7 @@
 
       <div class="form-row">
         <div class="form-group col-md-2">
-          <label for="inputObjectAmount">Aantal</label>
+          <label for="inputObjectAmount">Aantal(F9)</label>
           <input formControlName="itemAmount" type="number" class="form-control" min="1" id="inputObjectAmount"
                  placeholder="1">
           <div></div>
@@ -131,7 +131,7 @@
         <div class="form-group col-md-4">
           <label for="buttonObjectOk">Toevoegen</label>
           <button type="button" class="btn btn-info btn-block" id="buttonObjectOk" [disabled]="!itemForm.valid"
-                  (click)="onAddItemButton()">Artikel toevoegen
+                  (click)="onAddItemButton()">Artikel toevoegen(F2)
           </button>
         </div>
       </div>
@@ -151,12 +151,12 @@
         <div class="form-group col-md-4">
           <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice; else disabledbutton">
             <button type="button" class="btn btn-info btn-block" id="buttonObjectPay"
-                    (click)="onPayButton()">Afrekenen
+                    (click)="onPayButton()">Afrekenen(F3)
             </button>
           </ng-container>
           <ng-template #disabledbutton>
             <button type="button" class="btn btn-info btn-block"
-                    [disabled]="true">Afrekenen
+                    [disabled]="true">Afrekenen(F3)
             </button>
           </ng-template>
         </div>

@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
+  ElementRef, HostListener,
   Injectable, OnDestroy,
   OnInit,
   ViewChild
@@ -93,6 +93,55 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
               private dateFormatPipe2Date: DateFormatPipe2Date,
               private printService: PrintService
   ) {
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key){
+      case 'F1':
+        if (this.bookForm.valid) {
+          this.onAddBookButton();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F2':
+        if (this.itemForm.valid) {
+          this.onAddItemButton();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F3':
+        if (this.order.length > 0) {
+          this.onPayButton();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F8':
+        if (event.shiftKey) {
+          if (this.bookForm.controls.amount.value > 0) {
+            this.bookForm.controls.amount.setValue(this.bookForm.controls.amount.value - 1);
+          }
+        } else {
+          this.bookForm.controls.amount.setValue(this.bookForm.controls.amount.value + 1);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F9':
+        if (event.shiftKey) {
+          if (this.itemForm.controls.itemAmount.value > 0) {
+            this.itemForm.controls.itemAmount.setValue(this.itemForm.controls.itemAmount.value - 1);
+          }
+        } else {
+          this.itemForm.controls.itemAmount.setValue(this.itemForm.controls.itemAmount.value + 1);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+    }
   }
 
   ngOnDestroy(): void {
@@ -216,7 +265,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bookForm.reset();
     this.bookForm.controls.date.setValue(date);
     setTimeout(() => this.scrollOrderWindow(), 1000);
-    this.autofocusField.nativeElement.focus()
+    this.autofocusField.nativeElement.focus();
   }
 
   formatDescription(description, size) {
@@ -296,7 +345,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('bonnetje afdrukken');
       this.printService.initPrinter().pipe(
         tap(res => console.log('initPrinter ', res)),
-        concatMap(res => this.printService.printLogoAndAddress()),
+        concatMap(() => this.printService.printLogoAndAddress()),
         concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
         concatMap(res => this.printService.printSolidLine()),
         concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
@@ -309,10 +358,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         concatMap(res => this.printService.printToPrinter())
       ).subscribe(res => console.log('printToPrinter', res));
     }
-    this.store.dispatch(new DeleteAllOrder());
     this.payed = true;
-    setTimeout(() => this.scrollOrderWindow(), 1000);
-    this.autofocusField.nativeElement.focus()
+    setTimeout(() => this.store.dispatch(new DeleteAllOrder()), 1500);
+    this.autofocusField.nativeElement.focus();
   }
 
   scrollOrderWindow(): string {
@@ -331,7 +379,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   onChangeIsbn(event: Event) {
     const isbn = this.bookForm.controls.isbn.value;
     console.log('isbn: ' + isbn);
-    if (isbn.length === 13) {
+    if (isbn && isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
         this.bookForm.controls.supply.setValue(book.supply);
         this.bookForm.controls.supplyDepot.setValue(book.supplyDepot);

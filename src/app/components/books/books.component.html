@@ -70,7 +70,7 @@
   <div class="d-flex justify-content-between p-2 footer">
 
     <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [maxSize]="5" [rotate]="true"
-                    [boundaryLinks]="true"></ngb-pagination>
+                    [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>
 
     <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
       <option [ngValue]="4">4 items per page</option>

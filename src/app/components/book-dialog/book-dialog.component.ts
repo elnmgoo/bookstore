@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {Book} from '../../../store/book/models/book';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
@@ -39,6 +39,41 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.autofocusField.nativeElement.focus();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key){
+      case 'F1':
+        if (this.bookForm.valid) {
+          this.onAddBookButton();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F8':
+        if (event.shiftKey) {
+          if (this.bookForm.controls.amount.value > 0) {
+            this.bookForm.controls.amount.setValue(this.bookForm.controls.amount.value - 1);
+          }
+        } else {
+          this.bookForm.controls.amount.setValue(this.bookForm.controls.amount.value + 1);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'F9':
+        if (event.shiftKey) {
+          if (this.bookForm.controls.amountDepot.value > 0) {
+            this.bookForm.controls.amountDepot.setValue(this.bookForm.controls.amountDepot.value - 1);
+          }
+        } else {
+          this.bookForm.controls.amountDepot.setValue(this.bookForm.controls.amountDepot.value + 1);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+    }
   }
 
   ngOnInit(): void {

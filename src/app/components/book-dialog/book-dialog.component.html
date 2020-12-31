@@ -34,27 +34,24 @@
     </div>
 
     <div class="form-row">
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-2">
         <label for="inputAmount">Voorraad</label>
         <input formControlName="supply" type="number" class="form-control" id="inputAmount" placeholder="1" min="0" [readonly]="bNew===true">
       </div>
-      <div class="form-group col-md-1">
+      <div class="form-group col-md-2">
         <label for="inputDepot">Depot</label>
         <input formControlName="supplyDepot" type="number" class="form-control" id="inputDepot" placeholder="1" min="0"  [readonly]="bNew===true">
       </div>
-      <div *ngIf="bNew===true" class="form-group col-md-1">
-        <label for="addAmount">+ Voorraad</label>
+      <div *ngIf="bNew===true" class="form-group col-md-2">
+        <label for="addAmount">+ Voorraad(F8)</label>
         <input formControlName="amount" type="number" class="form-control" id="addAmount" placeholder="1" min="0">
       </div>
-      <div *ngIf="bNew===true"class="form-group col-md-1">
-        <label for="addDepot">+ Depot</label>
+      <div *ngIf="bNew===true"class="form-group col-md-2">
+        <label for="addDepot">+ Depot(F9)</label>
         <input formControlName="amountDepot" type="number" class="form-control" id="addDepot" placeholder="1" min="0">
       </div>
-      <div *ngIf="bNew===false" class="form-group col-md-2"></div>
+      <div *ngIf="bNew===false" class="form-group col-md-4"></div>
 
-      <div class="form-group col-md-2"></div>
-
-      <div class="form-group col-md-2"></div>
       <div class="form-group col-md-2">
         <label for="buttonCancel">&nbsp;</label>
         <button type="button" class="btn btn-info btn-block" id="buttonCancel"
@@ -64,7 +61,7 @@
       <div *ngIf="bNew===true" class="form-group col-md-2">
         <label for="buttonAddOk">&nbsp;</label>
         <button type="button" class="btn btn-info btn-block" id="buttonAddOk" [disabled]="bookForm.invalid"
-                (click)="onAddBookButton()">Boek toevoegen
+                (click)="onAddBookButton()">Boek toevoegen(F1)
         </button>
       </div>
 
