@@ -67,7 +67,45 @@
     </tbody>
   </table>
 
-  <div class="d-flex justify-content-between p-2 footer">
+  <div class="d-flex justify-content-between p-2 footer" >
+    <ng-container *ngIf="bookStatistics$ | async as bookStatistics">
+    <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5">
+      <tr>
+        <th></th>
+        <th>Voorraad</th>
+        <th>Depot</th>
+        <th>Totaal</th>
+      </tr>
+      <tr>
+        <td align="right">
+          Aantal
+        </td>
+        <td align="right">
+          {{bookStatistics.amountSupply}}
+        </td>
+        <td align="right">
+          {{bookStatistics.amountDepot}}
+        </td>
+        <td align="right">
+          {{bookStatistics.amountSupply + bookStatistics.amountDepot}}
+        </td>
+      </tr>
+      <tr>
+        <td align="right">
+          Prijs
+        </td>
+        <td align="right">
+          {{bookStatistics.totalPriceSupply | number:'1.2-2'}}
+        </td>
+        <td align="right">
+          {{bookStatistics.totalPriceDepot  | number:'1.2-2'}}
+        </td>
+        <td align="right">
+          {{bookStatistics.totalPrice | number:'1.2-2'}}
+        </td>
+      </tr>
+    </table>
+    </ng-container>
 
     <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [maxSize]="5" [rotate]="true"
                     [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>

@@ -6,6 +6,7 @@ import {Book} from '../../../store/book/models/book';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
 import {BookDialogComponent} from '../book-dialog/book-dialog.component';
 import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
+import {BookStatistics} from '../../models/bookStatistics';
 
 @Component({
   selector: 'app-books',
@@ -14,6 +15,7 @@ import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 })
 export class BooksComponent implements OnInit {
   books$: Observable<Book[]>;
+  bookStatistics$: Observable<BookStatistics>;
   total$: Observable<number>;
   warningText: string;
 
@@ -31,6 +33,7 @@ export class BooksComponent implements OnInit {
   ngOnInit(): void {
     this.books$ = this.service.books$;
     this.total$ = this.service.total$;
+    this.bookStatistics$ = this.service.bookStatistics$;
     this.service.refresh();
   }
 

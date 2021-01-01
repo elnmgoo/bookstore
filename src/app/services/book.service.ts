@@ -11,6 +11,7 @@ import {NgbCalendar, NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {BtwTotal} from '../models/btwTotal';
 import {Book, BookAdapter} from '../../store/book/models/book';
 import {SearchResultBook, SearchResultBookAdapter} from '../../store/book/models/searchResultBook';
+import {BookStatistics} from '../models/bookStatistics';
 
 interface State {
   page: number;
@@ -32,11 +33,13 @@ export class BooksService {
     sortColumn: 'isbn',
     sortDirection: 'desc',
   };
-  private booksUrl = environment.apiUrl ;
+  private booksUrl = environment.apiUrl;
   private pLoading$ = new BehaviorSubject<boolean>(true);
   private pSearch$ = new Subject<void>();
   private pBooks$ = new BehaviorSubject<Book[]>([]);
   private pTotal$ = new BehaviorSubject<number>(0);
+  private pSearchBookStatistics$ = new Subject<void>();
+  private pBookStatistics$ = new BehaviorSubject<BookStatistics>(new BookStatistics());
 
 
   constructor(private httpClient: HttpClient,
@@ -55,10 +58,18 @@ export class BooksService {
       this.pTotal$.next(result.totalElements);
     });
     this.pSearch$.next();
+
+    this.pSearchBookStatistics$.pipe(
+      switchMap(() => this.pSearchBookStatistics())
+    ).subscribe(result => {
+      this.pBookStatistics$.next(result);
+    });
+    this.pSearchBookStatistics$.next();
   }
 
-  refresh(){
-    this.pSearch$.next()
+  refresh() {
+    this.pSearch$.next();
+    this.pSearchBookStatistics$.next();
   }
 
 
@@ -66,9 +77,14 @@ export class BooksService {
     return this.pBooks$.asObservable();
   }
 
+  get bookStatistics$() {
+    return this.pBookStatistics$.asObservable();
+  }
+
   get total$() {
     return this.pTotal$.asObservable();
   }
+
   get loading$() {
     return this.pLoading$.asObservable();
   }
@@ -109,6 +125,7 @@ export class BooksService {
   private pSet(patch: Partial<State>) {
     Object.assign(BooksService.pState, patch);
     this.pSearch$.next();
+    this.pSearchBookStatistics$.next();
   }
 
   private pSearch(): Observable<SearchResultBook> {
@@ -160,25 +177,34 @@ export class BooksService {
       catchError(this.handleError));
   }
 
+  pSearchBookStatistics(): Observable<BookStatistics> {
+    const {searchTerm} = BooksService.pState;
+    return this.httpClient.get<BookStatistics>(this.booksUrl + '/statistics/boeken/' + searchTerm);
+  }
+
   delete(isbn: number) {
     console.log('remove ' + isbn);
     this.httpClient.delete(this.booksUrl + '/boeken/' + isbn).pipe(
       map(response => {
         console.log(response);
         this.pSearch$.next();
+        this.pSearchBookStatistics$.next();
       }),
       catchError(this.handleError)).subscribe();
   }
 
-  public update(book: Book){
+  public update(book: Book) {
     const boek = Book.getBoek(book);
     const url = this.booksUrl + '/uitgevers/' + boek.uitgever.id + '/boeken/' + boek.isbn;
     return this.httpClient.put(url, boek).pipe(
-      tap(() => this.pSearch$.next())
-      );
+      tap(() => {
+        this.pSearch$.next();
+        this.pSearchBookStatistics$.next();
+      })
+    );
   }
 
-  public getNrOfOrders(book: Book){
+  public getNrOfOrders(book: Book) {
     return this.httpClient.get<number>(this.booksUrl + '/boeken/' + book.isbn + '/nroforders');
   }
 
