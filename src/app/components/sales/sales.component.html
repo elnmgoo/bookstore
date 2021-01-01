@@ -181,7 +181,7 @@
         <ng-container *ngIf="orderTotalPrice > 0">
           <span style="color: red;display:inline-block;width: 3ch;cursor: pointer;"></span>
           <span style="display:inline-block;width: 15ch;"><B>ISBN</B></span>
-          <span style="display:inline-block;width: 30ch;"><B>Boek/artikel</B></span>
+          <span style="display:inline-block;width: 32ch;"><B>Boek/artikel</B></span>
           <span style="display:inline-block;width: 7ch;"><B>Prijs</B></span>
         </ng-container>
         <ul style="list-style-type:none;margin-bottom: 0;padding:0;margin-right:0;"
@@ -193,6 +193,7 @@
         </span>
           <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
           <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
+          <span style="display:inline-block;width: 2ch;"></span>
           <span style="display:inline-block;width: 1ch;vertical-align:top">&euro;</span>
           <span
             style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
@@ -201,7 +202,7 @@
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
           <ng-container *ngIf="orderTotalPrice > 0">
             <span style="display:inline-block;width: 18ch;"></span>
-            <span style="display:inline-block;width: 30ch;"><b>Totaal te betalen:</b></span>
+            <span style="display:inline-block;width: 32ch;"><b>Totaal te betalen:</b></span>
             <span style="display:inline-block;width: 1ch;">&euro;</span>
             <span
               style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}}</b></span>
@@ -210,7 +211,7 @@
                 <ng-container *ngIf="orderTotalPriceTaxMap.get(tax) > 0">
                   <span style="display:block"></span>
                   <span style="display:inline-block;width: 18ch;"></span>
-                  <span style="display:inline-block;width: 30ch;">Totaal Btw {{tax | number: '2.0'}}
+                  <span style="display:inline-block;width: 32ch;">Totaal Btw {{tax | number: '2.0'}}
                     %: {{(orderTotalPriceTaxMap.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
                   <span style="display:inline-block;width: 1ch;">&euro;</span>
                   <span

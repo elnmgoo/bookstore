@@ -217,6 +217,11 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setTimeStamp();
     console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
     console.log('totalPrice: ' + this.orderTotalPrice);
+    let description = this.itemForm.controls.item.value.description;
+    if (this.itemForm.controls.itemAmount.value > 1){
+      description = description + ' (' + this.itemForm.controls.itemPrice.value + ' x ' +
+        this.itemForm.controls.itemAmount.value + ')';
+    }
     const order = {
       isbn: '',
       item: this.itemForm.controls.item.value.description,
@@ -226,7 +231,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: '',
       tax: parseInt(this.itemForm.controls.itemTax.value, 10),
       title: '',
-      description: this.itemForm.controls.item.value.description,
+      description,
       dateTime: 0,
       total: this.itemForm.controls.itemAmount.value * (parseFloat(this.itemForm.controls.itemPrice.value.replace(',', '.')) * 100.0),
       discount: 0
@@ -241,11 +246,19 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.payed = false;
     }
     this.setTimeStamp();
-    let descript = this.bookForm.controls.title.value + ', ' + this.bookForm.controls.author.value;
+    let description = this.bookForm.controls.title.value + ', ' + this.bookForm.controls.author.value;
     if (this.bookForm.controls.amount.value > 1) {
-      descript = '' + this.bookForm.controls.amount.value + ' x ' + descript;
+      if (this.bookForm.controls.discount.value > 0){
+        description += ' (' + this.bookForm.controls.price.value + ' x ' + this.bookForm.controls.amount.value +
+          ' - ' + this.bookForm.controls.discount.value + ')';
+      } else {
+        description += ' (' + this.bookForm.controls.price.value + ' x ' + this.bookForm.controls.amount.value + ')';
+      }
+    } else {
+      if (this.bookForm.controls.discount.value > 0) {
+        description += ' (' + this.bookForm.controls.price.value + ' - ' + this.bookForm.controls.discount.value + ')';
+      }
     }
-    console.log('bookprice = ' + this.bookForm.controls.price.value);
     const order = {
       isbn: this.bookForm.controls.isbn.value,
       item: '',
@@ -255,7 +268,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: this.bookForm.controls.publisher.value,
       tax: parseInt(this.bookForm.controls.tax.value, 10),
       title: this.bookForm.controls.title.value,
-      description: descript,
+      description,
       dateTime: 0,
       discount: (parseFloat(this.bookForm.controls.discount.value.toString().replace(',', '.')) * 100.0),
       total: (parseFloat(this.bookForm.controls.total.value.replace(',', '.')) * 100.0)
