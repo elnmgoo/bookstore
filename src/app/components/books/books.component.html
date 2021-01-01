@@ -19,7 +19,7 @@
       <label for="searchTerm">Zoeken op term</label>
       <input id="searchTerm" class="form-control" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
     </div>
- </div>
+  </div>
 
   <table class="table table-striped">
     <thead>
@@ -38,7 +38,7 @@
     <tr *ngFor="let book of books$ | async">
       <td>
         <img src="assets/delete-24px.svg" (click)="handleDelete(content, book)" style="opacity: 0.25;"/>
-        <img src="assets/edit-24px.svg" (click)="handleEdit(book)" style="opacity: 0.25;" />
+        <img src="assets/edit-24px.svg" (click)="handleEdit(book)" style="opacity: 0.25;"/>
       </td>
       <td>
         <ng-container *ngIf="book.isbn != '0000000000000'">
@@ -67,44 +67,46 @@
     </tbody>
   </table>
 
-  <div class="d-flex justify-content-between p-2 footer" >
+  <div class="d-flex justify-content-between p-2 footer">
     <ng-container *ngIf="bookStatistics$ | async as bookStatistics">
-    <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5">
-      <tr>
-        <th></th>
-        <th>Voorraad</th>
-        <th>Depot</th>
-        <th>Totaal</th>
-      </tr>
-      <tr>
-        <td align="right">
-          Aantal
-        </td>
-        <td align="right">
-          {{bookStatistics.amountSupply}}
-        </td>
-        <td align="right">
-          {{bookStatistics.amountDepot}}
-        </td>
-        <td align="right">
-          {{bookStatistics.amountSupply + bookStatistics.amountDepot}}
-        </td>
-      </tr>
-      <tr>
-        <td align="right">
-          Prijs
-        </td>
-        <td align="right">
-          {{bookStatistics.totalPriceSupply | number:'1.2-2'}}
-        </td>
-        <td align="right">
-          {{bookStatistics.totalPriceDepot  | number:'1.2-2'}}
-        </td>
-        <td align="right">
-          {{bookStatistics.totalPrice | number:'1.2-2'}}
-        </td>
-      </tr>
-    </table>
+      <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5">
+        <tr>
+          <th>(F1)</th>
+          <th>Voorraad</th>
+          <th>Depot</th>
+          <th>Totaal</th>
+        </tr>
+        <ng-container *ngIf="this.showTotals">
+          <tr>
+            <td align="right">
+              Aantal
+            </td>
+            <td align="right">
+              {{bookStatistics.amountSupply}}
+            </td>
+            <td align="right">
+              {{bookStatistics.amountDepot}}
+            </td>
+            <td align="right">
+              {{bookStatistics.amountSupply + bookStatistics.amountDepot}}
+            </td>
+          </tr>
+          <tr>
+            <td align="right">
+              Prijs
+            </td>
+            <td align="right">
+              {{bookStatistics.totalPriceSupply | number:'1.2-2'}}
+            </td>
+            <td align="right">
+              {{bookStatistics.totalPriceDepot  | number:'1.2-2'}}
+            </td>
+            <td align="right">
+              {{bookStatistics.totalPrice | number:'1.2-2'}}
+            </td>
+          </tr>
+        </ng-container>
+      </table>
     </ng-container>
 
     <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [maxSize]="5" [rotate]="true"

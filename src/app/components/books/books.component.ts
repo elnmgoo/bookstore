@@ -1,4 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, HostListener, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ConfirmDialogService} from '../../modules/confirm-dialog/confirm-dialog.service';
 import {BooksService} from '../../services/book.service';
 import {Observable} from 'rxjs';
@@ -18,6 +18,7 @@ export class BooksComponent implements OnInit {
   bookStatistics$: Observable<BookStatistics>;
   total$: Observable<number>;
   warningText: string;
+  showTotals = false;
 
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
@@ -28,6 +29,17 @@ export class BooksComponent implements OnInit {
     config.backdrop = 'static';
     config.keyboard = true;
     config.size = 'xl';
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'F1':
+        this.showTotals = !this.showTotals;
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+    }
   }
 
   ngOnInit(): void {
