@@ -25,7 +25,7 @@ export class ProcurementService {
 
   private static pState: State = {
     page: 1,
-    pageSize: 8,
+    pageSize: 50,
     searchTerm: '',
     sortColumn: 'datetime',
     sortDirection: 'desc',

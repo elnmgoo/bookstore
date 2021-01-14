@@ -27,7 +27,7 @@ export class PurchaseOrdersService {
 
   private static pState: State = {
     page: 1,
-    pageSize: 8,
+    pageSize: 50,
     searchTerm: '',
     sortColumn: 'datetime',
     sortDirection: 'desc',
@@ -106,7 +106,7 @@ export class PurchaseOrdersService {
   }
 
   get searchTerm() {
-    return PurchaseOrdersService.pState.searchTerm;
+    return PurchaseOrdersService.pState.searchTerm.trim();
   }
 
   set searchTerm(searchTerm: string) {
@@ -178,9 +178,12 @@ export class PurchaseOrdersService {
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
     }
+
     const url = this.ordersUrl + this.formatBetweenPartUrl(startFromDate, endUntilDate);
-    if (searchTerm.length > 0) {
-      return this.httpClient.get<SearchResultPurchaseOrder>(url + '/search/' + searchTerm + urlSuffix).pipe(
+    const searchString = searchTerm.trim();
+
+    if (searchString.length > 0) {
+      return this.httpClient.get<SearchResultPurchaseOrder>(url + '/search/' + searchString + urlSuffix).pipe(
         map((item) => this.adapter.adapt(item)),
         catchError(this.handleError));
     } else {
@@ -193,8 +196,9 @@ export class PurchaseOrdersService {
   private pSearchTotal(): Observable<BtwTotal[]> {
     const {searchTerm, startFromDate, endUntilDate} = PurchaseOrdersService.pState;
     const url = this.ordersTotalUrl + this.formatBetweenPartUrl(startFromDate, endUntilDate);
-    if (searchTerm.length > 0) {
-      return this.httpClient.get<BtwTotal[]>(url + '/search/' + searchTerm);
+    const searchString = searchTerm.trim();
+    if (searchString.length > 0) {
+      return this.httpClient.get<BtwTotal[]>(url + '/search/' + searchString);
     } else {
       return this.httpClient.get<BtwTotal[]>(url);
     }
@@ -218,7 +222,6 @@ export class PurchaseOrdersService {
     console.log('remove ' + purchasOrderId);
     this.httpClient.delete(this.ordersUrl + '/' + purchasOrderId).pipe(
       map(response => {
-        console.log(response);
         this.pSearch$.next();
         this.pSearchTotal$.next();
       }),

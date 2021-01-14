@@ -106,7 +106,7 @@ export class BooksService {
   }
 
   get searchTerm() {
-    return BooksService.pState.searchTerm;
+    return BooksService.pState.searchTerm.trim();
   }
 
   set searchTerm(searchTerm: string) {
@@ -150,8 +150,9 @@ export class BooksService {
 
     const url = this.booksUrl + '/boeken';
     let theUrl = url + urlSuffix;
-    if (searchTerm.length > 0) {
-      theUrl = url + '/search/' + searchTerm + urlSuffix;
+    const searchString = searchTerm.trim();
+    if (searchString.length > 0) {
+      theUrl = url + '/search/' + searchString + urlSuffix;
     }
     return this.httpClient.get<SearchResultPurchaseOrder>(theUrl).pipe(
       map((item) => this.adapter.adapt(item)),

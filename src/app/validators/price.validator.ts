@@ -4,19 +4,18 @@ export function PriceValidator(price: number): ValidatorFn {
 
   return (control: AbstractControl): ValidationErrors | null => {
 
-    const value: number = parseFloat(control.value) * 100.0;
-
+    let value = 0;
+    if (control.value != null) {
+      value = Number(control.value.replace(',', '.')) * 100.0;
+    }
 
     if (isNaN(value)) {
       return {priceValidator: true, requiredValue: price};
     }
 
-    if (value > (price * 100) || value <= 0) {
+    if (value > (price * 100.0) || value <= 0.0) {
       return {priceValidator: true, requiredValue: price};
     }
-
     return null;
-
   };
-
 }
