@@ -29,7 +29,7 @@
     "ng-thermal-print": "^1.0.3",
     "ngx-mask": "^9.1.2",
     "popper.js": "^1.16.1",
-    "rxjs": "~6.5.4",
+    "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
