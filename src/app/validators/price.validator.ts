@@ -6,7 +6,7 @@ export function PriceValidator(price: number): ValidatorFn {
 
     let value = 0;
     if (control.value != null) {
-      value = Number(control.value.replace(',', '.')) * 100.0;
+      value = Number(String(control.value).replace(',', '.')) * 100.0;
     }
 
     if (isNaN(value)) {
