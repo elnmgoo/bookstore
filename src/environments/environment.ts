@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:4200/api',
   api2Url: 'http://127.0.0.1:4200/api2',
-  buildTimestamp: '14-01-2021'
+  buildTimestamp: '16-01-2021'
 };
 
 /*

@@ -10,7 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ItemEffects} from '../store/items/effects/item.effects';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {HttpClientModule, HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ItemService} from '../store/items/services/item.service';
 import {appReducers} from '../store/app.reducers';
 import {NgxMaskModule, IConfig} from 'ngx-mask';
@@ -36,6 +36,7 @@ import {BooksService} from './services/book.service';
 import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
 import { PublishersComponent } from './components/publishers/publishers.component';
 import { ProcurementComponent } from './components/procurement/procurement.component';
+import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
 
 
 registerLocaleData(localeNl, 'nl');
@@ -67,6 +68,10 @@ registerLocaleData(localeNl, 'nl');
     ConfirmDialogModule
   ],
   providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: NoCacheHeadersInterceptor,
+    multi: true
+  }, {
     provide: LOCALE_ID,
     useValue: 'nl'
   }, ItemService, OrderService, PurchaseOrdersService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time,
