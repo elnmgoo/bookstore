@@ -25,12 +25,14 @@
     "@ngrx/router-store": "^10.1.2",
     "@ngrx/store": "^10.1.2",
     "bootstrap": "^4.5.3",
+    "classlist.js": "^1.1.20150312",
     "jquery": "^3.5.1",
-    "ng-thermal-print": "^1.0.3",
+    "ngx-device-detector": "^2.0.5",
     "ngx-mask": "^9.1.4",
     "popper.js": "^1.16.1",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
+    "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

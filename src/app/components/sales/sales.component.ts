@@ -14,7 +14,11 @@ import {GetItems} from '../../../store/items/actions/item.actions';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {PriceValidator} from '../../validators/price.validator';
-import {selectOrderList, selectOrderTotalPrice, selectOrderTotalPriceTaxMap} from '../../../store/orders/selectors/order.selectors';
+import {
+  selectOrderList,
+  selectOrderTotalPrice,
+  selectOrderTotalPriceTaxMap
+} from '../../../store/orders/selectors/order.selectors';
 import {AddOrder, BookOrder, DeleteAllOrder, DeleteOrder, GetOrders} from '../../../store/orders/actions/order.actions';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
@@ -97,7 +101,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    switch (event.key){
+    switch (event.key) {
       case 'F1':
         if (this.bookForm.valid) {
           this.onAddBookButton();
@@ -160,7 +164,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       author: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       publisher: ['', Validators.required],
       price: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
-      amount: [1, [Validators.required, Validators.min(1), Validators.max(99)]],
+      amount: [1, [Validators.required, Validators.min(1), Validators.max(999)]],
       discount: [''],
       total: ['', [Validators.required, Validators.minLength(1)]],
       tax: ['9', [Validators.required, Validators.min(1)]],
@@ -171,9 +175,11 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.itemForm = this.formBuilder.group({
       item: ['', Validators.required],
-      itemAmount: [1, [Validators.required, Validators.min(1), Validators.max(99)]],
+      itemAmount: [1, [Validators.required, Validators.min(1), Validators.max(999)]],
       itemPrice: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceArticle)]],
-      itemTax: ['', [Validators.required, Validators.min(1)]]
+      itemTax: ['', [Validators.required, Validators.min(1)]],
+      itemDiscount: [''],
+      itemTotal: ['', [Validators.required, Validators.minLength(1)]],
     });
     this.store.dispatch(new GetItems());
     this.store.dispatch(new GetOrders());
@@ -200,9 +206,10 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.itemForm.controls.itemPrice.value.length === 0) {
       this.autofocusPrijsField.nativeElement.focus();
     }
+    this.calculateTotalPriceItem();
   }
 
-  calculateTotalPriceBook(){
+  calculateTotalPriceBook() {
     let totalPrice = this.bookForm.controls.amount.value * Number(this.bookForm.controls.price.value.replace(',', '.'));
     if (this.bookForm.controls.discount.value.toString().length > 0) {
       totalPrice -= Number(this.bookForm.controls.discount.value.toString().replace(',', '.'));
@@ -210,17 +217,33 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bookForm.controls.total.setValue(totalPrice.toFixed(2).replace('.', ','));
   }
 
+  calculateTotalPriceItem() {
+    let itemTotalPrice = this.itemForm.controls.itemAmount.value * Number(this.itemForm.controls.itemPrice.value.replace(',', '.'));
+    if (this.itemForm.controls.itemDiscount.value.toString().length > 0) {
+      itemTotalPrice -= Number(this.itemForm.controls.itemDiscount.value.toString().replace(',', '.'));
+    }
+    this.itemForm.controls.itemTotal.setValue(itemTotalPrice.toFixed(2).replace('.', ','));
+  }
+
   onAddItemButton() {
-    if (this.payed){
+    if (this.payed) {
       this.payed = false;
     }
     this.setTimeStamp();
     console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
     console.log('totalPrice: ' + this.orderTotalPrice);
     let description = this.itemForm.controls.item.value.description;
-    if (this.itemForm.controls.itemAmount.value > 1){
-      description = description + ' (' + this.itemForm.controls.itemPrice.value + ' x ' +
-        this.itemForm.controls.itemAmount.value + ')';
+    if (this.itemForm.controls.itemAmount.value > 1) {
+      if (this.itemForm.controls.itemDiscount.value > 0) {
+        description += ' (' + this.itemForm.controls.itemPrice.value + ' x ' + this.itemForm.controls.itemAmount.value +
+          ' - ' + this.itemForm.controls.itemDiscount.value + ')';
+      } else {
+        description += ' (' + this.itemForm.controls.itemPrice.value + ' x ' + this.itemForm.controls.itemAmount.value + ')';
+      }
+    } else {
+      if (this.itemForm.controls.itemDiscount.value > 0) {
+        description += ' (' + this.itemForm.controls.itemPrice.value + ' - ' + this.itemForm.controls.itemAmount.value + ')';
+      }
     }
     const order = {
       isbn: '',
@@ -233,8 +256,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       title: '',
       description,
       dateTime: 0,
-      total: this.itemForm.controls.itemAmount.value * Math.round(Number(this.itemForm.controls.itemPrice.value.replace(',', '.')) * 100.0),
-      discount: 0
+      total: this.itemForm.controls.itemAmount.value * Math.round(Number(this.itemForm.controls.itemPrice.value.replace(',', '.')) * 100.0)
+        - Math.round(Number(this.itemForm.controls.itemDiscount.value.replace(',', '.')) * 100.0),
+      discount: (Number(this.itemForm.controls.itemDiscount.value.toString().replace(',', '.')) * 100.0)
     } as Order;
     this.store.dispatch(new AddOrder(order));
     this.itemForm.reset();
@@ -242,13 +266,13 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onAddBookButton() {
-    if (this.payed){
+    if (this.payed) {
       this.payed = false;
     }
     this.setTimeStamp();
     let description = this.bookForm.controls.title.value + ', ' + this.bookForm.controls.author.value;
     if (this.bookForm.controls.amount.value > 1) {
-      if (this.bookForm.controls.discount.value > 0){
+      if (this.bookForm.controls.discount.value > 0) {
         description += ' (' + this.bookForm.controls.price.value + ' x ' + this.bookForm.controls.amount.value +
           ' - ' + this.bookForm.controls.discount.value + ')';
       } else {
@@ -271,7 +295,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       description,
       dateTime: 0,
       discount: (Number(this.bookForm.controls.discount.value.toString().replace(',', '.')) * 100.0),
-      total: Math.round(Number(this.bookForm.controls.total.value.replace(',', '.')) * 100.0)
+      total: this.bookForm.controls.amount.value * Math.round(Number(this.bookForm.controls.price.value.replace(',', '.')) * 100.0)
+        - Math.round(Number(this.bookForm.controls.discount.value.replace(',', '.')) * 100.0),
     } as Order;
     this.store.dispatch(new AddOrder(order));
     const date = this.bookForm.controls.date.value;
@@ -402,7 +427,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.price.setValue(book.price.toFixed(2).replace('.', ','));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.tax.setValue(9);
-        this.bookForm.controls.discount.setValue('' );
+        this.bookForm.controls.discount.setValue('');
         this.bookForm.controls.total.setValue(book.price.toFixed(2).replace('.', ','));
       });
     }
@@ -425,7 +450,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onCheckboxChange(event) {
     this.printOrder = event.target.checked;
-    console.log( 'printOrder ' + this.printOrder);
+    console.log('printOrder ' + this.printOrder);
   }
 
 }

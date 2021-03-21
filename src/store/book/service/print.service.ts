@@ -25,10 +25,9 @@ export class PrintService {
 
   printStringNewLine(text: string, bold: boolean, center: boolean): Observable<boolean> {
     let params = new HttpParams();
-    params = params.append('text', text);
     params = params.append('bold', bold.toString());
     params = params.append('center', center.toString());
-    return this.httpClient.post<boolean>(this.printUrl + '/printStringNewLine', null, {params});
+    return this.httpClient.post<boolean>(this.printUrl + '/printStringNewLine', text, {params});
   }
 
   printToPrinter(): Observable<boolean> {

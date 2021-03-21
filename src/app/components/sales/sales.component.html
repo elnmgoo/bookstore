@@ -97,7 +97,7 @@
     <br>
     <form [formGroup]="itemForm">
       <div class="form-row">
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-10">
           <div class="form-group">
             <label for="inputItem">Artikel</label>
             <select formControlName="item" name="item" class="form-control" id="inputItem" placeholder="Artikel"
@@ -108,31 +108,45 @@
             </select>
           </div>
         </div>
+        <div class="form-group col-md-2">
+          <label for="inputObjectTax">Btw</label>
+          <select formControlName="itemTax" type="number" class="form-control" id="inputObjectTax" placeholder="Btw">
+            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-2">
           <label for="inputObjectAmount">Aantal(F9)</label>
           <input formControlName="itemAmount" type="number" class="form-control" min="1" id="inputObjectAmount"
-                 placeholder="1">
+                 placeholder="1" (change)="calculateTotalPriceItem()">
           <div></div>
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-2">
           <label for="inputObjectPrice">Prijs</label>
           <input #autofocusPrijs formControlName="itemPrice" type="text" name="inputObjectPrice" class="form-control"
                  id="inputObjectPrice" placeholder="Prijs"
-                 mask="separator.2" thousandSeparator=".">
+                 mask="separator.2" thousandSeparator="."
+                 (change)="calculateTotalPriceItem()">
           <div class="validator"
                *ngIf="itemForm.controls['itemPrice'].invalid && (itemForm.controls['itemPrice'].dirty ||itemForm.controls['itemPrice'].touched)">
-            Max. {{itemForm.controls['itemPrice'].errors.requiredValue}}
+              Max. {{itemForm.controls['itemPrice'].errors.requiredValue}}
           </div>
         </div>
-        <div class="form-group col-md-3">
-          <label for="inputObjectTax">Btw</label>
-          <select formControlName="itemTax" type="number" class="form-control" id="inputObjectTax" placeholder="Btw">
-            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
-          </select>
+        <div class="form-group col-md-2">
+          <label for="inputObjectDiscount">Korting</label>
+          <input formControlName="itemDiscount" type="text" class="form-control" id="inputObjectDiscount"
+                 mask="separator.2"
+                 thousandSeparator="." (change)="calculateTotalPriceItem()">
         </div>
+        <div class="form-group col-md-2">
+          <label for="inputObjectTotal">Totaal</label>
+          <input formControlName="itemTotal" type="text" class="form-control" id="inputObjectTotal" placeholder="0"
+                 mask="separator.2"
+                 thousandSeparator="." [readonly]=true>
+        </div>
+
         <div class="form-group col-md-4">
           <label for="buttonObjectOk">Toevoegen</label>
           <button type="button" class="btn btn-info btn-block" id="buttonObjectOk" [disabled]="!itemForm.valid"

@@ -37,6 +37,7 @@ import { BookDialogComponent } from './components/book-dialog/book-dialog.compon
 import { PublishersComponent } from './components/publishers/publishers.component';
 import { ProcurementComponent } from './components/procurement/procurement.component';
 import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 
 registerLocaleData(localeNl, 'nl');
@@ -67,7 +68,8 @@ registerLocaleData(localeNl, 'nl');
     NgbModule,
     ConfirmDialogModule
   ],
-  providers: [{
+  providers: [
+    {
     provide: HTTP_INTERCEPTORS,
     useClass: NoCacheHeadersInterceptor,
     multi: true
