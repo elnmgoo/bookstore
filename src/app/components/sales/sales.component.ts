@@ -203,6 +203,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
     this.itemForm.controls.itemAmount.setValue(1);
+    this.itemForm.controls.itemDiscount.setValue('');
     if (this.itemForm.controls.itemPrice.value.length === 0) {
       this.autofocusPrijsField.nativeElement.focus();
     }
@@ -242,7 +243,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     } else {
       if (this.itemForm.controls.itemDiscount.value > 0) {
-        description += ' (' + this.itemForm.controls.itemPrice.value + ' - ' + this.itemForm.controls.itemAmount.value + ')';
+        description += ' (' + this.itemForm.controls.itemPrice.value + ' - ' + this.itemForm.controls.itemDiscount.value + ')';
       }
     }
     const order = {

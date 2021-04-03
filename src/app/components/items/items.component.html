@@ -63,7 +63,7 @@
           </div>
           <div class="col-md-5">{{ item.description }}</div>
           <div class="col-md-3">{{ item.tax }}</div>
-          <div class="col-md-3">{{ item.price }}</div>
+          <div class="col-md-3">{{ item.price | number:'1.2-2'}}</div>
         </div>
       </ng-container>
     </div>
