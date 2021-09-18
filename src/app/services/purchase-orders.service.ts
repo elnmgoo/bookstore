@@ -162,7 +162,9 @@ export class PurchaseOrdersService {
     const mapSortColumn = new Map();
     mapSortColumn.set('description', 'beschrijving');
     mapSortColumn.set('datetime', 'datumtijd');
-    mapSortColumn.set('book.uitgever', 'boek.uitgever.naam');
+    mapSortColumn.set('book.publisher', 'boek.uitgever.naam');
+    mapSortColumn.set('book.supply', 'boek.voorraad');
+    mapSortColumn.set('book.supplyDepot', 'boek.voorraadDepot');
     mapSortColumn.set('totalPrice', 'totaal');
     mapSortColumn.set('price', 'prijs');
     mapSortColumn.set('isbn', 'boek.isbn');

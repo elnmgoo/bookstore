@@ -29,7 +29,7 @@ export class ItemsComponent implements OnInit {
   ngOnInit(): void {
     this.itemForm = this.formBuilder.group({
       itemDescription: ['', [Validators.required, Validators.minLength(4)]],
-      itemTax: [0, [Validators.required, Validators.min(1)]],
+      itemTax: [9, [Validators.required, Validators.min(0)]],
       itemPrice: ['']
     });
 

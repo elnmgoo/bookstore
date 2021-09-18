@@ -167,7 +167,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       amount: [1, [Validators.required, Validators.min(1), Validators.max(999)]],
       discount: [''],
       total: ['', [Validators.required, Validators.minLength(1)]],
-      tax: ['9', [Validators.required, Validators.min(1)]],
+      tax: ['9', [Validators.required, Validators.min(0)]],
       date: [this.calendar.getToday()],
       supply: [''],
       supplyDepot: ['']
@@ -177,7 +177,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       item: ['', Validators.required],
       itemAmount: [1, [Validators.required, Validators.min(1), Validators.max(999)]],
       itemPrice: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceArticle)]],
-      itemTax: ['', [Validators.required, Validators.min(1)]],
+      itemTax: ['', [Validators.required, Validators.min(0)]],
       itemDiscount: [''],
       itemTotal: ['', [Validators.required, Validators.minLength(1)]],
     });

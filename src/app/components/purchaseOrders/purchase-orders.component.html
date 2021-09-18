@@ -51,9 +51,11 @@
       <th scope="col" sortable="isbn" (sort)="onSort($event)">Isbn</th>
       <th scope="col" sortable="description" (sort)="onSort($event)">Beschrijving</th>
       <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
-      <th scope="col" sortable="book.uitgever" (sort)="onSort($event)">Uitgever</th>
-      <th scope="col" sortable="amount" (sort)="onSort($event)">Aantal</th>
-      <th scope="col" sortable="amountInDepot" (sort)="onSort($event)">Depot</th>
+      <th scope="col" sortable="book.publisher" (sort)="onSort($event)">Uitgever</th>
+      <th scope="col" sortable="book.supply" (sort)="onSort($event)">Voorraad</th>
+      <th scope="col" sortable="book.supplyDepot" (sort)="onSort($event)">Depot</th>
+      <th scope="col" sortable="amount" (sort)="onSort($event)">Verkocht</th>
+      <th scope="col" sortable="amountInDepot" (sort)="onSort($event)">uit Depot</th>
       <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
       <th scope="col" sortable="totalPrice" (sort)="onSort($event)">Totaal</th>
     </tr>
@@ -85,10 +87,22 @@
         </ng-container>
       </td>
       <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+        <ngb-highlight [result]="purchaseOrder.book.supply | number" [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+        <ngb-highlight [result]="purchaseOrder.book.supplyDepot | number" [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
         <ngb-highlight [result]="purchaseOrder.amount | number" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
         <ngb-highlight [result]="purchaseOrder.amountInDepot | number" [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.price | number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
