@@ -332,6 +332,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPayButton() {
     console.log('Afrekenen en een bonnetje afdrukken');
+    this.setTimeStamp();
     this.order.forEach(myOrder => {
       console.log('Order: ' + myOrder.description);
       const order = {...myOrder};
