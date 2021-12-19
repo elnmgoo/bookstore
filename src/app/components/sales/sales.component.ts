@@ -28,7 +28,7 @@ import {NgbCalendar, NgbDateParserFormatter, NgbDateStruct} from '@ng-bootstrap/
 import {DateFormatPipe2Time} from './DateFormatPipe2Time';
 import {DateFormatPipe2Date} from './DateFormatPipe2Date';
 import {PrintService} from '../../../store/book/service/print.service';
-import {concatMap, tap} from 'rxjs/operators';
+import {concatMap, debounceTime, tap} from 'rxjs/operators';
 import {formatNumber} from '@angular/common';
 import {Subscription} from 'rxjs';
 
@@ -68,16 +68,26 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('orderwindow') private myScrollContainer: ElementRef;
   @ViewChild('autofocus') private autofocusField: ElementRef;
   @ViewChild('autofocusPrijs') private autofocusPrijsField: ElementRef;
+  readonly DEBOUNCE_TIME = 2000;
   spaces = '                                    ';
   subscriptions = new Subscription();
   taxArray = AppConstants.taxArray;
   itemForm: FormGroup;
   bookForm: FormGroup;
+  discountForm: FormGroup;
   time = '';
   timeStamp = 0;
   order = [];
-  orderTotalPriceTaxMap;
+  orderTotalPriceTaxMap: Map<number, number>;
+  orderTotalPriceTaxMapWithDiscount: Map<number, number> = new Map<number, number>();
   orderTotalPrice = 0;
+  orderTotalPriceWithDiscount = 0;
+  orderTotalPriceWithDiscountAndReduction = 0;
+  discountPercentage = 0;
+  discountPercentageText = 'Korting';
+  discountPercentageValue = 0;
+  discountValue = 0;
+  discountValueText = 'Af';
   printOrder = true;
   payed = false;
 
@@ -181,6 +191,15 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       itemDiscount: [''],
       itemTotal: ['', [Validators.required, Validators.minLength(1)]],
     });
+
+    this.discountForm = this.formBuilder.group({
+      discountValueText: [this.discountValueText, Validators.maxLength(30)],
+      discountValue: ['', [PriceValidator(AppConstants.maxPriceBook)]],
+      discountPercentageText: ['Korting', Validators.maxLength(30)],
+      discountPercentage: ['', [Validators.max(100), Validators.min(0)]]
+
+    });
+
     this.store.dispatch(new GetItems());
     this.store.dispatch(new GetOrders());
     this.store.dispatch(new GetPublishers());
@@ -190,11 +209,34 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.add(this.orderTotalPrice$.subscribe(orderTotalPrice => {
       this.orderTotalPrice = orderTotalPrice;
+      this.onChangeDiscountPercentage();
     }));
 
     this.subscriptions.add(this.orderTotalPriceTaxMap$.subscribe(orderTotalPriceTaxMap => {
       this.orderTotalPriceTaxMap = orderTotalPriceTaxMap;
     }));
+    this.subscriptions.add(this.discountForm.get('discountValue').valueChanges
+      .pipe(debounceTime(this.DEBOUNCE_TIME))
+      .subscribe(val => {
+        this.onChangeDiscountValue();
+      }));
+    this.subscriptions.add(this.discountForm.get('discountValueText').valueChanges
+      .pipe(debounceTime(this.DEBOUNCE_TIME))
+      .subscribe(val => {
+        this.discountValueText = this.discountForm.controls.discountValueText.value;
+      }));
+
+    this.subscriptions.add(this.discountForm.get('discountPercentage').valueChanges
+      .pipe(debounceTime(this.DEBOUNCE_TIME))
+      .subscribe(val => {
+        this.onChangeDiscountPercentage();
+      }));
+    this.subscriptions.add(this.discountForm.get('discountPercentageText').valueChanges
+      .pipe(debounceTime(this.DEBOUNCE_TIME))
+      .subscribe(val => {
+        this.discountPercentageText = this.discountForm.controls.discountPercentageText.value;
+      }));
+
   }
 
   onInputArticleSelected(event) {
@@ -450,9 +492,37 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  onChangeDiscountPercentage() {
+    console.log('change discountPercentage');
+    this.discountPercentage = Number(this.discountForm.controls.discountPercentage.value.replace(',', '.'));
+    this.discountPercentageValue = (this.orderTotalPrice / 100) * this.discountPercentage;
+    this.orderTotalPriceWithDiscount = this.orderTotalPrice - this.discountPercentageValue;
+    this.orderTotalPriceWithDiscountAndReduction = this.orderTotalPriceWithDiscount - this.discountValue;
+
+    if (this.taxArray) {
+      this.taxArray.forEach(value => {
+        /*this.orderTotalPriceTaxMapWithDiscount.put(value, this.orderTotalPriceTaxMap.get(value));*/
+        console.log(value);
+        if (this.orderTotalPriceTaxMap) {
+          console.log(this.orderTotalPriceTaxMap.get(value));
+          this.orderTotalPriceTaxMapWithDiscount.set(value, (this.orderTotalPriceTaxMap.get(value)
+            / 100) * (100 - this.discountPercentage));
+        }
+      });
+    }
+  }
+
+  onChangeDiscountValue() {
+    console.log('change discountValue');
+    this.discountValue = Number(this.discountForm.controls.discountValue.value.replace(',', '.')) * 100;
+    this.orderTotalPriceWithDiscountAndReduction = this.orderTotalPriceWithDiscount - this.discountValue;
+  }
+
+
   onCheckboxChange(event) {
     this.printOrder = event.target.checked;
     console.log('printOrder ' + this.printOrder);
   }
+
 
 }

@@ -70,7 +70,6 @@
                *ngIf="bookForm.controls['price'].invalid && (bookForm.controls['price'].dirty ||bookForm.controls['price'].touched)">
             Max. {{bookForm.controls['price'].errors.requiredValue}}
           </div>
-
         </div>
         <div class="form-group col-md-2">
           <label for="inputDiscount">Korting</label>
@@ -94,7 +93,6 @@
         </div>
       </div>
     </form>
-    <br>
     <form [formGroup]="itemForm">
       <div class="form-row">
         <div class="form-group col-md-10">
@@ -102,8 +100,7 @@
             <label for="inputItem">Artikel</label>
             <select formControlName="item" name="item" class="form-control" id="inputItem" placeholder="Artikel"
                     type="number" (change)='onInputArticleSelected($event)'>
-              <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}} ({{item.tax}}
-                %) {{item.price.replace('.', ',')}}
+              <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}} ({{item.tax}}%) {{item.price.replace('.', ',')}}
               </option>
             </select>
           </div>
@@ -131,9 +128,10 @@
                  (change)="calculateTotalPriceItem()">
           <div class="validator"
                *ngIf="itemForm.controls['itemPrice'].invalid && (itemForm.controls['itemPrice'].dirty ||itemForm.controls['itemPrice'].touched)">
-              Max. {{itemForm.controls['itemPrice'].errors.requiredValue}}
+            Max. {{itemForm.controls['itemPrice'].errors.requiredValue}}
           </div>
         </div>
+
         <div class="form-group col-md-2">
           <label for="inputObjectDiscount">Korting</label>
           <input formControlName="itemDiscount" type="text" class="form-control" id="inputObjectDiscount"
@@ -146,7 +144,6 @@
                  mask="separator.2"
                  thousandSeparator="." [readonly]=true>
         </div>
-
         <div class="form-group col-md-4">
           <label for="buttonObjectOk">Toevoegen</label>
           <button type="button" class="btn btn-info btn-block" id="buttonObjectOk" [disabled]="!itemForm.valid"
@@ -154,20 +151,35 @@
           </button>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-1">
+    </form>
+    <form [formGroup]="discountForm">
+
+    <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="inputKortingText">Af</label>
+          <input formControlName="discountValueText" type="text" class="form-control" id="inputKortingText" maxLength="30">
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-1">
+
+        <div class="form-group col-md-2">
+          <label for="inputObjectDiscountTotal">&euro; v.totaal</label>
+          <input formControlName="discountValue" type="text" class="form-control" id="inputObjectDiscountTotal"
+                 mask="separator.2" maxlength="10" >
         </div>
-        <div class="form-group col-md-7">
-          <input type="checkbox" class="form-check-input" id="printLabelCount" [checked]="this.printOrder"
-                 (change)="onCheckboxChange($event)">
-          <label for="printLabelCount">Afdrukken van een bonnetje</label>
+        <div class="form-group col-md-2">
+          <label for="inputKortingTextPercent">Korting</label>
+          <input formControlName="discountPercentageText" maxLength=30 type="text" class="form-control" id="inputKortingTextPercent">
+        </div>
+
+        <div class="form-group col-md-2">
+          <label for="inputObjectExtraDiscountTotal">% v.totaal</label>
+          <input formControlName="discountPercentage" type="text" class="form-control" id="inputObjectExtraDiscountTotal"
+                 mask="separator.1" maxlength="4"
+                 thousandSeparator="." >
         </div>
 
         <div class="form-group col-md-4">
+          <label for="buttonObjectPay">Totaal</label>
+
           <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice; else disabledbutton">
             <button type="button" class="btn btn-info btn-block" id="buttonObjectPay"
                     (click)="onPayButton()">Afrekenen(F3)
@@ -180,9 +192,20 @@
           </ng-template>
         </div>
       </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-1">
+        </div>
+        <div class="form-group col-md-7">
+          <input type="checkbox" class="form-check-input" id="printLabelCount" [checked]="this.printOrder"
+                 (change)="onCheckboxChange($event)">
+          <label for="printLabelCount">Afdrukken van een bonnetje</label>
+        </div>
+      </div>
     </form>
   </div>
 </div>
+
 <div class="split right">
   <form #orderwindow class="order">
     <div class="form-group col-md-12">
@@ -217,27 +240,48 @@
           <span
             style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
-        <br>
+        <ng-container *ngIf="discountPercentage>0">
+          <span style="display:inline-block;width: 18ch;"></span>
+          <span style="display:inline-block;width: 32ch;">{{discountPercentageText}} {{discountPercentage}}% ({{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}})</span>
+          <span style="display:inline-block;width: 1ch;">&euro;</span>
+          <span
+            style="display:inline-block;width: 7ch;text-align: right;">{{(discountPercentageValue / 100 | number:'1.2-2').toString().replace('.', ',')}}</span><span> -</span>
+        </ng-container>
+
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
           <ng-container *ngIf="orderTotalPrice > 0">
             <span style="display:inline-block;width: 18ch;"></span>
-            <span style="display:inline-block;width: 32ch;"><b>Totaal te betalen:</b></span>
+            <span style="display:inline-block;width: 32ch;"><b>Totaal:</b></span>
             <span style="display:inline-block;width: 1ch;">&euro;</span>
             <span
-              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}}</b></span>
+              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+            </span>
             <ng-container *ngIf="orderTotalPriceTaxMap$ | async as orderTotalPriceTaxMap">
               <ng-container *ngFor="let tax of taxArray">
-                <ng-container *ngIf="orderTotalPriceTaxMap.get(tax) > 0">
+                <ng-container *ngIf="orderTotalPriceTaxMapWithDiscount.get(tax) > 0">
                   <span style="display:block"></span>
                   <span style="display:inline-block;width: 18ch;"></span>
-                  <span style="display:inline-block;width: 32ch;">Totaal Btw {{tax | number: '2.0'}}
-                    %: {{(orderTotalPriceTaxMap.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+                  <span style="display:inline-block;width: 32ch;">Btw {{tax | number: '2.0'}}% ({{(orderTotalPriceTaxMapWithDiscount.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}})</span>
                   <span style="display:inline-block;width: 1ch;">&euro;</span>
                   <span
-                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMap.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMapWithDiscount.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
                 </ng-container>
               </ng-container>
             </ng-container>
+            <ng-container *ngIf="discountValue > 0">
+              <span style="display:inline-block;width: 18ch;"></span>
+              <span style="display:inline-block;width: 32ch;"><b>{{discountValueText}}:</b></span>
+              <span style="display:inline-block;width: 1ch;">&euro;</span>
+              <span
+                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discountValue / 100 | number:'1.2-2').toString().replace('.', ',')}} -</b>
+            </span>
+            </ng-container>
+            <span style="display:inline-block;width: 18ch;"></span>
+            <span style="display:inline-block;width: 32ch;"><b>Te betalen:</b></span>
+            <span style="display:inline-block;width: 1ch;">&euro;</span>
+            <span
+              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscountAndReduction / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+            </span>
             <ng-container *ngIf="time.length > 0">
               <p></p>
               <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i></p>
@@ -249,5 +293,3 @@
     </div>
   </form>
 </div>
-
-
