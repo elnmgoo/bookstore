@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {Publisher} from '../models/publisher';
@@ -13,8 +13,8 @@ export class PublisherEffects {
   constructor(private action$: Actions, private publisherService: PublisherService) {
   }
 
-  @Effect()
-  GetPublishers$ = this.action$.pipe(
+  
+  GetPublishers$ = createEffect(() => this.action$.pipe(
     ofType(EPublisherActions.GetPublishers),
     take(1),
     mergeMap(() =>
@@ -27,10 +27,10 @@ export class PublisherEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  AddPublishers$ = this.action$.pipe(
+  
+  AddPublishers$ = createEffect(() => this.action$.pipe(
     ofType<AddPublisher>(EPublisherActions.AddPublisher),
     mergeMap(action =>
       this.publisherService.addPublisher(action.payload)
@@ -43,10 +43,10 @@ export class PublisherEffects {
           })
         )
     )
-  );
+  ));
 
-  @Effect()
-  DeletePublishers$ = this.action$.pipe(
+  
+  DeletePublishers$ = createEffect(() => this.action$.pipe(
     ofType<DeletePublisher>(EPublisherActions.DeletePublisher),
     mergeMap(action =>
       this.publisherService.deletePublisher(action.payload)
@@ -59,5 +59,5 @@ export class PublisherEffects {
           })
         )
     )
-  );
+  ));
 }

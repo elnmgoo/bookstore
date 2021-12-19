@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import {Item} from '../models/item';
@@ -14,8 +14,8 @@ export class ItemEffects {
   constructor(private action$: Actions, private itemService: ItemService) {
   }
 
-  @Effect()
-  GetItems$ = this.action$.pipe(
+  
+  GetItems$ = createEffect(() => this.action$.pipe(
     ofType(EItemActions.GetItems),
     /*filter(() => AppConstants.getItemsCounter++ === 0), werkt ook echter take(1) is eenvoudiger*/
     take(1),
@@ -29,10 +29,10 @@ export class ItemEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  AddItems$ = this.action$.pipe(
+  
+  AddItems$ = createEffect(() => this.action$.pipe(
     ofType<AddItem>(EItemActions.AddItem),
     mergeMap(action =>
       this.itemService.addItem(action.payload)
@@ -45,10 +45,10 @@ export class ItemEffects {
           })
         )
     )
-  );
+  ));
 
-  @Effect()
-  DeleteItems$ = this.action$.pipe(
+  
+  DeleteItems$ = createEffect(() => this.action$.pipe(
     ofType<DeleteItem>(EItemActions.DeleteItem),
     mergeMap(action =>
       this.itemService.deleteItem(action.payload)
@@ -61,6 +61,6 @@ export class ItemEffects {
           })
         )
     )
-  );
+  ));
 
 }

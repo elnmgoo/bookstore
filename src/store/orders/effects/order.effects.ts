@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
 import {Order} from '../models/order';
@@ -22,8 +22,8 @@ export class OrderEffects {
   constructor(private action$: Actions, private orderService: OrderService) {
   }
 
-  @Effect()
-  GetOrders$ = this.action$.pipe(
+  
+  GetOrders$ = createEffect(() => this.action$.pipe(
     ofType(EOrderActions.GetOrders),
     /*filter(() => AppConstants.getOrdersCounter++ === 0), werkt ook echter take(1) is eenvoudiger*/
     take(1),
@@ -37,10 +37,10 @@ export class OrderEffects {
         })
       )
     )
-  );
+  ));
 
-  @Effect()
-  AddOrders$ = this.action$.pipe(
+  
+  AddOrders$ = createEffect(() => this.action$.pipe(
     ofType<AddOrder>(EOrderActions.AddOrder),
     mergeMap(action =>
       this.orderService.addOrder(action.payload)
@@ -53,10 +53,10 @@ export class OrderEffects {
           })
         )
     )
-  );
+  ));
 
-  @Effect()
-  DeleteOrders$ = this.action$.pipe(
+  
+  DeleteOrders$ = createEffect(() => this.action$.pipe(
     ofType<DeleteOrder>(EOrderActions.DeleteOrder),
     mergeMap(action =>
       this.orderService.deleteOrder(action.payload)
@@ -69,10 +69,10 @@ export class OrderEffects {
           })
         )
     )
-  );
+  ));
 
-  @Effect()
-  BookOrder$ = this.action$.pipe(
+  
+  BookOrder$ = createEffect(() => this.action$.pipe(
     ofType<BookOrder>(EOrderActions.BookOrder),
     mergeMap(action =>
       this.orderService.bookOrder(action.payload)
@@ -85,6 +85,6 @@ export class OrderEffects {
           })
         )
     )
-  );
+  ));
 
 }
