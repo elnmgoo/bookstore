@@ -1,6 +1,7 @@
 import {initialOrderState, OrderState} from '../state/order.state';
 import {EOrderActions, OrderActions} from '../actions/order.actions';
 import {Order} from '../models/order';
+import {Discount} from '../models/discount';
 
 export const orderReducers = (
   state = initialOrderState,
@@ -11,16 +12,21 @@ export const orderReducers = (
       return {...state, orders: action.payload};
     }
     case EOrderActions.AddOrderSuccess: {
-      /* const newPriceTotalTaxMap: Map<number, number> = { ...state.priceTotalTaxMap};*/
       if (state.priceTotalTaxMap.has(action.payload.tax)) {
         state.priceTotalTaxMap.set(action.payload.tax,
           state.priceTotalTaxMap.get(action.payload.tax) + (action.payload.total));
       } else {
         state.priceTotalTaxMap.set(action.payload.tax, (action.payload.total));
       }
+      const price = state.priceTotal + (action.payload.total);
       return {
-        ...state, orders: [...state.orders, action.payload], priceTotal: state.priceTotal + (action.payload.total) ,
-        priceTotalTaxMap: state.priceTotalTaxMap
+        ...state, orders: [...state.orders, action.payload],
+        priceTotal: price,
+        priceTotalTaxMap: state.priceTotalTaxMap,
+        discountPercentageValue: calculateDiscountPercentageValue(state.discount, price),
+        priceTotalWithDiscount: calculateTotalWithDiscount(state.discount, price),
+        priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(state.discount, price),
+        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap)
       };
     }
     case EOrderActions.DeleteOrderSuccess: {
@@ -30,30 +36,77 @@ export const orderReducers = (
       } else {
         state.priceTotalTaxMap.set(action.payload.tax, 0);
       }
+      const price = state.priceTotal - (action.payload.total);
       return {
         ...state,
         orders: [...state.orders.filter(order => order.id !== action.payload.id)],
-        priceTotal: state.priceTotal - (action.payload.total),
-        priceTotalTaxMap: state.priceTotalTaxMap
+        priceTotal: price,
+        priceTotalTaxMap: state.priceTotalTaxMap,
+        discountPercentageValue: calculateDiscountPercentageValue(state.discount, price),
+        priceTotalWithDiscount: calculateTotalWithDiscount(state.discount, price),
+        priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(state.discount, price),
+        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap)
       };
     }
     case EOrderActions.DeleteAllOrder: {
       return {
         ...state,
+        discount: {
+          discountValue: 0,
+          discountText: 'Af',
+          discountPercentageText: 'Korting',
+          discountPercentage: 0
+        },
         orders: Array<Order>(),
         orderIdCounter: 0,
+        discountPercentageValue: 0,
         priceTotal: 0,
         priceTotalTaxMap: new Map<number, number>(),
+        priceTotalTaxMapWithDiscount: new Map<number, number>(),
+        priceTotalWithDiscount: 0,
+        priceTotalWithDiscountAndReduction: 0,
         orderError: null
+      };
+    }
+    case EOrderActions.SetDiscount: {
+      console.log('setDiscount');
+      return {
+        ...state,
+        discountPercentageValue: calculateDiscountPercentageValue(action.payload, state.priceTotal),
+        priceTotalWithDiscount: calculateTotalWithDiscount(action.payload, state.priceTotal),
+        priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(action.payload, state.priceTotal),
+        discount: action.payload,
+        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(action.payload, state.priceTotalTaxMap)
       };
     }
     case EOrderActions.OrderError: {
       console.log(action.error);
       return state;
     }
+
     case EOrderActions.BookOrderSuccess:
     default: {
       return state;
     }
+  }
+
+  function calculateDiscountPercentageValue(discount: Discount, total: number) {
+    return total * (discount.discountPercentage) / 100.0;
+  }
+
+  function calculateTotalWithDiscount(discount: Discount, total: number) {
+    return total * (100 - discount.discountPercentage) / 100.0;
+  }
+
+  function calculateTotalWithDiscountWithReduction(discount: Discount, total: number) {
+    return calculateTotalWithDiscount(discount, total) - discount.discountValue;
+  }
+
+  function calculateTotalTaxWithDiscount(discount: Discount, priceTotalTaxMap: Map<number, number>){
+    const taxMapWithReduction = new Map<number, number>();
+    priceTotalTaxMap.forEach( (value: number, key: number) => {
+      taxMapWithReduction.set(key, (value / 100) * (100 - discount .discountPercentage));
+    });
+    return taxMapWithReduction;
   }
 };

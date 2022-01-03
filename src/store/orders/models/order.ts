@@ -12,5 +12,4 @@ export interface Order {
   description: string;
   dateTime: number;
   total: number;
-  discount: number;
 }

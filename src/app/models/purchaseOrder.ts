@@ -13,9 +13,10 @@ export class PurchaseOrder {
   isBook: boolean;
   tax: number;
   description: string;
+  discountPercentage: number;
 
   constructor(id: number, dateTime: number, price: number, amount: number, amountDepot: number, totalPrice: number, book: Book,
-              tax: number, isBook: boolean, description: string) {
+              tax: number, isBook: boolean, description: string, discountPercentage: number) {
     this.id = id;
     this.dateTime = dateTime;
     this.price = (price != null) ? price : 0;
@@ -30,6 +31,7 @@ export class PurchaseOrder {
     } else {
       this.description = (amount > 1) ? book.title + '(x' + amount + ')' : book.title;
     }
+    this.discountPercentage = discountPercentage;
   }
 }
 
@@ -46,6 +48,6 @@ export class PurchaseOrderAdapter implements Adapter<PurchaseOrder> {
       book = this.bookAdapter.adapt(item.boek);
     }
     return new PurchaseOrder(item.orderid, item.datumtijd, item.prijs, item.aantal, item.aantalDepot, item.totaal, book, item.isBoek,
-      item.btw, item.beschrijving);
+      item.btw, item.beschrijving, item.korting);
   }
 }

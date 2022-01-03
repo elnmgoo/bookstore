@@ -15,12 +15,38 @@ export const orderError = createSelector(
   (state: OrderState) => state.orderError
 );
 
+export const selectDiscountPercentageValue = createSelector(
+  selectOrders,
+  (state: OrderState) => state.discountPercentageValue
+);
+
+
 export const selectOrderTotalPrice = createSelector(
   selectOrders,
   (state: OrderState) => state.priceTotal
 );
 
+export const selectOrderTotalPriceWithDiscount = createSelector(
+  selectOrders,
+  (state: OrderState) => state.priceTotalWithDiscount
+);
+
+export const selectOrderTotalPriceWithDiscountAndReduction = createSelector(
+  selectOrders,
+  (state: OrderState) => state.priceTotalWithDiscountAndReduction
+);
+
 export const selectOrderTotalPriceTaxMap = createSelector(
   selectOrders,
   (state: OrderState) => state.priceTotalTaxMap
+);
+
+export const selectOrderTotalTaxMapWithDiscount = createSelector(
+  selectOrders,
+  (state: OrderState) => state.priceTotalTaxMapWithDiscount
+);
+
+export const selectDiscount = createSelector(
+  selectOrders,
+  (state: OrderState) => state.discount
 );

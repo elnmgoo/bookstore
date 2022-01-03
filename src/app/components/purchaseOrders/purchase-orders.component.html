@@ -57,6 +57,7 @@
       <th scope="col" sortable="amount" (sort)="onSort($event)">Verkocht</th>
       <th scope="col" sortable="amountInDepot" (sort)="onSort($event)">uit Depot</th>
       <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
+      <th scope="col" sortable="discountPercentage" (sort)="onSort($event)">Korting</th>
       <th scope="col" sortable="totalPrice" (sort)="onSort($event)">Totaal</th>
     </tr>
     </thead>
@@ -106,6 +107,9 @@
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.price | number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.discountPercentage | number:'1.1-1'" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.totalPrice | number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>

@@ -1,5 +1,6 @@
 import {Action, createAction, props} from '@ngrx/store';
 import {Order} from '../models/order';
+import {Discount} from '../models/discount';
 
 export enum EOrderActions {
   GetOrders = '[Order] - Get Orders',
@@ -11,6 +12,8 @@ export enum EOrderActions {
   BookOrder = '[Order] - Book order',
   BookOrderSuccess = '[Order] - Book order success',
   DeleteAllOrder = '[Order] - DeleteAll order',
+  SetDiscount = '[Order] - SetDiscount',
+  SetDiscountSuccess = '[Order] - SetDiscount success',
   OrderError = '[Order] - Error'
 }
 
@@ -74,6 +77,12 @@ export class BookOrderSuccess implements Action {
   }
 }
 
+export class SetDiscount implements Action {
+  public readonly type = EOrderActions.SetDiscount;
+
+  constructor(public payload: Discount) {
+  }
+}
 
 export class OrderError implements Action {
   public readonly type = EOrderActions.OrderError;
@@ -93,4 +102,5 @@ export type OrderActions =
   | BookOrder
   | DeleteAllOrder
   | BookOrderSuccess
+  | SetDiscount
   | OrderError;

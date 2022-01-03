@@ -163,7 +163,7 @@
         <div class="form-group col-md-2">
           <label for="inputObjectDiscountTotal">&euro; v.totaal</label>
           <input formControlName="discountValue" type="text" class="form-control" id="inputObjectDiscountTotal"
-                 mask="separator.2" maxlength="10" >
+                 mask="separator.2" thousandSeparator="."  maxlength="10" >
         </div>
         <div class="form-group col-md-2">
           <label for="inputKortingTextPercent">Korting</label>
@@ -240,12 +240,12 @@
           <span
             style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
-        <ng-container *ngIf="discountPercentage>0">
+        <ng-container *ngIf="discount.discountPercentage>0">
           <span style="display:inline-block;width: 18ch;"></span>
-          <span style="display:inline-block;width: 32ch;">{{discountPercentageText}} {{discountPercentage}}% ({{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}})</span>
+          <span style="display:inline-block;width: 32ch;">{{discount.discountPercentageText}} {{discount.discountPercentage}}% ({{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}})</span>
           <span style="display:inline-block;width: 1ch;">&euro;</span>
           <span
-            style="display:inline-block;width: 7ch;text-align: right;">{{(discountPercentageValue / 100 | number:'1.2-2').toString().replace('.', ',')}}</span><span> -</span>
+            style="display:inline-block;width: 7ch;text-align: right;">{{(discountPercentageValue / 100| number:'1.2-2').toString().replace('.', ',')}}</span><span> -</span>
         </ng-container>
 
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
@@ -268,12 +268,12 @@
                 </ng-container>
               </ng-container>
             </ng-container>
-            <ng-container *ngIf="discountValue > 0">
+            <ng-container *ngIf="discount.discountValue > 0">
               <span style="display:inline-block;width: 18ch;"></span>
-              <span style="display:inline-block;width: 32ch;"><b>{{discountValueText}}:</b></span>
+              <span style="display:inline-block;width: 32ch;"><b>{{discount.discountText}}:</b></span>
               <span style="display:inline-block;width: 1ch;">&euro;</span>
               <span
-                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discountValue / 100 | number:'1.2-2').toString().replace('.', ',')}} -</b>
+                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discount.discountValue / 100 | number:'1.2-2').toString().replace('.', ',')}} -</b>
             </span>
             </ng-container>
             <span style="display:inline-block;width: 18ch;"></span>

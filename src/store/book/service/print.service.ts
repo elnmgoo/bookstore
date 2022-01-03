@@ -1,5 +1,6 @@
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import { of } from 'rxjs';
 
 import {Observable, throwError} from 'rxjs';
 import {Injectable} from '@angular/core';
@@ -17,6 +18,10 @@ export class PrintService {
 
   printLogoAndAddress(): Observable<boolean> {
     return this.httpClient.post<boolean>(this.printUrl + '/printLogoAndAddress', null);
+  }
+
+  printNothing(): Observable<boolean> {
+    return of(true);
   }
 
   printSolidLine(): Observable<boolean> {

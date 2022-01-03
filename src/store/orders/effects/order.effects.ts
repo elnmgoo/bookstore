@@ -1,7 +1,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
-import {catchError, map, mergeMap, filter, take} from 'rxjs/operators';
+import {catchError, map, mergeMap, filter, take, switchMap} from 'rxjs/operators';
 import {Order} from '../models/order';
 import {
   AddOrder,
@@ -13,7 +13,7 @@ import {
   OrderError
 } from '../actions/order.actions';
 import {OrderService} from '../services/order.service';
-
+import {Discount} from '../models/discount';
 
 
 @Injectable()
@@ -22,7 +22,7 @@ export class OrderEffects {
   constructor(private action$: Actions, private orderService: OrderService) {
   }
 
-  
+
   GetOrders$ = createEffect(() => this.action$.pipe(
     ofType(EOrderActions.GetOrders),
     /*filter(() => AppConstants.getOrdersCounter++ === 0), werkt ook echter take(1) is eenvoudiger*/
@@ -39,7 +39,7 @@ export class OrderEffects {
     )
   ));
 
-  
+
   AddOrders$ = createEffect(() => this.action$.pipe(
     ofType<AddOrder>(EOrderActions.AddOrder),
     mergeMap(action =>
@@ -55,7 +55,7 @@ export class OrderEffects {
     )
   ));
 
-  
+
   DeleteOrders$ = createEffect(() => this.action$.pipe(
     ofType<DeleteOrder>(EOrderActions.DeleteOrder),
     mergeMap(action =>
@@ -71,7 +71,7 @@ export class OrderEffects {
     )
   ));
 
-  
+
   BookOrder$ = createEffect(() => this.action$.pipe(
     ofType<BookOrder>(EOrderActions.BookOrder),
     mergeMap(action =>
@@ -86,5 +86,6 @@ export class OrderEffects {
         )
     )
   ));
+
 
 }
