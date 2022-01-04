@@ -91,11 +91,11 @@ export const orderReducers = (
   }
 
   function calculateDiscountPercentageValue(discount: Discount, total: number) {
-    return total * (discount.discountPercentage) / 100.0;
+    return Math.round(total * (discount.discountPercentage) / 100.0);
   }
 
   function calculateTotalWithDiscount(discount: Discount, total: number) {
-    return total * (100 - discount.discountPercentage) / 100.0;
+    return Math.round(total - calculateDiscountPercentageValue(discount, total));
   }
 
   function calculateTotalWithDiscountWithReduction(discount: Discount, total: number) {

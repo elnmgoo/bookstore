@@ -475,14 +475,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.spaces.substring(0, 8 - totalPriceWithDiscountAndReduction.length) + totalPriceWithDiscountAndReduction;
     let taxReceipt = '';
     this.taxArray.forEach(tax => {
-      if (this.orderTotalPriceTaxMapWithDiscount.get(tax) > 0) {
+      if (this.orderTotalPriceTaxMap.get(tax) > 0) {
         if (taxReceipt.length > 0) {
           taxReceipt += '\n';
         }
         let taxString = '   Totaal Btw ' + formatNumber(tax, 'nl', '2.0') + '%: € ' +
           formatNumber(this.orderTotalPriceTaxMapWithDiscount.get(tax) / 100, 'nl', '1.2-2');
-        const taxPrice = formatNumber(((this.orderTotalPriceTaxMap.get(tax)
-          / (100 + tax)) * tax) * (100 - this.discount.discountPercentage) / 100, 'nl', '1.2-2');
+        const taxPrice = formatNumber(((this.orderTotalPriceTaxMapWithDiscount.get(tax)
+          / (100 + tax)) * tax) / 100, 'nl', '1.2-2');
         taxString += this.spaces.substring(0, 39 - taxString.length) +
           '€' + this.spaces.substring(0, 8 - taxPrice.length) + taxPrice;
         taxReceipt += taxString;
