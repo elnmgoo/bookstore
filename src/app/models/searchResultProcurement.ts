@@ -39,7 +39,6 @@ export class SearchResultProcurementAdapter implements Adapter<SearchResultProcu
 
   adapt(item: any): SearchResultProcurement {
     let procurements = null;
-    console.log('convert procurement');
     if (item.content != null) {
       procurements = item.content.map(procurement => this.procurementAdapter.adapt(procurement));
     }

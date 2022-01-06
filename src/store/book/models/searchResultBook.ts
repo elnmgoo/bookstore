@@ -39,7 +39,6 @@ export class SearchResultBookAdapter implements Adapter<SearchResultBook> {
 
   adapt(item: any): SearchResultBook {
     let books = null;
-    console.log('convert purchaseOrder');
     if (item.content != null) {
       books = item.content.map(book => this.bookAdapter.adapt(book));
     }

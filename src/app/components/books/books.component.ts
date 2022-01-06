@@ -61,7 +61,6 @@ export class BooksComponent implements OnInit {
   }
 
   handleDelete(content, book) {
-    console.log('Delete ' + book.title);
     this.service.getNrOfOrders(book).subscribe(nrOfOrders => {
       if (nrOfOrders === 0) {
         this.service.delete(book.isbn);

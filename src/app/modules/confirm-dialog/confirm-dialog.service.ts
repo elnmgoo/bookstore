@@ -9,7 +9,6 @@ import { Subject } from 'rxjs';
 
   confirmThis(title: string, message: string, yesFn: () => void, noFn: () => void,
               no: string = 'Nee', yes: string = 'Ja' ): any {
-    console.log("confirmThis " + title);
     this.setConfirmation(title, message, yes, no, yesFn, noFn);
 
   }
@@ -25,11 +24,11 @@ import { Subject } from 'rxjs';
       no: noMessage,
       title: messageTitle,
       yesFn(): any {
-        that.subject.next(); // This will close the modal
+        that.subject.next(this.yes); // This will close the modal
         yesFn();
       },
       noFn(): any {
-        that.subject.next();
+        that.subject.next(this.no);
         noFn();
       }
     });

@@ -40,7 +40,6 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
         this.theBtwTotal.totalWithBtw += btwTotal.totalWithBtw;
         this.theBtwTotal.totalWithoutBtw += btwTotal.totalWithoutBtw;
       });
-      console.log('total ' + this.theBtwTotal.totalWithoutBtw);
     });
   }
 

@@ -171,11 +171,6 @@ export class PurchaseOrdersService {
     mapSortColumn.set('author', 'boek.auteur');
     mapSortColumn.set('amount', 'aantal');
     mapSortColumn.set('amountInDepot', 'aantalDepot');
-    console.log('sortColumn ' + sortColumn + ', ' + mapSortColumn.get(sortColumn));
-    console.log('sortOrder ' + sortDirection);
-    console.log('searchTerm ' + searchTerm);
-    // orders: [...state.orders, action.payload]
-
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
@@ -221,7 +216,6 @@ export class PurchaseOrdersService {
   }
 
   delete(purchasOrderId: number) {
-    console.log('remove ' + purchasOrderId);
     this.httpClient.delete(this.ordersUrl + '/' + purchasOrderId).pipe(
       map(response => {
         this.pSearch$.next();

@@ -167,11 +167,6 @@ export class ProcurementService {
     mapSortColumn.set('author', 'boek.auteur');
     mapSortColumn.set('amount', 'aantal');
     mapSortColumn.set('amountInDepot', 'aantalDepot');
-    console.log('sortColumn ' + sortColumn + ', ' + mapSortColumn.get(sortColumn));
-    console.log('sortOrder ' + sortDirection);
-    console.log('searchTerm ' + searchTerm);
-    // orders: [...state.orders, action.payload]
-
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
@@ -214,10 +209,8 @@ export class ProcurementService {
   }
 
   delete(purchasOrderId: number) {
-    console.log('remove ' + purchasOrderId);
     this.httpClient.delete(this.ordersUrl + '/' + purchasOrderId).pipe(
       map(response => {
-        console.log(response);
         this.pSearch$.next();
         this.pSearchTotal$.next();
       }),
@@ -225,11 +218,9 @@ export class ProcurementService {
   }
 
   add(procurement: Procurement) {
-    console.log('add ' + procurement.book.isbn);
     const inkoop = procurement.getInkoop();
     return this.httpClient.post(this.procurementUrl + procurement.book.isbn + '/inkopen', inkoop ).pipe(
       map(response => {
-        console.log(response);
         this.pSearch$.next();
         this.pSearchTotal$.next();
       }),

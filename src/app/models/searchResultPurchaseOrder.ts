@@ -39,7 +39,6 @@ export class SearchResultPurchaseOrderAdapter implements Adapter<SearchResultPur
 
   adapt(item: any): SearchResultPurchaseOrder {
     let purchaseOrders = null;
-    console.log('convert purchaseOrder');
     if (item.content != null) {
       purchaseOrders = item.content.map(purchaseOrder => this.purchaseOrderAdapter.adapt(purchaseOrder));
     }

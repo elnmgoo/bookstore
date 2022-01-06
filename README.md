@@ -90,4 +90,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
          "proxyConfig": "src/proxy.conf.json"
        },
      ```
-7.   ...     
+7.   upgrading of packages
+
+   - Use the following command:  
+     npx npm-check-updates -u  
+     npm install     

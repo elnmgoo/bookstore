@@ -49,7 +49,6 @@ export class ProcurementAdapter implements Adapter<Procurement> {
   private bookAdapter: BookAdapter = new BookAdapter();
 
   adapt(item: any): Procurement {
-    console.log('adapt book');
     let book: Book = null;
     if (item.boek != null) {
       book = this.bookAdapter.adapt(item.boek);

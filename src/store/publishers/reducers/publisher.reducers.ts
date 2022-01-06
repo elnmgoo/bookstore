@@ -16,7 +16,6 @@ export const publisherReducers = (
       return {...state, publishers: state.publishers.filter(publisher => publisher.id !== action.payload.id)};
     }
     case EPublisherActions.PublisherError: {
-      console.log(action.error);
       return state;
     }
     default: {

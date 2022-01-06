@@ -138,11 +138,6 @@ export class BooksService {
     mapSortColumn.set('author', 'auteur');
     mapSortColumn.set('supply', 'voorraad');
     mapSortColumn.set('supplyDepot', 'voorraadDepot');
-    console.log('sortColumn ' + sortColumn + ', ' + mapSortColumn.get(sortColumn));
-    console.log('sortOrder ' + sortDirection);
-    console.log('searchTerm ' + searchTerm);
-    // orders: [...state.orders, action.payload]
-
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
@@ -184,10 +179,8 @@ export class BooksService {
   }
 
   delete(isbn: number) {
-    console.log('remove ' + isbn);
     this.httpClient.delete(this.booksUrl + '/boeken/' + isbn).pipe(
       map(response => {
-        console.log(response);
         this.pSearch$.next();
         this.pSearchBookStatistics$.next();
       }),

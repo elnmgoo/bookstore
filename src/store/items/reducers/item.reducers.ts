@@ -16,7 +16,6 @@ export const itemReducers = (
       return {...state, items: state.items.filter(item => item.id !== action.payload.id)};
     }
     case EItemActions.ItemError: {
-      console.log(action.error);
       return state;
     }
     default: {

@@ -226,12 +226,10 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
     this.subscriptions.add(this.discount$.subscribe(discount => {
-      console.log('discount$');
       this.discount = discount;
     }));
 
     this.subscriptions.add(this.discountPercentageValue$.subscribe(discountPercentageValue => {
-      console.log('discountPercentageValue$ ' + discountPercentageValue);
       this.discountPercentageValue = discountPercentageValue;
     }));
 
@@ -290,8 +288,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onInputArticleSelected(event) {
-    console.log(event.target.selectedIndex);
-    console.log(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
     this.itemForm.controls.itemAmount.setValue(1);
@@ -323,8 +319,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.payed = false;
     }
     this.setTimeStamp();
-    console.log('itemprice = ' + this.itemForm.controls.itemPrice.value);
-    console.log('totalPrice: ' + this.orderTotalPrice);
     let description = this.itemForm.controls.item.value.description;
     if (this.itemForm.controls.itemAmount.value > 1) {
       if (this.itemForm.controls.itemDiscount.value > 0) {
@@ -421,10 +415,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onPayButton() {
-    console.log('Afrekenen en een bonnetje afdrukken');
     this.setTimeStamp();
     this.order.forEach(myOrder => {
-      console.log('Order: ' + myOrder.description);
       const order = {...myOrder};
       order.dateTime = this.timeStamp;
       order.discountPercentage = Math.round(this.discount.discountPercentage * 100);
@@ -489,7 +481,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     if (this.printOrder === true) {
-      console.log('bonnetje afdrukken');
       this.printService.initPrinter().pipe(
         tap(res => console.log('initPrinter ', res)),
         concatMap(() => this.printService.printLogoAndAddress()),
@@ -530,7 +521,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onChangeIsbn(event: Event) {
     const isbn = this.bookForm.controls.isbn.value;
-    console.log('isbn: ' + isbn);
     if (isbn && isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
         this.bookForm.controls.supply.setValue(book.supply);
@@ -562,16 +552,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onChangeDiscountValue() {
-    console.log('change discountValue');
-    // this.discountValue = Number(this.discountForm.controls.discountValue.value.replace(',', '.')) * 100;
-    // this.orderTotalPriceWithDiscountAndReduction = this.orderTotalPriceWithDiscount - this.discountValue;
-  }
-
-
   onCheckboxChange(event) {
     this.printOrder = event.target.checked;
-    console.log('printOrder ' + this.printOrder);
   }
 
 

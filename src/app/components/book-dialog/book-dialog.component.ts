@@ -96,7 +96,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
 
   onChangeIsbn(event: Event) {
     const isbn = this.bookForm.controls.isbn.value;
-    console.log('isbn: ' + isbn);
     if (isbn.length === 13) {
       this.service.getBook(isbn).subscribe((book: Book) => {
         this.bookForm.controls.title.setValue(book.title);
@@ -145,7 +144,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       Number(this.bookForm.controls.price.value.replace(',', '.')));
 
     if (this.procurementService != null){
-      console.log('add order');
       const procurement: Procurement = new Procurement(  0, new Date().getTime(),
         Number(this.bookForm.controls.price.value.replace(',', '.')), this.bookForm.controls.amount.value,
         this.bookForm.controls.amountDepot.value, book);
@@ -165,7 +163,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
     const value = $event.target.options[$event.target.options.selectedIndex].value;
     this.publisher.id = value;
     this.publisher.publisher = text;
-    console.log(value + ': ' + text);
   }
 
   onEditBookButton() {
@@ -182,7 +179,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
   }
 
   onCancelButton() {
-    console.log('cancel');
     this.activeModal.close();
 
   }

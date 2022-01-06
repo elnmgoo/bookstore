@@ -23,7 +23,6 @@ export class Book {
 
 
   public static getBoek(book: Book) {
-    console.log('modify ' + book.isbn);
     const boek: any = new Object();
     const uitgever: any = new Object();
     uitgever.id = book.publisher.id;

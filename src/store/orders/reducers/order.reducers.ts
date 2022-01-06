@@ -69,7 +69,6 @@ export const orderReducers = (
       };
     }
     case EOrderActions.SetDiscount: {
-      console.log('setDiscount');
       return {
         ...state,
         discountPercentageValue: calculateDiscountPercentageValue(action.payload, state.priceTotal),
@@ -80,7 +79,6 @@ export const orderReducers = (
       };
     }
     case EOrderActions.OrderError: {
-      console.log(action.error);
       return state;
     }
 
