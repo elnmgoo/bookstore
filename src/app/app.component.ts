@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 
-import 'bootstrap';
+
 declare var $: any;
 
 @Component({
