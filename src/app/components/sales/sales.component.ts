@@ -485,7 +485,8 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         tap(res => console.log('initPrinter ', res)),
         concatMap(() => this.printService.printLogoAndAddress()),
         concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
-        concatMap(res => this.printService.printStringNewLine(discountPercentageReceipt, false, false)),
+        concatMap(res => (this.discount.discountPercentage <= 0) ? this.printService.printNothing() :
+          this.printService.printStringNewLine(discountPercentageReceipt, false, false)),
         concatMap(res => this.printService.printSolidLine()),
         concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
         concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
