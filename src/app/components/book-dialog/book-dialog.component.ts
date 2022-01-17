@@ -3,7 +3,7 @@ import {Book} from '../../../store/book/models/book';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
 import {AppConstants} from '../../app-constants';
-import {NgbActiveModal, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {AppState} from '../../../store/app.state';
@@ -11,7 +11,6 @@ import {GetPublishers} from '../../../store/publishers/actions/publisher.actions
 import {BooksService} from '../../services/book.service';
 import {Publisher} from '../../../store/publishers/models/publisher';
 import {ProcurementService} from '../../services/procurement.service';
-import {PurchaseOrder} from '../../models/purchaseOrder';
 import {Procurement} from '../../models/procurement';
 
 
@@ -141,7 +140,8 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       this.bookForm.controls.supply.value + this.bookForm.controls.amount.value,
       this.bookForm.controls.supplyDepot.value + this.bookForm.controls.amountDepot.value,
       this.publisher,
-      Number(this.bookForm.controls.price.value.replace(',', '.')));
+      Number(this.bookForm.controls.price.value.replace(',', '.')),
+      false);
 
     if (this.procurementService != null){
       const procurement: Procurement = new Procurement(  0, new Date().getTime(),
@@ -173,7 +173,8 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       this.bookForm.controls.supply.value,
       this.bookForm.controls.supplyDepot.value,
       this.publisher,
-      Number(this.bookForm.controls.price.value.replace(',', '.'))
+      Number(this.bookForm.controls.price.value.replace(',', '.')),
+      false
     );
     this.service.update(book).subscribe(() => this.activeModal.close());
   }

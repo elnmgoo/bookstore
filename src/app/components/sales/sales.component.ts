@@ -557,5 +557,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.printOrder = event.target.checked;
   }
 
+  onRefresh() {
+    console.log('refresh');
+  }
+
 
 }

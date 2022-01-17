@@ -65,7 +65,7 @@ export class ProcurementComponent implements OnInit, OnDestroy {
   }
 
   onButtonAdd() {
-    const book: Book = new Book('', '', '', 0, 0, null, 0);
+    const book: Book = new Book('', '', '', 0, 0, null, 0, false);
     const modalRef = this.modalService.open(BookDialogComponent);
     modalRef.componentInstance.book = book;
     modalRef.componentInstance.bNew = true;

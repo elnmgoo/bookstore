@@ -1,14 +1,11 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
-import {PurchaseOrder} from '../models/purchaseOrder';
 import {SortDirection} from '../directives/ngbd-sortable-header.directive';
 import {catchError, debounceTime, delay, map, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {SearchResultPurchaseOrder, SearchResultPurchaseOrderAdapter} from '../models/searchResultPurchaseOrder';
+import {SearchResultPurchaseOrder} from '../models/searchResultPurchaseOrder';
 import {DecimalPipe} from '@angular/common';
-import {NgbCalendar, NgbDate, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {BtwTotal} from '../models/btwTotal';
 import {Book, BookAdapter} from '../../store/book/models/book';
 import {SearchResultBook, SearchResultBookAdapter} from '../../store/book/models/searchResultBook';
 import {BookStatistics} from '../models/bookStatistics';
@@ -19,6 +16,7 @@ interface State {
   searchTerm: string;
   sortColumn: string;
   sortDirection: SortDirection;
+  onlyWebSite: boolean;
 }
 
 @Injectable({
@@ -32,6 +30,7 @@ export class BooksService {
     searchTerm: '',
     sortColumn: 'isbn',
     sortDirection: 'desc',
+    onlyWebSite: false
   };
   private booksUrl = environment.apiUrl;
   private pLoading$ = new BehaviorSubject<boolean>(true);
@@ -113,6 +112,13 @@ export class BooksService {
     this.pSet({searchTerm});
   }
 
+  get onlyWebSite() {
+    return BooksService.pState.onlyWebSite;
+  }
+
+  set onlyWebSite(onlyWebSite: boolean) {
+    this.pSet({onlyWebSite});
+  }
 
   set sortColumn(sortColumn: string) {
     this.pSet({sortColumn});
@@ -129,7 +135,7 @@ export class BooksService {
   }
 
   private pSearch(): Observable<SearchResultBook> {
-    const {sortColumn, sortDirection, pageSize, page, searchTerm} = BooksService.pState;
+    const {sortColumn, sortDirection, pageSize, page, searchTerm, onlyWebSite} = BooksService.pState;
     const mapSortColumn = new Map();
     mapSortColumn.set('title', 'titel');
     mapSortColumn.set('publisher', 'uitgever.naam');
@@ -142,7 +148,9 @@ export class BooksService {
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;
     }
-
+    if (onlyWebSite){
+      urlSuffix += '&onlyWebSite=true';
+    }
     const url = this.booksUrl + '/boeken';
     let theUrl = url + urlSuffix;
     const searchString = searchTerm.trim();
@@ -174,7 +182,10 @@ export class BooksService {
   }
 
   pSearchBookStatistics(): Observable<BookStatistics> {
-    const {searchTerm} = BooksService.pState;
+    const {searchTerm, onlyWebSite} = BooksService.pState;
+    if (onlyWebSite){
+      return this.httpClient.get<BookStatistics>(this.booksUrl + '/statistics/boeken/' + searchTerm + '?onlyWebSite=true&');
+    }
     return this.httpClient.get<BookStatistics>(this.booksUrl + '/statistics/boeken/' + searchTerm);
   }
 

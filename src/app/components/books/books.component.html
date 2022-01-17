@@ -19,6 +19,12 @@
       <label for="searchTerm">Zoeken op term</label>
       <input id="searchTerm" class="form-control" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
     </div>
+    <div class="form-group col-md-8"></div>
+    <div class="form-group col-md-2">
+      <input type="checkbox" class="form-check-input" id="showOnlyWeb" [checked]="service.onlyWebSite"
+             (change)="onCheckboxChange($event)">
+      <label for="showOnlyWeb">Toon boeken in WebShop</label>
+    </div>
   </div>
 
   <table class="table table-striped">
@@ -37,6 +43,8 @@
     <tbody>
     <tr *ngFor="let book of books$ | async">
       <td>
+        <img *ngIf="book.onWebSite === true" src="assets/Wordpress-Icon.png" style="opacity: 0.70;"/>
+        <img *ngIf="book.onWebSite === false" src="assets/Wordpress-Icon.png" style="opacity: 0.10;"/>
         <img src="assets/delete-24px.svg" (click)="handleDelete(content, book)" style="opacity: 0.25;"/>
         <img src="assets/edit-24px.svg" (click)="handleEdit(book)" style="opacity: 0.25;"/>
       </td>

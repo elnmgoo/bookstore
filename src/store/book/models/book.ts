@@ -10,8 +10,10 @@ export class Book {
   supplyDepot: number;
   publisher: Publisher;
   price: number;
+  onWebSite: boolean;
 
-  constructor(isbn: string, title: string, author: string, supply: number, supplyDepot: number, publisher: Publisher, price: number) {
+  constructor(isbn: string, title: string, author: string, supply: number, supplyDepot: number,
+              publisher: Publisher, price: number, onWebSite: boolean) {
     this.isbn = (isbn != null) ? isbn : '';
     this.title = (title != null) ? title : '';
     this.author = (author != null) ? author : '';
@@ -19,6 +21,7 @@ export class Book {
     this.supplyDepot = (supplyDepot != null) ? supplyDepot : 0;
     this.publisher = (publisher != null) ? publisher : new Publisher('', '');
     this.price = (price != null) ? price : 0;
+    this.onWebSite = onWebSite;
   }
 
 
@@ -34,6 +37,7 @@ export class Book {
     boek.prijs = book.price;
     boek.voorraad = book.supply;
     boek.voorraadDepot = book.supplyDepot;
+    boek.onWebSite = book.onWebSite;
     return (boek);
   }
 }
@@ -47,6 +51,6 @@ export class BookAdapter implements Adapter<Book> {
     if (item.uitgever != null) {
       publisher = new Publisher(item.uitgever.uitgeverid, item.uitgever.naam);
     }
-    return new Book(item.isbn, item.titel, item.auteur, item.voorraad, item.voorraadDepot, publisher, item.prijs);
+    return new Book(item.isbn, item.titel, item.auteur, item.voorraad, item.voorraadDepot, publisher, item.prijs, item.onWebSite);
   }
 }

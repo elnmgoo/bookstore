@@ -20,6 +20,7 @@ export class BooksComponent implements OnInit {
   warningText: string;
   showTotals = false;
 
+
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
   constructor(public service: BooksService,
@@ -79,4 +80,7 @@ export class BooksComponent implements OnInit {
     modalRef.componentInstance.procurementService = null;
   }
 
+  onCheckboxChange(event) {
+    this.service.onlyWebSite = event.target.checked;
+  }
 }
