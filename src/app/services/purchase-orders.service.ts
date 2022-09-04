@@ -164,13 +164,11 @@ export class PurchaseOrdersService {
     mapSortColumn.set('datetime', 'datumtijd');
     mapSortColumn.set('book.publisher', 'boek.uitgever.naam');
     mapSortColumn.set('book.supply', 'boek.voorraad');
-    mapSortColumn.set('book.supplyDepot', 'boek.voorraadDepot');
     mapSortColumn.set('totalPrice', 'totaal');
     mapSortColumn.set('price', 'prijs');
     mapSortColumn.set('isbn', 'boek.isbn');
     mapSortColumn.set('author', 'boek.auteur');
     mapSortColumn.set('amount', 'aantal');
-    mapSortColumn.set('amountInDepot', 'aantalDepot');
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;

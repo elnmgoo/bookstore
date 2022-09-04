@@ -7,15 +7,13 @@ export class Procurement {
   dateTime: number;
   price: number;
   amount: number;
-  amountInDepot: number;
   book: Book;
 
-  constructor(id: number, dateTime: number, price: number, amount: number, amountDepot: number, book: Book) {
+  constructor(id: number, dateTime: number, price: number, amount: number, book: Book) {
     this.id = id;
     this.dateTime = dateTime;
     this.price = (price != null) ? price : 0;
     this.amount = amount;
-    this.amountInDepot = amountDepot;
     this.book = book;
   }
 
@@ -31,12 +29,10 @@ export class Procurement {
       boek.uitgever = uitgever;
       boek.prijs = this.book.price;
       boek.voorraad = this.book.supply;
-      boek.voorraadDepot = this.book.supplyDepot;
       inkoop.boek = boek;
       inkoop.datumtijd = this.dateTime;
       inkoop.prijs = this.price;
       inkoop.aantal = this.amount;
-      inkoop.aantalDepot = this.amountInDepot;
       inkoop.id = 0;
       return (inkoop);
   }
@@ -53,6 +49,6 @@ export class ProcurementAdapter implements Adapter<Procurement> {
     if (item.boek != null) {
       book = this.bookAdapter.adapt(item.boek);
     }
-    return new Procurement(item.id, item.datumtijd, item.prijs, item.aantal, item.aantalDepot, book);
+    return new Procurement(item.id, item.datumtijd, item.prijs, item.aantal, book);
   }
 }

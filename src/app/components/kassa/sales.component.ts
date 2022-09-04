@@ -198,8 +198,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       total: ['', [Validators.required, Validators.minLength(1)]],
       tax: ['9', [Validators.required, Validators.min(0)]],
       date: [this.calendar.getToday()],
-      supply: [''],
-      supplyDepot: ['']
+      supply: ['']
     });
 
     this.itemForm = this.formBuilder.group({
@@ -503,7 +502,10 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       ).subscribe(res => console.log('printToPrinter', res));
     }
     this.payed = true;
-    setTimeout(() => this.store.dispatch(new DeleteAllOrder()), 1500);
+    setTimeout(() => {
+      this.store.dispatch(new DeleteAllOrder());
+      this.printOrder = true;
+    }, 1500);
     this.autofocusField.nativeElement.focus();
   }
 
@@ -525,7 +527,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isbn && isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
         this.bookForm.controls.supply.setValue(book.supply);
-        this.bookForm.controls.supplyDepot.setValue(book.supplyDepot);
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);

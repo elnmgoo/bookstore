@@ -59,7 +59,6 @@
       <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
       <th scope="col" sortable="book.publisher" (sort)="onSort($event)">Uitgever</th>
       <th scope="col" sortable="amount" (sort)="onSort($event)">Aantal</th>
-      <th scope="col" sortable="amountInDepot" (sort)="onSort($event)">Depot</th>
       <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
       <th scope="col">Totaal</th>
     </tr>
@@ -94,20 +93,17 @@
         <ngb-highlight [result]="procurement.amount | number" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
-        <ngb-highlight [result]="procurement.amountInDepot | number" [term]="service.searchTerm"></ngb-highlight>
-      </td>
-      <td>
         <ngb-highlight [result]="procurement.price | number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
-        <ngb-highlight [result]="(procurement.price * (procurement.amount + procurement.amountInDepot))| number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
+        <ngb-highlight [result]="(procurement.price * procurement.amount )| number:'1.2-2'" [term]="service.searchTerm"></ngb-highlight>
       </td>
     </tr>
     </tbody>
   </table>
 
   <div class="d-flex justify-content-between p-2 footer">
-    <span>Total: {{searchPriceTotal$ | async}}</span>
+    <span>Total: {{searchPriceTotal$ | async  | number:'1.2-2'}}</span>
 
     <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [maxSize]="5" [rotate]="true"
                     [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>

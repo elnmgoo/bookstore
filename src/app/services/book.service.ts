@@ -143,7 +143,6 @@ export class BooksService {
     mapSortColumn.set('isbn', 'isbn');
     mapSortColumn.set('author', 'auteur');
     mapSortColumn.set('supply', 'voorraad');
-    mapSortColumn.set('supplyDepot', 'voorraadDepot');
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;

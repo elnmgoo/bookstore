@@ -35,7 +35,6 @@
       <th scope="col" sortable="title" (sort)="onSort($event)">Titel</th>
       <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
       <th scope="col" sortable="supply" (sort)="onSort($event)">Voorraad</th>
-      <th scope="col" sortable="supplyDepot" (sort)="onSort($event)">Depot</th>
       <th scope="col" sortable="publisher" (sort)="onSort($event)">Uitgever</th>
       <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
     </tr>
@@ -63,9 +62,6 @@
         <ngb-highlight [result]="book.supply" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
-        <ngb-highlight [result]="book.supplyDepot" [term]="service.searchTerm"></ngb-highlight>
-      </td>
-      <td>
         <ngb-highlight [result]="book.publisher.publisher" [term]="service.searchTerm"></ngb-highlight>
       </td>
       <td>
@@ -81,7 +77,6 @@
         <tr>
           <th>(F1)</th>
           <th>Voorraad</th>
-          <th>Depot</th>
           <th>Totaal</th>
         </tr>
         <ng-container *ngIf="this.showTotals">
@@ -92,12 +87,6 @@
             <td align="right">
               {{bookStatistics.amountSupply}}
             </td>
-            <td align="right">
-              {{bookStatistics.amountDepot}}
-            </td>
-            <td align="right">
-              {{bookStatistics.amountSupply + bookStatistics.amountDepot}}
-            </td>
           </tr>
           <tr>
             <td align="right">
@@ -106,13 +95,7 @@
             <td align="right">
               {{bookStatistics.totalPriceSupply | number:'1.2-2'}}
             </td>
-            <td align="right">
-              {{bookStatistics.totalPriceDepot  | number:'1.2-2'}}
-            </td>
-            <td align="right">
-              {{bookStatistics.totalPrice | number:'1.2-2'}}
-            </td>
-          </tr>
+           </tr>
         </ng-container>
       </table>
     </ng-container>

@@ -166,7 +166,6 @@ export class ProcurementService {
     mapSortColumn.set('isbn', 'boek.isbn');
     mapSortColumn.set('author', 'boek.auteur');
     mapSortColumn.set('amount', 'aantal');
-    mapSortColumn.set('amountInDepot', 'aantalDepot');
     let urlSuffix = '?page=' + (page - 1) + '&size=' + pageSize;
     if (sortColumn) {
       urlSuffix += '&sort=' + mapSortColumn.get(sortColumn) + ',' + sortDirection;

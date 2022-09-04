@@ -5,9 +5,7 @@ import {select, Store} from '@ngrx/store';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {AppState} from '../../../store/app.state';
 import {AddPublisher, DeletePublisher, GetPublishers} from '../../../store/publishers/actions/publisher.actions';
-import {AddItem, DeleteItem} from '../../../store/items/actions/item.actions';
 import {PublisherService} from '../../../store/publishers/services/publisher.service';
-import {ConfirmDialogService} from '../../modules/confirm-dialog/confirm-dialog.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -51,7 +49,7 @@ export class PublishersComponent implements OnInit {
         this.store.dispatch(new DeletePublisher(publisher));
       } else {
         this.warningText = 'Uitgever is nog aan ' + nrOfBooks + ' boeken gekoppeld.';
-        this.modalService.open(content, { size: 'lg' });
+        this.modalService.open(content, {size: 'lg'});
       }
     });
   }

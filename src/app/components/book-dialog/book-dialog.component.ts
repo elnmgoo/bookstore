@@ -61,17 +61,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
         event.preventDefault();
         event.stopPropagation();
         break;
-      case 'F9':
-        if (event.shiftKey) {
-          if (this.bookForm.controls.amountDepot.value > 0) {
-            this.bookForm.controls.amountDepot.setValue(this.bookForm.controls.amountDepot.value - 1);
-          }
-        } else {
-          this.bookForm.controls.amountDepot.setValue(this.bookForm.controls.amountDepot.value + 1);
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        break;
     }
   }
 
@@ -85,9 +74,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       price: [this.book.price.toString(10).replace('.', ','),
         [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
       supply: [this.book.supply, [Validators.required, Validators.min(0), Validators.max(99)]],
-      supplyDepot: [this.book.supplyDepot, [Validators.required, Validators.min(0), Validators.max(99)]],
       amount: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
-      amountDepot: [0, [Validators.required, Validators.min(0), Validators.max(99)]],
       added: ['', [Validators.minLength(0), Validators.maxLength(100)]]
     });
     this.publisher = this.book.publisher;
@@ -103,9 +90,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
         this.bookForm.controls.price.setValue(book.price.toString(10).replace('.', ','));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.supply.setValue(book.supply);
-        this.bookForm.controls.supplyDepot.setValue(book.supplyDepot);
         this.bookForm.controls.amount.setValue(1);
-        this.bookForm.controls.amountDepot.setValue(0);
         this.publisher.id = book.publisher.id;
         this.publisher.publisher = book.publisher.publisher;
       });
@@ -115,8 +100,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
   bookSuccesfullyAdded(book: Book){
     this.bookForm.controls.added.setValue(
       book.title + ', ' + book.author + ' (' +
-      this.bookForm.controls.amount.value + ',' +
-      this.bookForm.controls.amountDepot.value + ')'
+      this.bookForm.controls.amount.value  + ')'
     );
     this.bookForm.controls.isbn.setValue('');
     this.bookForm.controls.title.setValue('');
@@ -125,9 +109,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
     this.bookForm.controls.price.setValue(0);
     this.bookForm.controls.amount.setValue(0);
     this.bookForm.controls.supply.setValue(0);
-    this.bookForm.controls.supplyDepot.setValue(0);
     this.bookForm.controls.amount.setValue(0);
-    this.bookForm.controls.amountDepot.setValue(0);
     this.autofocusField.nativeElement.focus();
   }
 
@@ -138,7 +120,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       this.bookForm.controls.title.value,
       this.bookForm.controls.author.value,
       this.bookForm.controls.supply.value + this.bookForm.controls.amount.value,
-      this.bookForm.controls.supplyDepot.value + this.bookForm.controls.amountDepot.value,
       this.publisher,
       Number(this.bookForm.controls.price.value.replace(',', '.')),
       false);
@@ -146,7 +127,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
     if (this.procurementService != null){
       const procurement: Procurement = new Procurement(  0, new Date().getTime(),
         Number(this.bookForm.controls.price.value.replace(',', '.')), this.bookForm.controls.amount.value,
-        this.bookForm.controls.amountDepot.value, book);
+        book);
       this.procurementService.add(procurement).subscribe(() => {
         this.bookSuccesfullyAdded(procurement.book);
       });
@@ -171,7 +152,6 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       this.bookForm.controls.title.value,
       this.bookForm.controls.author.value,
       this.bookForm.controls.supply.value,
-      this.bookForm.controls.supplyDepot.value,
       this.publisher,
       Number(this.bookForm.controls.price.value.replace(',', '.')),
       false
@@ -181,6 +161,5 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
 
   onCancelButton() {
     this.activeModal.close();
-
   }
 }
