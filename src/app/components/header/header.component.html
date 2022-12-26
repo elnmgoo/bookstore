@@ -26,6 +26,6 @@
       </li>
     </ul>
   </div>
-  <div class="version" align="right">{{browser}} - Versie: {{buildTimestamp}}</div>
+  <div *ngIf="router.url === '/procurement'" class="version" align="right">{{browser}} - {{buildTimestamp}} - {{origin}}</div>
 </nav>
 

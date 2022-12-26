@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:4200/api',
-  api2Url: 'http://127.0.0.1:4200/api2',
-  buildTimestamp: '23-01-2022'
+  apiUrl: window.location.origin + '/api',
+  api2Url: window.location.origin + '/api2',
+  buildTimestamp: '26-12-2022'
 };
 
 /*
