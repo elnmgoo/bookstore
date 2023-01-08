@@ -1,8 +1,9 @@
-import {Action, createAction, props} from '@ngrx/store';
+import {Action} from '@ngrx/store';
 import {Publisher} from '../models/publisher';
 
 export enum EPublisherActions {
   GetPublishers = '[Publisher] - Get Publishers',
+  GetPublishersRefresh = '[Publisher] - Get PublishersRefresh',
   GetPublishersSuccess = '[Publisher] - Get PublishersSuccess',
   AddPublisher = '[Publisher] - Add publisher',
   AddPublisherSuccess = '[Publisher] - Add publisher success',
@@ -19,6 +20,13 @@ export class GetPublishersSuccess implements Action {
   public readonly type = EPublisherActions.GetPublishersSuccess;
   constructor(public payload: Publisher[]) {}
 }
+
+export class GetPublishersRefresh implements Action {
+  public readonly type = EPublisherActions.GetPublishersRefresh;
+  constructor() {}
+}
+
+
 
 export class AddPublisher implements Action {
   public readonly type = EPublisherActions.AddPublisher;
@@ -46,4 +54,5 @@ export class PublisherError implements Action {
   constructor(public error: Error) {}
 }
 
-export type PublisherActions = GetPublishers | GetPublishersSuccess | AddPublisher | AddPublisherSuccess | DeletePublisher | DeletePublisherSuccess| PublisherError;
+export type PublisherActions = GetPublishers | GetPublishersSuccess | AddPublisher |
+  AddPublisherSuccess | DeletePublisher | DeletePublisherSuccess| PublisherError;

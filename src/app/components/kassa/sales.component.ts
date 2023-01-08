@@ -32,7 +32,9 @@ import {
   SetDiscount
 } from '../../../store/orders/actions/order.actions';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
-import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
+import {
+  GetPublishers, GetPublishersRefresh
+} from '../../../store/publishers/actions/publisher.actions';
 import {BookService} from '../../../store/book/service/book.service';
 import {Book} from '../../../store/book/models/book';
 import {NgbCalendar, NgbDateParserFormatter, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -41,8 +43,10 @@ import {DateFormatPipe2Date} from './DateFormatPipe2Date';
 import {PrintService} from '../../../store/book/service/print.service';
 import {concatMap, debounceTime, take, tap} from 'rxjs/operators';
 import {formatNumber} from '@angular/common';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Discount} from '../../../store/orders/models/discount';
+import {Publisher} from '../../../store/publishers/models/publisher';
+import {Item} from '../../../store/items/models/item';
 
 /**
  * This Service handles how the date is rendered and parsed from keyboard i.e. in the bound input field.
@@ -97,13 +101,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceWithDiscount = 0;
   orderTotalPriceWithDiscountAndReduction = 0;
   discount: Discount;
+  publishers: Publisher[];
 
   printOrder = true;
   payed = false;
 
-  item$ = this.store.pipe(select(selectItemList));
-  order$ = this.store.pipe(select(selectOrderList));
-  publisher$ = this.store.pipe(select(selectPublisherList));
+  item$: Observable<Item[]> = this.store.pipe(select(selectItemList));
+  order$: Observable<Order[]> = this.store.pipe(select(selectOrderList));
+  publisher$: Observable<Publisher[]> = this.store.pipe(select(selectPublisherList));
   discountPercentageValue$ = this.store.pipe(select(selectDiscountPercentageValue));
   discount$ = this.store.pipe(select(selectDiscount));
   orderTotalPrice$ = this.store.pipe(select(selectOrderTotalPrice));
@@ -182,7 +187,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit(): void {
-
     this.discount$.pipe(take(1)).subscribe(
       d => this.discount = d
     );
@@ -223,6 +227,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.add(this.order$.subscribe(order => {
       this.order = order;
     }));
+    this.subscriptions.add(this.publisher$.subscribe(publisher => {
+      this.publishers = publisher;
+    }));
 
     this.subscriptions.add(this.discount$.subscribe(discount => {
       this.discount = discount;
@@ -254,7 +261,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.add(this.discountForm.get('discountValue').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(val => {
+      .subscribe(() => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
           discountValue: Number(this.discountForm.controls.discountValue.value.replace(',', '.') * 100)
@@ -262,7 +269,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
     this.subscriptions.add(this.discountForm.get('discountValueText').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(val => {
+      .subscribe(() => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
           discountText: this.discountForm.controls.discountValueText.value
@@ -270,7 +277,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
     this.subscriptions.add(this.discountForm.get('discountPercentage').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(val => {
+      .subscribe(() => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
           discountPercentage: Number(this.discountForm.controls.discountPercentage.value.replace(',', '.'))
@@ -278,7 +285,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
     this.subscriptions.add(this.discountForm.get('discountPercentageText').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(val => {
+      .subscribe(() => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
           discountPercentageText: this.discountForm.controls.discountPercentageText.value
@@ -286,7 +293,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
   }
 
-  onInputArticleSelected(event) {
+  onInputArticleSelected() {
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
     this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
     this.itemForm.controls.itemAmount.setValue(1);
@@ -395,12 +402,12 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     const splittedDescription = description.split(' ');
     let line = '';
     splittedDescription.forEach(word => {
-      const subword = word.substr(0, Math.min(word.length, size));
+      const subword = word.substring(0, Math.min(word.length, size));
       if (line.length === 0) {
         line = subword;
       } else {
         if (line.length + subword.length >= (size - 1)) {
-          arrayDescription.push(line + this.spaces.substr(0, size - line.length));
+          arrayDescription.push(line + this.spaces.substring(0, size - line.length));
           line = subword;
         } else {
           line += ' ' + subword;
@@ -408,7 +415,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     if (line.length > 0) {
-      arrayDescription.push(line + this.spaces.substr(0, size - line.length));
+      arrayDescription.push(line + this.spaces.substring(0, size - line.length));
     }
     return arrayDescription;
   }
@@ -440,7 +447,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
               descriptionBuffer += '\n - ' + line + '€';
             }
             const price = formatNumber((myOrder.price * myOrder.amount) / 100, 'nl', '1.2-2');
-            descriptionBuffer += this.spaces.substr(0, 8 - price.length) + price;
+            descriptionBuffer += this.spaces.substring(0, 8 - price.length) + price;
           } else {
             descriptionBuffer += '\n   ' + line;
           }
@@ -483,22 +490,22 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.printService.initPrinter().pipe(
         tap(res => console.log('initPrinter ', res)),
         concatMap(() => this.printService.printLogoAndAddress()),
-        concatMap(res => this.printService.printStringNewLine(buffer, false, false)),
-        concatMap(res => (this.discount.discountPercentage <= 0) ? this.printService.printNothing() :
+        concatMap(() => this.printService.printStringNewLine(buffer, false, false)),
+        concatMap(() => (this.discount.discountPercentage <= 0) ? this.printService.printNothing() :
           this.printService.printStringNewLine(discountPercentageReceipt, false, false)),
-        concatMap(res => this.printService.printSolidLine()),
-        concatMap(res => this.printService.printStringNewLine(totalReceipt, true, false)),
-        concatMap(res => this.printService.printStringNewLine(taxReceipt, false, false)),
-        concatMap(res => (this.discount.discountValue <= 0) ? this.printService.printNothing() :
+        concatMap(() => this.printService.printSolidLine()),
+        concatMap(() => this.printService.printStringNewLine(totalReceipt, true, false)),
+        concatMap(() => this.printService.printStringNewLine(taxReceipt, false, false)),
+        concatMap(() => (this.discount.discountValue <= 0) ? this.printService.printNothing() :
           this.printService.printStringNewLine(totalDiscountReceipt, true, false)),
-        concatMap(res => this.printService.printSolidLine()),
-        concatMap(res => this.printService.printStringNewLine(totalReceiptWithDiscount, true, false)),
-        concatMap(res => this.printService.printSolidLine()),
-        concatMap(res => this.printService.printStringNewLine(this.time, false, true)),
-        concatMap(res => this.printService.printStringNewLine('', false, false)),
-        concatMap(res => this.printService.printStringNewLine('Ruilen binnen 14 dagen met bon.', false, true)),
-        concatMap(res => this.printService.printStringNewLine('Bedankt voor uw aankoop en graag tot ziens!', false, true)),
-        concatMap(res => this.printService.printToPrinter())
+        concatMap(() => this.printService.printSolidLine()),
+        concatMap(() => this.printService.printStringNewLine(totalReceiptWithDiscount, true, false)),
+        concatMap(() => this.printService.printSolidLine()),
+        concatMap(() => this.printService.printStringNewLine(this.time, false, true)),
+        concatMap(() => this.printService.printStringNewLine('', false, false)),
+        concatMap(() => this.printService.printStringNewLine('Ruilen binnen 14 dagen met bon.', false, true)),
+        concatMap(() => this.printService.printStringNewLine('Bedankt voor uw aankoop en graag tot ziens!', false, true)),
+        concatMap(() => this.printService.printToPrinter())
       ).subscribe(res => console.log('printToPrinter', res));
     }
     this.payed = true;
@@ -518,14 +525,18 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     return ('');
   }
 
-  onDelete(indexOfElement: number, order: Order, event) {
+  onDelete(indexOfElement: number, order: Order) {
     this.store.dispatch(new DeleteOrder(order));
   }
 
-  onChangeIsbn(event: Event) {
+  onChangeIsbn() {
     const isbn = this.bookForm.controls.isbn.value;
     if (isbn && isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
+        // ToDo Add publisher if not known
+        if (this.publishers.filter(publisher => publisher.id === book.publisher.id).length === 0){
+          this.store.dispatch(new GetPublishersRefresh());
+        }
         this.bookForm.controls.supply.setValue(book.supply);
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
@@ -558,9 +569,4 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.printOrder = event.target.checked;
   }
 
-  onRefresh() {
-    console.log('refresh');
-  }
-
-
-}
+ }

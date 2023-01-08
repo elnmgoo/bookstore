@@ -11,7 +11,7 @@ export class Publisher {
   }
 
   public static getUitgever(publisher: Publisher) {
-    const uitgever: any = new Object();
+    const uitgever: any = {};
     uitgever.uitgeverid = publisher.id;
     uitgever.naam = publisher.publisher;
     return uitgever;

@@ -6,7 +6,6 @@ import {PurchaseOrder} from '../../models/purchaseOrder';
 import {PurchaseOrdersService} from '../../services/purchase-orders.service';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
 import {NgbCalendar, NgbDate} from '@ng-bootstrap/ng-bootstrap';
-import {FormGroup} from '@angular/forms';
 import {BtwTotal} from '../../models/btwTotal';
 
 @Component({
@@ -19,7 +18,6 @@ export class PurchaseOrdersComponent implements OnInit, OnDestroy {
   purchaseOrders$: Observable<PurchaseOrder[]>;
   searchBtwTotal$: Observable<BtwTotal[]>;
   total$: Observable<number>;
-  tableForm: FormGroup;
   theBtwTotal: BtwTotal;
   subscription: Subscription;
 

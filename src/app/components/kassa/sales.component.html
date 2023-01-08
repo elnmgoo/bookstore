@@ -17,7 +17,7 @@
         <div class="form-group col-md-4">
           <label for="inputISBN">ISBN</label>
           <input #autofocus formControlName="isbn" type="text" class="form-control form-control-sm" id="inputISBN" placeholder="Number"
-                 mask="0000000000000" (change)="onChangeIsbn($event)">
+                 mask="0000000000000" (change)="onChangeIsbn()">
         </div>
         <div class="form-group col-md-2">
           <label for="supply">Voorraad</label>
@@ -95,8 +95,8 @@
         <div class="form-group col-md-10">
           <div class="form-group">
             <label for="inputItem">Artikel</label>
-            <select formControlName="item" name="item" class="form-control form-control-sm" id="inputItem" placeholder="Artikel"
-                    type="number" (change)='onInputArticleSelected($event)'>
+            <select formControlName="item" name="item" class="form-control form-control-sm" id="inputItem"
+                    type="number" (change)='onInputArticleSelected()'>
               <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}} ({{item.tax}}
                 %) {{item.price.replace('.', ',')}}
               </option>
@@ -105,7 +105,7 @@
         </div>
         <div class="form-group col-md-2">
           <label for="inputObjectTax">Btw</label>
-          <select formControlName="itemTax" type="number" class="form-control form-control-sm" id="inputObjectTax" placeholder="Btw">
+          <select formControlName="itemTax" type="number" class="form-control form-control-sm" id="inputObjectTax">
             <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
           </select>
         </div>
@@ -182,7 +182,7 @@
         <div class="form-group col-md-4">
           <label for="buttonObjectPay">Totaal</label>
 
-          <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice; else disabledbutton">
+          <ng-container *ngIf="orderTotalPrice$; else disabledbutton">
             <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectPay"
                     (click)="onPayButton()">Afrekenen(F3)
             </button>
@@ -213,7 +213,6 @@
 <div class="split right">
   <form #orderwindow class="order">
     <div class="form-group col-md-12">
-      {{onRefresh()}}
       <span class="headerfont" style="display:block"><b>De KinderBoekenTuin</b></span>
       <span class="headerfont" style="display:block">Speelhuislaan 80</span>
       <span class="headerfont" style="display:block">4815 CG, Breda</span>
@@ -235,8 +234,8 @@
             *ngFor="let order of (order$ | async);let indexOfElement=index;">
         <span style="display:inline-block;width: 3ch;cursor: pointer;vertical-align:top"
               data-placement="right"
-              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order, $event)">
-           <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
+              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order)">
+           <img src="assets/delete-24px.svg" style="opacity: 0.25;" alt="Verwijder boek/artikel"/>
         </span>
           <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
           <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
@@ -263,7 +262,7 @@
             <span
               style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
             </span>
-            <ng-container *ngIf="orderTotalPriceTaxMap$ | async as orderTotalPriceTaxMap">
+            <ng-container *ngIf="orderTotalPriceTaxMap$">
               <ng-container *ngFor="let tax of taxArray">
                 <ng-container *ngIf="orderTotalPriceTaxMapWithDiscount.get(tax) > 0">
                   <span style="display:block"></span>

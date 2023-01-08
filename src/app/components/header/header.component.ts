@@ -29,7 +29,6 @@ export class HeaderComponent implements OnInit {
 
   getIPAddress() {
     this.http.get(this.serverUrl + '/ipaddress', {responseType: 'text'} ).subscribe((res: any) => {
-      console.log(res);
       this.origin =  window.location.protocol + '//' + res + ':' + window.location.port ;
     });
   }

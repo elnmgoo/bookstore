@@ -37,7 +37,7 @@ export class BookService {
   }
 
   handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error!';
+    let errorMessage;
     if (error.error instanceof ErrorEvent) {
       // Client-side errors
       errorMessage = `Error: ${error.error.message}`;

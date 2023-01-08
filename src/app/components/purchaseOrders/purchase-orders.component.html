@@ -43,8 +43,8 @@
     </div>
     <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
   </div>
-  <table class="table table-striped">
-    <thead>
+  <table class="table table-striped" aria-label="Verkochte boeken/artikelen">
+   <thead>
     <tr>
       <th></th>
       <th scope="col" sortable="datetime" (sort)="onSort($event)">Datum</th>
@@ -62,7 +62,7 @@
     <tbody>
     <tr *ngFor="let purchaseOrder of purchaseOrders$ | async">
       <td>
-        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)" style="opacity: 0.25;"/>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)" style="opacity: 0.25;" alt="Verwijder verkochte artikel/boek"/>
       </td>
       <td>
         <ngb-highlight [result]="purchaseOrder.dateTime | date" [term]="service.searchTerm"></ngb-highlight>
@@ -107,7 +107,7 @@
   </table>
 
   <div class="d-flex justify-content-between p-2 footer">
-    <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5">
+    <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5" aria-label="Totaal">
       <tr>
         <th></th>
         <th>Exclusief</th>

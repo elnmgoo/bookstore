@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 
 declare var $: any;
@@ -16,7 +16,7 @@ export class AppComponent {
       selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
       trigger: 'hover',
       container: 'body'
-    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function() {
+    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', () => {
       $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('dispose');
     });
   }

@@ -35,7 +35,6 @@ export class OrderService {
   }
 
   bookOrder(order: Order): Observable<Order> {
-    console.log('book ' + order.description);
     return this.httpClient.put<Order>(this.ordersUrl + '/addOrder', order);
   }
 }

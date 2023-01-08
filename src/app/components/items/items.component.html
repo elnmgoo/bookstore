@@ -34,14 +34,7 @@
         </div>
       </form>
     </div>
-    <!--
-        <div *ngIf="(itemError$ | async)?.message">
-          <div class="alert alert-danger" role="alert">
-            Some error occurred. Please try again
-          </div>
-        </div>
-        -->
-  </div>
+   </div>
 
   <div class="between">
     <div class="col">
@@ -59,7 +52,7 @@
       <ng-container *ngFor="let item of (item$ | async)">
         <div class="row">
           <div class="col-md-1" style="color: grey;text-align: center;cursor: pointer;" data-placement="right" data-toggle="tooltip" title="Verwijder artikel" (click)="onDeleteItem(item, $event)">
-            <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
+            <img src="assets/delete-24px.svg" style="opacity: 0.25;" alt="Verwijder artikel"/>
           </div>
           <div class="col-md-5">{{ item.description }}</div>
           <div class="col-md-3">{{ item.tax }}</div>
