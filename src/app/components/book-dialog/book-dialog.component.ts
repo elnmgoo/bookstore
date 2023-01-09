@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {Book} from '../../../store/book/models/book';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
@@ -7,11 +16,15 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {select, Store} from '@ngrx/store';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
 import {AppState} from '../../../store/app.state';
-import {GetPublishers} from '../../../store/publishers/actions/publisher.actions';
+import {
+  GetPublishers,
+  GetPublishersRefresh
+} from '../../../store/publishers/actions/publisher.actions';
 import {BooksService} from '../../services/book.service';
 import {Publisher} from '../../../store/publishers/models/publisher';
 import {ProcurementService} from '../../services/procurement.service';
 import {Procurement} from '../../models/procurement';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -19,16 +32,18 @@ import {Procurement} from '../../models/procurement';
   templateUrl: './book-dialog.component.html',
   styleUrls: ['./book-dialog.component.scss']
 })
-export class BookDialogComponent implements OnInit, AfterViewInit {
+export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('autofocus') private autofocusField: ElementRef;
   @Input() public book: Book;
   @Input() public bNew: boolean;
   @Input() private service: BooksService;
   @Input() private procurementService: ProcurementService;
 
+  subscriptions = new Subscription();
   bookForm: FormGroup;
   publisher$ = this.store.pipe(select(selectPublisherList));
   publisher: Publisher;
+  publishers: Publisher[];
 
   constructor(public activeModal: NgbActiveModal,
               private store: Store<AppState>,
@@ -78,12 +93,22 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
       added: ['', [Validators.minLength(0), Validators.maxLength(100)]]
     });
     this.publisher = this.book.publisher;
+    this.subscriptions.add(this.publisher$.subscribe(publisher => {
+      this.publishers = publisher;
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   onChangeIsbn(event: Event) {
     const isbn = this.bookForm.controls.isbn.value;
     if (isbn.length === 13) {
       this.service.getBook(isbn).subscribe((book: Book) => {
+        if (this.publishers.filter(publisher => publisher.id === book.publisher.id).length === 0){
+          this.store.dispatch(new GetPublishersRefresh());
+        }
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);
@@ -140,10 +165,8 @@ export class BookDialogComponent implements OnInit, AfterViewInit {
   }
 
   onChange($event) {
-    const text = $event.target.options[$event.target.options.selectedIndex].text;
-    const value = $event.target.options[$event.target.options.selectedIndex].value;
-    this.publisher.id = value;
-    this.publisher.publisher = text;
+    this.publisher.id = $event.target.options[$event.target.options.selectedIndex].value;
+    this.publisher.publisher = $event.target.options[$event.target.options.selectedIndex].text;
   }
 
   onEditBookButton() {

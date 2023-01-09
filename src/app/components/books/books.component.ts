@@ -34,12 +34,10 @@ export class BooksComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'F1':
-        this.showTotals = !this.showTotals;
-        event.preventDefault();
-        event.stopPropagation();
-        break;
+    if (event.key === 'F1') {
+      this.showTotals = !this.showTotals;
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 

@@ -533,7 +533,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     const isbn = this.bookForm.controls.isbn.value;
     if (isbn && isbn.length === 13) {
       this.bookService.getBook(isbn).subscribe((book: Book) => {
-        // ToDo Add publisher if not known
         if (this.publishers.filter(publisher => publisher.id === book.publisher.id).length === 0){
           this.store.dispatch(new GetPublishersRefresh());
         }
