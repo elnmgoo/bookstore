@@ -1,65 +1,75 @@
 <div class="split left">
   <div class="col">
     <form [formGroup]="bookForm">
-      <div class="form-row">
-
-        <div class="form-group col-md-4">
-          <label for="inputDate">Datum</label>
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label class="form-label" for="inputDate">Datum</label>
           <div class="input-group">
-            <input formControlName="date" class="form-control form-control-sm" placeholder="dd-mm-yyyy"
+            <input formControlName="date" class="form-control form-control-sm"
+                   placeholder="dd-mm-yyyy"
                    name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate"
             >
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                      type="button"></button>
             </div>
           </div>
         </div>
-        <div class="form-group col-md-4">
+        <div class="mb-3 col-md-4">
           <label for="inputISBN">ISBN</label>
-          <input #autofocus formControlName="isbn" type="text" class="form-control form-control-sm" id="inputISBN" placeholder="Number"
+          <input #autofocus formControlName="isbn" type="text" class="form-control form-control-sm"
+                 id="inputISBN" placeholder="Number"
                  mask="0000000000000" (change)="onChangeIsbn()">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="supply">Voorraad</label>
-          <input formControlName="supply" type="number" class="form-control form-control-sm" id="supply" [readonly]=true>
+          <input formControlName="supply" type="number" class="form-control form-control-sm"
+                 id="supply" [readonly]=true>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-10">
+      <div class="row">
+        <div class="mb-3 col-md-10">
           <label for="inputTitle">Titel</label>
-          <input formControlName="title" type="text" class="form-control form-control-sm" id="inputTitle" placeholder="Titel">
+          <input formControlName="title" type="text" class="form-control form-control-sm"
+                 id="inputTitle" placeholder="Titel">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputTax">Btw</label>
-          <select formControlName="tax" type="number" class="form-control form-control-sm" id="inputTax">
+          <select formControlName="tax" type="number" class="form-control form-control-sm"
+                  id="inputTax">
             <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
           </select>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-6">
+      <div class="row">
+        <div class="mb-3 col-md-6">
           <label for="inputAuthor">Auteur</label>
-          <input formControlName="author" type="text" class="form-control form-control-sm" id="inputAuthor" placeholder="Auteur">
+          <input formControlName="author" type="text" class="form-control form-control-sm"
+                 id="inputAuthor" placeholder="Auteur">
         </div>
-        <div class="form-group col-md-6">
+        <div class="mb-3 col-md-6">
           <label for="inputPublisher">Uitgever</label>
-          <select formControlName="publisher" name="publisher" class="form-control form-control-sm" id="inputPublisher">
-            <option *ngFor="let publisher of (publisher$ | async)" [ngValue]="publisher.id">{{publisher.publisher}}
+          <select formControlName="publisher" name="publisher" class="form-control form-control-sm"
+                  id="inputPublisher">
+            <option *ngFor="let publisher of (publisher$ | async)"
+                    [ngValue]="publisher.id">{{publisher.publisher}}
             </option>
           </select>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-2">
+      <div class="row">
+        <div class="mb-3 col-md-2">
           <label for="inputAmount">Aantal(F8)</label>
-          <input formControlName="amount" type="number" class="form-control form-control-sm" id="inputAmount" placeholder="1" min="1"
+          <input formControlName="amount" type="number" class="form-control form-control-sm"
+                 id="inputAmount" placeholder="1" min="1"
                  (change)="calculateTotalPriceBook()">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputPrice">Prijs</label>
-          <input formControlName="price" type="text" class="form-control form-control-sm" id="inputPrice" placeholder="0"
+          <input formControlName="price" type="text" class="form-control form-control-sm"
+                 id="inputPrice" placeholder="0"
                  mask="separator.2"
                  thousandSeparator="." (change)="calculateTotalPriceBook()">
           <div class="validator"
@@ -67,22 +77,25 @@
             Max. {{bookForm.controls['price'].errors.requiredValue}}
           </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputDiscount">Korting</label>
-          <input formControlName="discount" type="text" class="form-control form-control-sm" id="inputDiscount"
+          <input formControlName="discount" type="text" class="form-control form-control-sm"
+                 id="inputDiscount"
                  mask="separator.2"
                  thousandSeparator="." (change)="calculateTotalPriceBook()">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputTotal">Totaal</label>
-          <input formControlName="total" type="text" class="form-control form-control-sm" id="inputTotal" placeholder="0"
+          <input formControlName="total" type="text" class="form-control form-control-sm"
+                 id="inputTotal" placeholder="0"
                  mask="separator.2"
                  thousandSeparator="." [readonly]=true>
         </div>
 
-        <div class="form-group col-md-4">
+        <div class="mb-3 col-md-4">
           <label for="buttonOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block btn-sm" id="buttonOk" [disabled]="bookForm.invalid"
+          <button type="button" class="btn btn-info btn-block btn-sm" id="buttonOk"
+                  [disabled]="bookForm.invalid"
                   (click)="onAddBookButton()">Boek
             toevoegen(F1)
           </button>
@@ -91,36 +104,41 @@
     </form>
     <hr class="solid"/>
     <form [formGroup]="itemForm">
-      <div class="form-row">
-        <div class="form-group col-md-10">
-          <div class="form-group">
+      <div class="row">
+        <div class="mb-3 col-md-10">
+          <div class="mb-3">
             <label for="inputItem">Artikel</label>
-            <select formControlName="item" name="item" class="form-control form-control-sm" id="inputItem"
+            <select formControlName="item" name="item" class="form-control form-control-sm"
+                    id="inputItem"
                     type="number" (change)='onInputArticleSelected()'>
-              <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}} ({{item.tax}}
+              <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}}
+                ({{item.tax}}
                 %) {{item.price.replace('.', ',')}}
               </option>
             </select>
           </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectTax">Btw</label>
-          <select formControlName="itemTax" type="number" class="form-control form-control-sm" id="inputObjectTax">
+          <select formControlName="itemTax" type="number" class="form-control form-control-sm"
+                  id="inputObjectTax">
             <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
           </select>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-2">
+      <div class="row">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectAmount">Aantal(F9)</label>
-          <input formControlName="itemAmount" type="number" class="form-control form-control-sm" min="1" id="inputObjectAmount"
+          <input formControlName="itemAmount" type="number" class="form-control form-control-sm"
+                 min="1" id="inputObjectAmount"
                  placeholder="1" (change)="calculateTotalPriceItem()">
           <div></div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectPrice">Prijs</label>
-          <input #autofocusPrijs formControlName="itemPrice" type="text" name="inputObjectPrice" class="form-control form-control-sm"
+          <input #autofocusPrijs formControlName="itemPrice" type="text" name="inputObjectPrice"
+                 class="form-control form-control-sm"
                  id="inputObjectPrice" placeholder="Prijs"
                  mask="separator.2" thousandSeparator="."
                  (change)="calculateTotalPriceItem()">
@@ -130,21 +148,24 @@
           </div>
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectDiscount">Korting</label>
-          <input formControlName="itemDiscount" type="text" class="form-control form-control-sm" id="inputObjectDiscount"
+          <input formControlName="itemDiscount" type="text" class="form-control form-control-sm"
+                 id="inputObjectDiscount"
                  mask="separator.2"
                  thousandSeparator="." (change)="calculateTotalPriceItem()">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectTotal">Totaal</label>
-          <input formControlName="itemTotal" type="text" class="form-control form-control-sm" id="inputObjectTotal" placeholder="0"
+          <input formControlName="itemTotal" type="text" class="form-control form-control-sm"
+                 id="inputObjectTotal" placeholder="0"
                  mask="separator.2"
                  thousandSeparator="." [readonly]=true>
         </div>
-        <div class="form-group col-md-4">
+        <div class="mb-3 col-md-4">
           <label for="buttonObjectOk">Toevoegen</label>
-          <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectOk" [disabled]="!itemForm.valid"
+          <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectOk"
+                  [disabled]="!itemForm.valid"
                   (click)="onAddItemButton()">Artikel toevoegen(F2)
           </button>
         </div>
@@ -153,56 +174,54 @@
     <hr class="solid"/>
 
     <form [formGroup]="discountForm">
-      <div class="form-row">
-        <div class="form-group col-md-2">
+      <div class="row">
+        <div class="mb-3 col-md-2">
           <label for="inputKortingText">Af</label>
-          <input formControlName="discountValueText" type="text" class="form-control form-control-sm" id="inputKortingText"
+          <input formControlName="discountValueText" type="text"
+                 class="form-control form-control-sm" id="inputKortingText"
                  maxLength="30">
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectDiscountTotal">&euro; v.totaal</label>
-          <input formControlName="discountValue" type="text" class="form-control form-control-sm" id="inputObjectDiscountTotal"
+          <input formControlName="discountValue" type="text" class="form-control form-control-sm"
+                 id="inputObjectDiscountTotal"
                  mask="separator.2" thousandSeparator="." maxlength="10">
         </div>
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputKortingTextPercent">Korting</label>
-          <input formControlName="discountPercentageText" maxLength=30 type="text" class="form-control form-control-sm"
+          <input formControlName="discountPercentageText" maxLength=30 type="text"
+                 class="form-control form-control-sm"
                  id="inputKortingTextPercent">
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="mb-3 col-md-2">
           <label for="inputObjectExtraDiscountTotal">% v.totaal</label>
-          <input formControlName="discountPercentage" type="text" class="form-control form-control-sm"
+          <input formControlName="discountPercentage" type="text"
+                 class="form-control form-control-sm"
                  id="inputObjectExtraDiscountTotal"
                  mask="separator.1" maxlength="4"
                  thousandSeparator=".">
         </div>
 
-        <div class="form-group col-md-4">
-          <label for="buttonObjectPay">Totaal</label>
-
-          <ng-container *ngIf="orderTotalPrice$; else disabledbutton">
-            <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectPay"
-                    (click)="onPayButton()">Afrekenen(F3)
-            </button>
-          </ng-container>
-          <ng-template #disabledbutton>
-            <button type="button" class="btn btn-info btn-block btn-sm"
-                    [disabled]="true">Afrekenen(F3)
-            </button>
-          </ng-template>
+        <div class="mb-3 col-md-4">
+          <label for="buttonObjectPay">Totaal----</label>
+          <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectPay"
+                  [disabled]="orderTotalPrice === 0"
+                  (click)="onPayButton()">Afrekenen(F3)
+          </button>
         </div>
       </div>
 
-      <div class="form-row">
-
-        <div class="form-group col-md-7">
+      <div class="row">
+        <div class="mb-3 col-md-7">
           <div class="custom-control custom-checkbox checkbox-lg">
-            <input type="checkbox" class="form-check-input, custom-control-input" id="printLabelCount"
+            <input type="checkbox" class="form-check-input, custom-control-input"
+                   id="printLabelCount"
                    [checked]="this.printOrder"
                    (change)="onCheckboxChange($event)">
-            <label for="printLabelCount" class="custom-control-label">Afdrukken van een bonnetje</label>
+            <label for="printLabelCount" class="custom-control-label">Afdrukken van een
+              bonnetje</label>
           </div>
         </div>
       </div>
@@ -212,14 +231,15 @@
 
 <div class="split right">
   <form #orderwindow class="order">
-    <div class="form-group col-md-12">
+    <div class="mb-3 col-md-12">
       <span class="headerfont" style="display:block"><b>De KinderBoekenTuin</b></span>
       <span class="headerfont" style="display:block">Speelhuislaan 80</span>
       <span class="headerfont" style="display:block">4815 CG, Breda</span>
       <span class="headerfont" style="display:block">info@kinderboekentuin.nl</span>
       <span class="headerfont" style="display:block">076-737 0099</span>
       <ng-container *ngIf="this.payed === true">
-        <span class="headerfont" style="display:block">---------------------------------------</span>
+        <span class="headerfont"
+              style="display:block">---------------------------------------</span>
         <span class="headerfont" style="display:block"><b>Aantal artikelen afgerekend</b></span>
       </ng-container>
       <span style="display:block">&nbsp;</span>
@@ -234,15 +254,18 @@
             *ngFor="let order of (order$ | async);let indexOfElement=index;">
         <span style="display:inline-block;width: 3ch;cursor: pointer;vertical-align:top"
               data-placement="right"
-              data-toggle="tooltip" title="Verwijder boek/artikel" (click)="onDelete(indexOfElement, order)">
+              data-toggle="tooltip" title="Verwijder boek/artikel"
+              (click)="onDelete(indexOfElement, order)">
            <img src="assets/delete-24px.svg" style="opacity: 0.25;" alt="Verwijder boek/artikel"/>
         </span>
           <span style="display:inline-block;width: 15ch;vertical-align:top">{{order.isbn}}</span>
-          <span style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
+          <span
+            style="display:inline-block;width: 30ch;vertical-align:top">{{order.description}}</span>
           <span style="display:inline-block;width: 2ch;"></span>
           <span style="display:inline-block;width: 1ch;vertical-align:top">&euro;</span>
           <span
-            style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+            style="display:inline-block;width: 7ch;text-align: right;vertical-align:top">{{((order.total)
+          / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
         </ul>
         <ng-container *ngIf="discount.discountPercentage>0">
           <span style="display:inline-block;width: 18ch;"></span>
@@ -251,7 +274,8 @@
             % ({{(orderTotalPrice / 100 | number:'1.2-2').toString().replace('.', ',')}})</span>
           <span style="display:inline-block;width: 1ch;">&euro;</span>
           <span
-            style="display:inline-block;width: 7ch;text-align: right;">{{(discountPercentageValue / 100| number:'1.2-2').toString().replace('.', ',')}}</span><span> -</span>
+            style="display:inline-block;width: 7ch;text-align: right;">{{(discountPercentageValue
+          / 100| number:'1.2-2').toString().replace('.', ',')}}</span><span> -</span>
         </ng-container>
 
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
@@ -260,7 +284,8 @@
             <span style="display:inline-block;width: 32ch;"><b>Totaal:</b></span>
             <span style="display:inline-block;width: 1ch;">&euro;</span>
             <span
-              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount
+            / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
             </span>
             <ng-container *ngIf="orderTotalPriceTaxMap$">
               <ng-container *ngFor="let tax of taxArray">
@@ -268,20 +293,25 @@
                   <span style="display:block"></span>
                   <span style="display:inline-block;width: 18ch;"></span>
                   <span style="display:inline-block;width: 32ch;">Btw {{tax | number: '2.0'}}
-                    % ({{(orderTotalPriceTaxMapWithDiscount.get(tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}
+                    % ({{(orderTotalPriceTaxMapWithDiscount.get(tax)
+                    / 100 | number:'1.2-2').toString().replace('.', ',')}}
                     )</span>
                   <span style="display:inline-block;width: 1ch;">&euro;</span>
                   <span
-                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMapWithDiscount.get(tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.', ',')}}</span>
+                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMapWithDiscount.get(
+                    tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.',
+                    ',')}}</span>
                 </ng-container>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="discount.discountValue > 0">
               <span style="display:inline-block;width: 18ch;"></span>
-              <span style="display:inline-block;width: 32ch;"><b>{{discount.discountText}}:</b></span>
+              <span style="display:inline-block;width: 32ch;"><b>{{discount.discountText}}
+                :</b></span>
               <span style="display:inline-block;width: 1ch;">&euro;</span>
               <span
-                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discount.discountValue / 100 | number:'1.2-2').toString().replace('.', ',')}}
+                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discount.discountValue
+              / 100 | number:'1.2-2').toString().replace('.', ',')}}
                 -</b>
             </span>
             </ng-container>
@@ -289,7 +319,8 @@
             <span style="display:inline-block;width: 32ch;"><b>Te betalen:</b></span>
             <span style="display:inline-block;width: 1ch;">&euro;</span>
             <span
-              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscountAndReduction / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscountAndReduction
+            / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
             </span>
             <ng-container *ngIf="time.length > 0">
               <p></p>
