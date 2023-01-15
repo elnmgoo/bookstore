@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Observable} from 'rxjs';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
 import {NgbCalendar, NgbDate, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 import {ProcurementService} from '../../services/procurement.service';
@@ -19,7 +19,7 @@ export class ProcurementComponent implements OnInit, OnDestroy {
   procurement$: Observable<Procurement[]>;
   searchPriceTotal$: Observable<number>;
   total$: Observable<number>;
-  tableForm: FormGroup;
+  tableForm: UntypedFormGroup;
 
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 

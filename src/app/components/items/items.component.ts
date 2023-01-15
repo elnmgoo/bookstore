@@ -3,7 +3,7 @@ import {select, Store} from '@ngrx/store';
 import {AddItem, DeleteItem, GetItems} from '../../../store/items/actions/item.actions';
 import { selectItemList} from '../../../store/items/selectors/item.selectors';
 import {AppState} from '../../../store/app.state';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {Item} from '../../../store/items/models/item';
 
@@ -15,11 +15,11 @@ import {Item} from '../../../store/items/models/item';
 export class ItemsComponent implements OnInit {
   item$ = this.store.pipe(select(selectItemList));
   taxArray = AppConstants.taxArray;
-  itemForm: FormGroup;
+  itemForm: UntypedFormGroup;
 
   constructor(
     private store: Store<AppState>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private elementRef: ElementRef,
     private renderer: Renderer2
   ) {

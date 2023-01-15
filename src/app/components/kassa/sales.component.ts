@@ -11,7 +11,7 @@ import {select, Store} from '@ngrx/store';
 import {selectItemList} from '../../../store/items/selectors/item.selectors';
 import {AppState} from '../../../store/app.state';
 import {GetItems} from '../../../store/items/actions/item.actions';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {PriceValidator} from '../../validators/price.validator';
 import {
@@ -88,9 +88,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   spaces = '                                    ';
   subscriptions = new Subscription();
   taxArray = AppConstants.taxArray;
-  itemForm: FormGroup;
-  bookForm: FormGroup;
-  discountForm: FormGroup;
+  itemForm: UntypedFormGroup;
+  bookForm: UntypedFormGroup;
+  discountForm: UntypedFormGroup;
   time = '';
   timeStamp = 0;
   order = [];
@@ -118,7 +118,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceWithDiscountAndReduction$ = this.store.pipe(select(selectOrderTotalPriceWithDiscountAndReduction));
 
   constructor(private store: Store<AppState>,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private element: ElementRef<HTMLInputElement>,
               private bookService: BookService,
               private calendar: NgbCalendar,

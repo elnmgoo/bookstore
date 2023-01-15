@@ -1,5 +1,5 @@
 import {Component, OnInit, Renderer2} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Publisher} from '../../../store/publishers/models/publisher';
 import {select, Store} from '@ngrx/store';
 import {selectPublisherList} from '../../../store/publishers/selectors/publisher.selectors';
@@ -15,11 +15,11 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 export class PublishersComponent implements OnInit {
   publisher$ = this.store.pipe(select(selectPublisherList));
-  publisherForm: FormGroup;
+  publisherForm: UntypedFormGroup;
   warningText: string;
 
   constructor(private store: Store<AppState>,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private renderer: Renderer2,
               private publisherService: PublisherService,
               private modalService: NgbModal) {

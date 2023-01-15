@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {Book} from '../../../store/book/models/book';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
 import {AppConstants} from '../../app-constants';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -40,14 +40,14 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() private procurementService: ProcurementService;
 
   subscriptions = new Subscription();
-  bookForm: FormGroup;
+  bookForm: UntypedFormGroup;
   publisher$ = this.store.pipe(select(selectPublisherList));
   publisher: Publisher;
   publishers: Publisher[];
 
   constructor(public activeModal: NgbActiveModal,
               private store: Store<AppState>,
-              private formBuilder: FormBuilder
+              private formBuilder: UntypedFormBuilder
   ) {
   }
 
