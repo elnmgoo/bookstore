@@ -13,7 +13,7 @@ import {ItemEffects} from '../store/items/effects/item.effects';
 import {HttpClientModule, HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ItemService} from '../store/items/services/item.service';
 import {appReducers} from '../store/app.reducers';
-import {NgxMaskModule, IConfig} from 'ngx-mask';
+import {NgxMaskDirective, NgxMaskPipe, IConfig, provideNgxMask} from 'ngx-mask';
 import {OrderService} from '../store/orders/services/order.service';
 import {OrderEffects} from '../store/orders/effects/order.effects';
 import {PublisherEffects} from '../store/publishers/effects/publisher.effects';
@@ -61,7 +61,7 @@ registerLocaleData(localeNl, 'nl');
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    NgxMaskModule.forRoot(),
+    NgxMaskDirective, NgxMaskPipe,
     StoreModule.forRoot(appReducers),
     EffectsModule.forRoot([ItemEffects, OrderEffects, PublisherEffects]),
     ReactiveFormsModule,
@@ -77,7 +77,7 @@ registerLocaleData(localeNl, 'nl');
     provide: LOCALE_ID,
     useValue: 'nl'
   }, ItemService, OrderService, PurchaseOrdersService, PublisherService, BookService, DateFormatPipe2Date, DateFormatPipe2Time,
-    PrintService, ConfirmDialogService, BooksService, DecimalPipe],
+    PrintService, ConfirmDialogService, BooksService, DecimalPipe, provideNgxMask()],
   bootstrap: [AppComponent]
 })
 export class AppModule {
