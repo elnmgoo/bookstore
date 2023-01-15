@@ -11,7 +11,7 @@ import {select, Store} from '@ngrx/store';
 import {selectItemList} from '../../../store/items/selectors/item.selectors';
 import {AppState} from '../../../store/app.state';
 import {GetItems} from '../../../store/items/actions/item.actions';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {PriceValidator} from '../../validators/price.validator';
 import {
@@ -88,9 +88,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   spaces = '                                    ';
   subscriptions = new Subscription();
   taxArray = AppConstants.taxArray;
-  itemForm: UntypedFormGroup;
-  bookForm: UntypedFormGroup;
-  discountForm: UntypedFormGroup;
+  itemForm: FormGroup;
+  bookForm: FormGroup;
+  discountForm: FormGroup;
   time = '';
   timeStamp = 0;
   order = [];
@@ -118,7 +118,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceWithDiscountAndReduction$ = this.store.pipe(select(selectOrderTotalPriceWithDiscountAndReduction));
 
   constructor(private store: Store<AppState>,
-              private formBuilder: UntypedFormBuilder,
+              private formBuilder: FormBuilder,
               private element: ElementRef<HTMLInputElement>,
               private bookService: BookService,
               private calendar: NgbCalendar,
@@ -261,34 +261,36 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.add(this.discountForm.get('discountValue').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(() => {
+      .subscribe( value => {
+        console.log('discount values changed ' +  value);
         this.store.dispatch(new SetDiscount({
           ...this.discount,
-          discountValue: Number(this.discountForm.controls.discountValue.value.replace(',', '.') * 100)
+          discountValue: Number(value.toString().replace(',', '.') * 100)
         }));
+
       }));
     this.subscriptions.add(this.discountForm.get('discountValueText').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(() => {
+      .subscribe(value => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
-          discountText: this.discountForm.controls.discountValueText.value
+          discountText: value.toString()
         }));
       }));
     this.subscriptions.add(this.discountForm.get('discountPercentage').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(() => {
+      .subscribe(value => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
-          discountPercentage: Number(this.discountForm.controls.discountPercentage.value.replace(',', '.'))
+          discountPercentage: Number(value.toString().replace(',', '.'))
         }));
       }));
     this.subscriptions.add(this.discountForm.get('discountPercentageText').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
-      .subscribe(() => {
+      .subscribe(value => {
         this.store.dispatch(new SetDiscount({
           ...this.discount,
-          discountPercentageText: this.discountForm.controls.discountPercentageText.value
+          discountPercentageText: value.toString()
         }));
       }));
   }

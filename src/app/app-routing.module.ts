@@ -5,7 +5,7 @@ import {ItemsComponent} from './components/items/items.component';
 import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
 import {BooksComponent} from './components/books/books.component';
 import {PublishersComponent} from './components/publishers/publishers.component';
-import {ProcurementComponent} from './components/procurement/procurement.component';
+import {ProcurementComponent} from './components/inkoop/procurement.component';
 
 
 const routes: Routes = [

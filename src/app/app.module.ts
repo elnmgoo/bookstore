@@ -35,7 +35,7 @@ import { BooksComponent } from './components/books/books.component';
 import {BooksService} from './services/book.service';
 import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
 import { PublishersComponent } from './components/publishers/publishers.component';
-import { ProcurementComponent } from './components/procurement/procurement.component';
+import { ProcurementComponent } from './components/inkoop/procurement.component';
 import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
