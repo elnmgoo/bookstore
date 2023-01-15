@@ -2,9 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SalesComponent} from './components/kassa/sales.component';
 import {ItemsComponent} from './components/items/items.component';
-import {PurchaseOrdersComponent} from './components/purchaseOrders/purchase-orders.component';
-import {BooksComponent} from './components/books/books.component';
-import {PublishersComponent} from './components/publishers/publishers.component';
+import {PurchaseOrdersComponent} from './components/verkocht/purchase-orders.component';
+import {BooksComponent} from './components/boeken/books.component';
+import {PublishersComponent} from './components/uitgevers/publishers.component';
 import {ProcurementComponent} from './components/inkoop/procurement.component';
 
 

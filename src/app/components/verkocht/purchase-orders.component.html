@@ -1,44 +1,40 @@
 <app-confirm-dialog></app-confirm-dialog>
 
 <form>
-  <div class="form-row formTable col">
-    <div class="form-group col-md-2">
-      <label for="searchTerm">Zoeken op term</label>
+  <div class="row formTable col pt-2  me-auto">
+    <div class="mb-3 col-md-2 mx-4">
+      <label class="form-label-sm" for="searchTerm">Zoeken op term</label><br>
       <input id="searchTerm" class="form-control" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
     </div>
-    <div class="form-group col-md-1">
-      <label for="buttonToday">Deze</label>
+    <div class="mb-3 col-md-1">
+      <label class="form-label-sm" for="buttonToday">Deze</label><br>
       <button type="button" class="btn btn-info btn-block" id="buttonToday"
               (click)="onButtonToday()">dag
       </button>
     </div>
-    <div class="form-group col-md-1">
-      <label for="buttonYear">Dit</label>
+    <div class="mb-3 col-md-1">
+      <label class="form-label-sm" for="buttonYear">Dit</label><br>
       <button type="button" class="btn btn-info btn-block" id="buttonYear"
               (click)="onButtonYear()">jaar
       </button>
     </div>
-    <div class="form-group col-md-3">
-      <label for="inputDate1">vanaf</label>
+    <div class="mb-3 col-md-3">
+      <label class="form-label-sm" for="inputDate1">vanaf</label><br>
       <div class="input-group">
         <input [(ngModel)]="service.startFromDate" class="form-control" placeholder="dd-mm-yyyy"
                name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate1"
 
         >
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-        </div>
+          <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
       </div>
     </div>
-    <div class="form-group col-md-3">
-      <label for="inputDate2">tot en met</label>
+    <div class="mb-3 col-md-3">
+      <label class="form-label-sm" for="inputDate2">tot en met</label><br>
       <div class="input-group">
         <input [(ngModel)]="service.endUntilDate" class="form-control" placeholder="dd-mm-yyyy"
                name="date2" ngbDatepicker #e="ngbDatepicker" id="inputDate2"
         >
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="e.toggle()" type="button"></button>
-        </div>
+          <button class="btn btn-outline-secondary bi bi-calendar3" (click)="e.toggle()" type="button"></button>
       </div>
     </div>
     <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
@@ -146,7 +142,7 @@
     <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [maxSize]="5" [rotate]="true"
                     [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>
 
-    <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+    <select class="form-select" style="width: auto; height:33%"  name="pageSize"  [(ngModel)]="service.pageSize">
       <option [ngValue]="25">25 items per page</option>
       <option [ngValue]="50">50 items per page</option>
       <option [ngValue]="100">100 items per page</option>
