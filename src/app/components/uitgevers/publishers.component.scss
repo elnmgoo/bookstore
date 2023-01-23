@@ -32,3 +32,17 @@ $between-height: 30px;
   height: calc(100% - (#{$top-height} + #{$header-height} + #{$between-height}));
   overflow-y: scroll
 }
+
+.bg-kbt-aquamarine {
+  background-color: aquamarine;
+}
+
+.bg-kbt-azure {
+  background-color: #0dcaf0;
+}
+
+.table-uitgever{
+  background-color: mediumaquamarine;
+}
+
+

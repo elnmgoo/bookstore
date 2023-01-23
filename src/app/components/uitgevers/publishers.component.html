@@ -13,62 +13,48 @@
   </div>
 </ng-template>
 
-<div class="top">
-  <div class="col">
-    <br>
-    <form [formGroup]="publisherForm" >
-      <div class="row ">
-        <div class="mb-3 col-md-4   me-auto">
-          <label class="form-label-sm" for="publisher">Uitgever</label><br>
-          <input type="text" class="form-control" formControlName="publisher" placeholder="Uitgever"
-                 name="Uitgever"
-                 id="publisher"/>
-        </div>
-        <div class="mb-3 col-md-3">
-          <label class="form-label-sm" for="buttonObjectOk">Toevoegen</label><br>
-          <button type="button" class="btn btn-info btn-block" id="buttonObjectOk"
-                  [disabled]="!publisherForm.valid"
-                  (click)="onAddItemButton()">Uitgever toevoegen
-          </button>
-        </div>
+<div class="container-fluid">
+  <form [formGroup]="publisherForm">
+    <div class="row bg-kbt-aquamarine py-3">
+      <div class="mb-3 col-md-4">
+        <label class="form-label-sm" for="publisher">Uitgever</label><br>
+        <input type="text" class="form-control" formControlName="publisher" placeholder="Uitgever"
+               name="Uitgever"
+               id="publisher"/>
       </div>
-    </form>
-  </div>
-  <!--
-      <div *ngIf="(itemError$ | async)?.message">
-        <div class="alert alert-danger" role="alert">
-          Some error occurred. Please try again
-        </div>
+      <div class="mb-3 col-md-3">
+        <label class="form-label-sm" for="buttonObjectOk">Toevoegen</label><br>
+        <button type="button" class="btn btn-info btn-block" id="buttonObjectOk"
+                [disabled]="!publisherForm.valid"
+                (click)="onAddItemButton()">Uitgever toevoegen
+        </button>
       </div>
-      -->
-</div>
+      <div class="mb-3 col-md-5">
 
-<div class="between">
-  <div class="col">
-    <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-2"><b>Id</b></div>
-      <div class="col-md-5"><B>Uitgever</B></div>
+      </div>
     </div>
+  </form>
+</div>
+<div class="container-fluid">
+  <div class="row bg-kbt-azure" >
+    <div class="mb-2 col-1"></div>
+    <div class="mb-2 col-2"><b>Id</b></div>
+    <div class="mb-2 col-5"><B>Uitgever</B></div>
   </div>
 </div>
-
-<div class="bottom">
-  <div class="col">
-    <ng-container *ngFor="let publisher of (publisher$ | async)">
-      <div class="row">
-        <div class="col-md-1" style="text-align: center;cursor: pointer;" data-placement="right"
-             data-toggle="tooltip" title="Verwijder uitgever"
-             (click)="onDeleteItem(content, publisher, $event)">
-          <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
-        </div>
-        <div class="col-md-2">{{ publisher.id }}</div>
-        <div class="col-md-5">{{ publisher.publisher }}</div>
+<div class="table-uitgever ">
+  <ng-container *ngFor="let publisher of (publisher$ | async)">
+    <div class="row ">
+      <div class="col-1" style="text-align: center;cursor: pointer;" data-placement="right"
+           data-toggle="tooltip" title="Verwijder uitgever"
+           (click)="onDeleteItem(content, publisher, $event)">
+        <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
       </div>
-    </ng-container>
-  </div>
+      <div class="col-2">{{ publisher.id }}</div>
+      <div class="col-5">{{ publisher.publisher }}</div>
+    </div>
+  </ng-container>
 </div>
-
 
 
 
