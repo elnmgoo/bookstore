@@ -9,7 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {Book} from '../../../store/book/models/book';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {PriceValidator} from '../../validators/price.validator';
 import {AppConstants} from '../../app-constants';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -22,8 +22,8 @@ import {
 } from '../../../store/publishers/actions/publisher.actions';
 import {BooksService} from '../../services/book.service';
 import {Publisher} from '../../../store/publishers/models/publisher';
-import {ProcurementService} from '../../services/procurement.service';
-import {Procurement} from '../../models/procurement';
+import {InkoopService} from '../../services/inkoop.service';
+import {Inkoop} from '../../models/inkoop';
 import {Subscription} from 'rxjs';
 
 
@@ -37,17 +37,17 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() public book: Book;
   @Input() public bNew: boolean;
   @Input() private service: BooksService;
-  @Input() private procurementService: ProcurementService;
+  @Input() private procurementService: InkoopService;
 
   subscriptions = new Subscription();
-  bookForm: UntypedFormGroup;
+  bookForm: FormGroup;
   publisher$ = this.store.pipe(select(selectPublisherList));
   publisher: Publisher;
   publishers: Publisher[];
 
   constructor(public activeModal: NgbActiveModal,
               private store: Store<AppState>,
-              private formBuilder: UntypedFormBuilder
+              private formBuilder: FormBuilder
   ) {
   }
 
@@ -86,7 +86,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       title: [this.book.title, [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       author: [this.book.author, [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
       publisher: [this.book.publisher.id, Validators.required],
-      price: [this.book.price.toString(10).replace('.', ','),
+      price: [this.book.price.toString(10),
         [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
       supply: [this.book.supply, [Validators.required, Validators.min(0), Validators.max(99)]],
       amount: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
@@ -105,6 +105,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   onChangeIsbn(event: Event) {
     const isbn = this.bookForm.controls.isbn.value;
     if (isbn.length === 13) {
+
       this.service.getBook(isbn).subscribe((book: Book) => {
         if (this.publishers.filter(publisher => publisher.id === book.publisher.id).length === 0){
           this.store.dispatch(new GetPublishersRefresh());
@@ -112,7 +113,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);
-        this.bookForm.controls.price.setValue(book.price.toString(10).replace('.', ','));
+        this.bookForm.controls.price.setValue(book.price.toString(10));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.supply.setValue(book.supply);
         this.bookForm.controls.amount.setValue(1);
@@ -146,12 +147,12 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this.bookForm.controls.author.value,
       this.bookForm.controls.supply.value + this.bookForm.controls.amount.value,
       this.publisher,
-      Number(this.bookForm.controls.price.value.replace(',', '.')),
+      Number(this.bookForm.controls.price.value.toString().replace(',', '.')),
       false);
 
     if (this.procurementService != null){
-      const procurement: Procurement = new Procurement(  0, new Date().getTime(),
-        Number(this.bookForm.controls.price.value.replace(',', '.')), this.bookForm.controls.amount.value,
+      const procurement: Inkoop = new Inkoop(  0, new Date().getTime(),
+        Number(this.bookForm.controls.price.value.toString().replace(',', '.')), this.bookForm.controls.amount.value,
         book);
       this.procurementService.add(procurement).subscribe(() => {
         this.bookSuccesfullyAdded(procurement.book);
@@ -176,7 +177,7 @@ export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this.bookForm.controls.author.value,
       this.bookForm.controls.supply.value,
       this.publisher,
-      Number(this.bookForm.controls.price.value.replace(',', '.')),
+      Number(this.bookForm.controls.price.value.toString().replace(',', '.')),
       false
     );
     this.service.update(book).subscribe(() => this.activeModal.close());

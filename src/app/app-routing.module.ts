@@ -1,21 +1,21 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SalesComponent} from './components/kassa/sales.component';
-import {ItemsComponent} from './components/items/items.component';
-import {PurchaseOrdersComponent} from './components/verkocht/purchase-orders.component';
-import {BooksComponent} from './components/boeken/books.component';
-import {PublishersComponent} from './components/uitgevers/publishers.component';
-import {ProcurementComponent} from './components/inkoop/procurement.component';
+import {ArtikelenComponent} from './components/artikelen/artikelen.component';
+import {VerkochtComponent} from './components/verkocht/verkocht.component';
+import {BoekenComponent} from './components/boeken/boeken.component';
+import {UitgeversComponent} from './components/uitgevers/uitgevers.component';
+import {InkoopComponent} from './components/inkoop/inkoop.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/sales', pathMatch: 'full' },
   { path: 'sales', component: SalesComponent },
-  { path: 'items', component: ItemsComponent },
-  { path: 'purchaseOrders', component: PurchaseOrdersComponent},
-  { path: 'books', component: BooksComponent},
-  { path: 'publishers', component: PublishersComponent},
-  { path: 'procurement', component: ProcurementComponent},
+  { path: 'items', component: ArtikelenComponent },
+  { path: 'purchaseOrders', component: VerkochtComponent},
+  { path: 'books', component: BoekenComponent},
+  { path: 'publishers', component: UitgeversComponent},
+  { path: 'procurement', component: InkoopComponent},
   { path: '**', redirectTo: '/sales', pathMatch: 'full' }
 ];
 

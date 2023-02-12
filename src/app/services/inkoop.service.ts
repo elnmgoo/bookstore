@@ -7,7 +7,7 @@ import {DecimalPipe} from '@angular/common';
 import {catchError, debounceTime, delay, map, switchMap, tap} from 'rxjs/operators';
 import {SortDirection} from '../directives/ngbd-sortable-header.directive';
 import {SearchResultProcurement, SearchResultProcurementAdapter} from '../models/searchResultProcurement';
-import {Procurement} from '../models/procurement';
+import {Inkoop} from '../models/inkoop';
 
 interface State {
   page: number;
@@ -21,7 +21,7 @@ interface State {
 @Injectable({
   providedIn: 'root'
 })
-export class ProcurementService {
+export class InkoopService {
 
   private static pState: State = {
     page: 1,
@@ -37,7 +37,7 @@ export class ProcurementService {
   private ordersTotalUrl = environment.api2Url + '/inkopenTotal';
   private pLoading$ = new BehaviorSubject<boolean>(true);
   private pSearch$ = new Subject<void>();
-  private pProcurement$ = new BehaviorSubject<Procurement[]>([]);
+  private pProcurement$ = new BehaviorSubject<Inkoop[]>([]);
   private pTotal$ = new BehaviorSubject<number>(0);
   private pSearchTotal$ = new Subject<void>();
   private pSearchPriceTotal$ = new BehaviorSubject<number>(0);
@@ -46,11 +46,11 @@ export class ProcurementService {
   constructor(private httpClient: HttpClient, private adapter: SearchResultProcurementAdapter,
               private pipe: DecimalPipe,
               private calendar: NgbCalendar) {
-    if (ProcurementService.pState.endUntilDate === null) {
-      ProcurementService.pState.endUntilDate = calendar.getToday();
+    if (InkoopService.pState.endUntilDate === null) {
+      InkoopService.pState.endUntilDate = calendar.getToday();
     }
-    if (ProcurementService.pState.startFromDate === null) {
-      ProcurementService.pState.startFromDate = calendar.getToday();
+    if (InkoopService.pState.startFromDate === null) {
+      InkoopService.pState.startFromDate = calendar.getToday();
     }
     this.pSearch$.pipe(
       tap(() => this.pLoading$.next(true)),
@@ -89,7 +89,7 @@ export class ProcurementService {
   }
 
   get page() {
-    return ProcurementService.pState.page;
+    return InkoopService.pState.page;
   }
 
   set page(page: number) {
@@ -97,7 +97,7 @@ export class ProcurementService {
   }
 
   get pageSize() {
-    return ProcurementService.pState.pageSize;
+    return InkoopService.pState.pageSize;
   }
 
   set pageSize(pageSize: number) {
@@ -105,7 +105,7 @@ export class ProcurementService {
   }
 
   get searchTerm() {
-    return ProcurementService.pState.searchTerm;
+    return InkoopService.pState.searchTerm;
   }
 
   set searchTerm(searchTerm: string) {
@@ -113,7 +113,7 @@ export class ProcurementService {
   }
 
   get startFromDate() {
-    return ProcurementService.pState.startFromDate;
+    return InkoopService.pState.startFromDate;
   }
 
   set startFromDate(startFromDate: NgbDateStruct) {
@@ -121,7 +121,7 @@ export class ProcurementService {
   }
 
   get endUntilDate() {
-    return ProcurementService.pState.endUntilDate;
+    return InkoopService.pState.endUntilDate;
   }
 
   set endUntilDate(endUntilDate: NgbDateStruct) {
@@ -137,7 +137,7 @@ export class ProcurementService {
   }
 
   private pSet(patch: Partial<State>) {
-    Object.assign(ProcurementService.pState, patch);
+    Object.assign(InkoopService.pState, patch);
     this.pSearch$.next();
     this.pSearchTotal$.next();
   }
@@ -156,7 +156,7 @@ export class ProcurementService {
   }
 
   private pSearch(): Observable<SearchResultProcurement> {
-    const {sortColumn, sortDirection, pageSize, page, searchTerm, startFromDate, endUntilDate} = ProcurementService.pState;
+    const {sortColumn, sortDirection, pageSize, page, searchTerm, startFromDate, endUntilDate} = InkoopService.pState;
     const mapSortColumn = new Map();
     mapSortColumn.set('title', 'titel');
     mapSortColumn.set('datetime', 'datumtijd');
@@ -183,7 +183,7 @@ export class ProcurementService {
   }
 
   private pSearchTotal(): Observable<number> {
-    const {searchTerm, startFromDate, endUntilDate} = ProcurementService.pState;
+    const {searchTerm, startFromDate, endUntilDate} = InkoopService.pState;
 
     const url = this.ordersTotalUrl + this.formatBetweenPartUrl(startFromDate, endUntilDate);
     if (searchTerm.length > 0) {
@@ -216,7 +216,7 @@ export class ProcurementService {
       catchError(this.handleError)).subscribe();
   }
 
-  add(procurement: Procurement) {
+  add(procurement: Inkoop) {
     const inkoop = procurement.getInkoop();
     return this.httpClient.post(this.procurementUrl + procurement.book.isbn + '/inkopen', inkoop ).pipe(
       map(response => {

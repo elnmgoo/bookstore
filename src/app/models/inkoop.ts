@@ -2,7 +2,7 @@ import {Book, BookAdapter} from '../../store/book/models/book';
 import {Injectable} from '@angular/core';
 import {Adapter} from '../Adapter';
 
-export class Procurement {
+export class Inkoop {
   id: number;
   dateTime: number;
   price: number;
@@ -33,7 +33,7 @@ export class Procurement {
       inkoop.datumtijd = this.dateTime;
       inkoop.prijs = this.price;
       inkoop.aantal = this.amount;
-      inkoop.id = 0;
+      inkoop.id = -1;
       return (inkoop);
   }
 }
@@ -41,14 +41,15 @@ export class Procurement {
 @Injectable({
   providedIn: 'root',
 })
-export class ProcurementAdapter implements Adapter<Procurement> {
+export class InkoopAdapter implements Adapter<Inkoop> {
   private bookAdapter: BookAdapter = new BookAdapter();
 
-  adapt(item: any): Procurement {
+  adapt(item: any): Inkoop {
     let book: Book = null;
+
     if (item.boek != null) {
       book = this.bookAdapter.adapt(item.boek);
     }
-    return new Procurement(item.id, item.datumtijd, item.prijs, item.aantal, book);
+    return new Inkoop(item.id, item.datumtijd, item.prijs, item.aantal, book);
   }
 }

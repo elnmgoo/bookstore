@@ -10,10 +10,10 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-publishers',
-  templateUrl: './publishers.component.html',
-  styleUrls: ['./publishers.component.scss']
+  templateUrl: './uitgevers.component.html',
+  styleUrls: ['./uitgevers.component.scss']
 })
-export class PublishersComponent implements OnInit {
+export class UitgeversComponent implements OnInit {
   publisher$ = this.store.pipe(select(selectPublisherList));
   publisherForm: UntypedFormGroup;
   warningText: string;

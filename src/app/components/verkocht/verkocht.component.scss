@@ -1,3 +1,6 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
 .formTable {
   background-color: aquamarine;
   font-family:"Arial", Helvetica, sans-serif;
@@ -6,12 +9,6 @@
 .tablebtw {
   background-color: white;
   color: #0398fc;
-}
-
-.footer {
-  background-color: aquamarine;
-  font-family:"Arial", Helvetica, sans-serif;
-  //font-size: 18px;
 }
 
 th[sortable] {
@@ -52,4 +49,10 @@ button.calendar, button.calendar:active {
   background-repeat: no-repeat;
   background-size: 23px;
   background-position: center;
+}
+
+.color-table-primary {
+  background-color: $teal-400;
+  font-family:"Arial", Helvetica, sans-serif;
+  //font-size: 18px;
 }

@@ -1,0 +1,124 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Verwijderen boek</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{ warningText }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<form>
+  <div class="row formTable col pt-2 me-auto">
+    <div class="mb-3 col-md-2 mx-4">
+      <label class="form-label-sm" for="searchTerm">Zoeken op term</label><br>
+      <input id="searchTerm" class="form-control" type="text" name="searchTerm"
+             [(ngModel)]="service.searchTerm"/>
+    </div>
+    <div class="mb-3 col-md-7"></div>
+    <div class="mb-3 col-md-2 form-check"><br>
+      <input type="checkbox" class="form-check-input" id="showOnlyWeb"
+             [checked]="service.onlyWebSite"
+             (change)="onCheckboxChange($event)">
+      <label class="form-check-label mx-1" for="showOnlyWeb">Toon boeken in WebShop</label><br>
+    </div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+    <tr class="color-table-primary">
+      <th></th>
+      <th scope="col" sortable="isbn" (sort)="onSort($event)">Isbn</th>
+      <th scope="col" sortable="title" (sort)="onSort($event)">Titel</th>
+      <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
+      <th scope="col" sortable="supply" (sort)="onSort($event)">Voorraad</th>
+      <th scope="col" sortable="publisher" (sort)="onSort($event)">Uitgever</th>
+      <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of books$ | async">
+      <td>
+        <img *ngIf="book.onWebSite === true" alt="available in webshop"
+             src="assets/Wordpress-Icon.png" style="opacity: 0.70;"/>
+        <img *ngIf="book.onWebSite === false" alt="not available in webshop"
+             src="assets/Wordpress-Icon.png" style="opacity: 0.10;"/>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(content, book)"
+             style="opacity: 0.25;"/>
+        <img src="assets/edit-24px.svg" (click)="handleEdit(book)" style="opacity: 0.25;"/>
+      </td>
+      <td>
+        <ng-container *ngIf="book.isbn != '0000000000000'">
+          <ngb-highlight [result]="book.isbn" [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ngb-highlight [result]="book.title" [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="book.author" [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]=book.supply.toString() [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="book.publisher.publisher"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="book.price | number:'1.2-2'"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="10" class="color-table-primary">
+        <div class="row">
+          <div class="col-4 d-flex align-items-center justify-content-start">
+            <ng-container *ngIf="bookStatistics$ | async as bookStatistics">
+              <table class="table-bordered tablebtw text-start border-1">
+                <tr class="text-center">
+                  <th>(F1)</th>
+                  <th class="ps-2 pe-2">Totale voorraad</th>
+                </tr>
+                <ng-container *ngIf="this.showTotals">
+                  <tr>
+                    <td class="text-left ps-2">Aantal: </td>
+                    <td class="ps-2">
+                      {{bookStatistics.amountSupply}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-left ps-2">Waarde: </td>
+                    <td class="ps-2">
+                      {{bookStatistics.totalPriceSupply | number:'1.2-2'}}
+                    </td>
+                  </tr>
+                </ng-container>
+              </table>
+            </ng-container>
+          </div>
+          <div class="col-4 d-flex align-items-center justify-content-center mt-3">
+            <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page"
+                            [maxSize]="5"
+                            [rotate]="true"
+                            [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>
+          </div>
+          <div class="col-4 d-flex align-items-center justify-content-end">
+            <select class="form-select lh-1 lh-sm w-auto" name="pageSize"
+                    [(ngModel)]="service.pageSize">
+              <option [ngValue]="4">4 items per page</option>
+              <option [ngValue]="8">8 items per page</option>
+              <option [ngValue]="16">16 items per page</option>
+            </select>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>

@@ -3,27 +3,27 @@ import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
 import {NgbCalendar, NgbDate, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
-import {ProcurementService} from '../../services/procurement.service';
-import {Procurement} from '../../models/procurement';
+import {InkoopService} from '../../services/inkoop.service';
+import {Inkoop} from '../../models/inkoop';
 import {Book} from '../../../store/book/models/book';
 import {BookDialogComponent} from '../book-dialog/book-dialog.component';
 import {BooksService} from '../../services/book.service';
 
 
 @Component({
-  selector: 'app-procurement',
-  templateUrl: './procurement.component.html',
-  styleUrls: ['./procurement.component.scss']
+  selector: 'app-inkoop',
+  templateUrl: './inkoop.component.html',
+  styleUrls: ['./inkoop.component.scss']
 })
-export class ProcurementComponent implements OnInit, OnDestroy {
-  procurement$: Observable<Procurement[]>;
+export class InkoopComponent implements OnInit, OnDestroy {
+  procurement$: Observable<Inkoop[]>;
   searchPriceTotal$: Observable<number>;
   total$: Observable<number>;
   tableForm: UntypedFormGroup;
 
   @ViewChildren(NgbdSortableHeaderDirective) headers: QueryList<NgbdSortableHeaderDirective>;
 
-  constructor(public service: ProcurementService,
+  constructor(public service: InkoopService,
               private bookService: BooksService,
               private calendar: NgbCalendar,
               private config: NgbModalConfig,

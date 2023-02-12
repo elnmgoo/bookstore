@@ -1,0 +1,176 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<form>
+  <div class="row formTable row-cols-md-12 pt-2  me-auto">
+    <div class="mb-3 col-md-2 mx-4">
+      <label class="form-label-sm" for="searchTerm">Zoeken op term</label><br>
+      <input id="searchTerm" class="form-control" type="text" name="searchTerm"
+             [(ngModel)]="service.searchTerm"/>
+    </div>
+    <div class="mb-3 col-md-1">
+      <label class="form-label-sm" for="buttonToday">Deze</label><br>
+      <button type="button" class="btn btn-info btn-block" id="buttonToday"
+              (click)="onButtonToday()">dag
+      </button>
+    </div>
+    <div class="mb-3 col-md-1">
+      <label class="form-label-sm" for="buttonYear">Dit</label><br>
+      <button type="button" class="btn btn-info btn-block" id="buttonYear"
+              (click)="onButtonYear()">jaar
+      </button>
+    </div>
+    <div class="mb-3 col-md-3">
+      <label class="form-label-sm" for="inputDate1">vanaf</label><br>
+      <div class="input-group">
+        <input [(ngModel)]="service.startFromDate" class="form-control" placeholder="dd-mm-yyyy"
+               name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate1"
+
+        >
+        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()"
+                type="button"></button>
+      </div>
+    </div>
+    <div class="mb-3 col-md-3">
+      <label class="form-label-sm" for="inputDate2">tot en met</label><br>
+      <div class="input-group">
+        <input [(ngModel)]="service.endUntilDate" class="form-control" placeholder="dd-mm-yyyy"
+               name="date2" ngbDatepicker #e="ngbDatepicker" id="inputDate2"
+        >
+        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="e.toggle()"
+                type="button"></button>
+      </div>
+    </div>
+    <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
+  </div>
+  <table class="table table-striped" aria-label="Verkochte boeken/artikelen">
+    <thead>
+    <tr class="color-table-primary">
+      <th></th>
+      <th scope="col" sortable="datetime" (sort)="onSort($event)">Datum</th>
+      <th scope="col" sortable="isbn" (sort)="onSort($event)">Isbn</th>
+      <th scope="col" sortable="description" (sort)="onSort($event)">Beschrijving</th>
+      <th scope="col" sortable="author" (sort)="onSort($event)">Auteur</th>
+      <th scope="col" sortable="book.publisher" (sort)="onSort($event)">Uitgever</th>
+      <th scope="col" sortable="book.supply" (sort)="onSort($event)">Voorraad</th>
+      <th scope="col" sortable="amount" (sort)="onSort($event)">Verkocht</th>
+      <th scope="col" sortable="price" (sort)="onSort($event)">Prijs</th>
+      <th scope="col" sortable="discountPercentage" (sort)="onSort($event)">Korting</th>
+      <th scope="col" sortable="totalPrice" (sort)="onSort($event)">Totaal</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let purchaseOrder of purchaseOrders$ | async">
+      <td>
+        <img src="assets/delete-24px.svg" (click)="handleDelete(purchaseOrder)"
+             style="opacity: 0.25;" alt="Verwijder verkochte artikel/boek"/>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.dateTime | date"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+          <ngb-highlight [result]="purchaseOrder.book.isbn"
+                         [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.description"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+          <ngb-highlight [result]="purchaseOrder.book.author"
+                         [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+          <ngb-highlight [result]="purchaseOrder.book.publisher.publisher"
+                         [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="purchaseOrder.book.isbn != '0000000000000'">
+          <ngb-highlight [result]="purchaseOrder.book.supply | number"
+                         [term]="service.searchTerm"></ngb-highlight>
+        </ng-container>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.amount | number"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.price | number:'1.2-2'"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.discountPercentage | number:'1.1-1'"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td>
+        <ngb-highlight [result]="purchaseOrder.totalPrice | number:'1.2-2'"
+                       [term]="service.searchTerm"></ngb-highlight>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="11" class="color-table-primary">
+        <div class="row">
+          <div class="col-4 d-flex align-items-center justify-content-start">
+            <table border="1" class="footer" align="right" class="tablebtw" cellpadding="5"
+                   aria-label="Totaal">
+              <tr>
+                <th></th>
+                <th>Exclusief</th>
+                <th>Btw</th>
+                <th>Inclusief</th>
+              </tr>
+              <tr *ngFor="let btwTotal of searchBtwTotal$ | async">
+                <td align="right">
+                  {{btwTotal.btw}} % btw
+                </td>
+                <td align="right">
+                  {{btwTotal.totalWithoutBtw | number:'1.2-2'}}
+                </td>
+                <td align="right">
+                  {{btwTotal.totalBtw | number:'1.2-2'}}
+                </td>
+                <td align="right">
+                  {{btwTotal.totalWithBtw | number:'1.2-2'}}
+                </td>
+              </tr>
+              <tr *ngIf="theBtwTotal !== undefined && theBtwTotal.totalWithBtw > 0">
+                <td align="right">
+                </td>
+                <td align="right">
+                  {{theBtwTotal.totalWithoutBtw | number:'1.2-2'}}
+                </td>
+                <td align="right">
+                  {{theBtwTotal.totalBtw | number:'1.2-2'}}
+                </td>
+                <td align="right">
+                  {{theBtwTotal.totalWithBtw | number:'1.2-2'}}
+                </td>
+              </tr>
+
+            </table>
+          </div>
+          <div class="col-4 d-flex align-items-center justify-content-center mt-3">
+            <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page"
+                            [maxSize]="5" [rotate]="true"
+                            [pageSize]="service.pageSize" [boundaryLinks]="true"></ngb-pagination>
+          </div>
+          <div class="col-4 d-flex align-items-center justify-content-end">
+            <select class="form-select lh-1 lh-sm w-auto" name="pageSize"
+                    [(ngModel)]="service.pageSize">
+              <option [ngValue]="25">25 items per page</option>
+              <option [ngValue]="50">50 items per page</option>
+              <option [ngValue]="100">100 items per page</option>
+            </select>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</form>

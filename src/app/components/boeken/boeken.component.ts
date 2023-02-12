@@ -10,10 +10,10 @@ import {BookStatistics} from '../../models/bookStatistics';
 
 @Component({
   selector: 'app-books',
-  templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss']
+  templateUrl: './boeken.component.html',
+  styleUrls: ['./boeken.component.scss']
 })
-export class BooksComponent implements OnInit {
+export class BoekenComponent implements OnInit {
   books$: Observable<Book[]>;
   bookStatistics$: Observable<BookStatistics>;
   total$: Observable<number>;

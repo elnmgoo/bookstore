@@ -1,0 +1,62 @@
+
+  <div class="container-fluid">
+    <form [formGroup]="itemForm">
+      <div class="row bg-kbt-aquamarine py-3">
+        <div class="mb-3 col-md-4">
+          <label for="itemDescription">Artikel</label>
+          <input type="text" class="form-control" formControlName="itemDescription"
+                 placeholder="Beschrijving"
+                 name="Description"
+                 id="itemDescription"/>
+        </div>
+        <div class="mb-3 col-md-2">
+          <label for="inputObjectTax">Btw</label>
+          <select formControlName="itemTax" class="form-control" id="inputObjectTax"
+                  placeholder="Btw">
+            <option *ngFor="let tax of taxArray" value="{{tax}}">{{tax}}%</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="itemPrice">Prijs(optie)</label>
+          <input type="text" class="form-control" formControlName="itemPrice" placeholder="Prijs"
+                 name="Price" mask="separator.2" thousandSeparator="."
+                 id="itemPrice"/>
+        </div>
+        <div class="mb-3 col-md-3">
+          <label for="buttonObjectOk">Toevoegen</label><br>
+          <button type="button" class="btn btn-info btn-block" id="buttonObjectOk"
+                  [disabled]="!itemForm.valid"
+                  (click)="onAddItemButton()">Artikel toevoegen
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+    <tr class="color-table-primary">
+      <th></th>
+      <th>Beschrijving</th>
+      <th>Btw</th>
+      <th>Prijs</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of (item$ | async)">
+      <td>
+        <div class="col-md-1" style="color: grey;text-align: center;cursor: pointer;"
+             data-placement="right" data-toggle="tooltip" title="Verwijder artikel"
+             (click)="onDeleteItem(item, $event)">
+          <img src="assets/delete-24px.svg" style="opacity: 0.25;" alt="Verwijder artikel"/>
+        </div>
+      </td>
+      <td>{{ item.description }}</td>
+      <td>{{ item.tax }}</td>
+      <td>{{ item.price | number:'1.2-2'}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+

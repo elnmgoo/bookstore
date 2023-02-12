@@ -5,7 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {SalesComponent} from './components/kassa/sales.component';
-import {ItemsComponent} from './components/items/items.component';
+import {ArtikelenComponent} from './components/artikelen/artikelen.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
@@ -26,16 +26,16 @@ import {PrintService} from '../store/book/service/print.service';
 import {DecimalPipe, registerLocaleData} from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
 import {LoginComponent} from './components/login/login.component';
-import {PurchaseOrdersComponent} from './components/verkocht/purchase-orders.component';
+import {VerkochtComponent} from './components/verkocht/verkocht.component';
 import {PurchaseOrdersService} from './services/purchase-orders.service';
 import {NgbdSortableHeaderDirective} from './directives/ngbd-sortable-header.directive';
 import {ConfirmDialogService} from './modules/confirm-dialog/confirm-dialog.service';
 import {ConfirmDialogModule} from './modules/confirm-dialog/confirm-dialog.module';
-import { BooksComponent } from './components/boeken/books.component';
+import { BoekenComponent } from './components/boeken/boeken.component';
 import {BooksService} from './services/book.service';
 import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
-import { PublishersComponent } from './components/uitgevers/publishers.component';
-import { ProcurementComponent } from './components/inkoop/procurement.component';
+import { UitgeversComponent } from './components/uitgevers/uitgevers.component';
+import { InkoopComponent } from './components/inkoop/inkoop.component';
 import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -47,14 +47,14 @@ registerLocaleData(localeNl, 'nl');
     AppComponent,
     HeaderComponent,
     SalesComponent,
-    ItemsComponent,
+    ArtikelenComponent,
     LoginComponent,
-    PurchaseOrdersComponent,
+    VerkochtComponent,
     NgbdSortableHeaderDirective,
-    BooksComponent,
+    BoekenComponent,
     BookDialogComponent,
-    PublishersComponent,
-    ProcurementComponent,
+    UitgeversComponent,
+    InkoopComponent,
   ],
   imports: [
     BrowserModule,

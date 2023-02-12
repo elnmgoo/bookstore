@@ -29,32 +29,31 @@
                 (click)="onAddItemButton()">Uitgever toevoegen
         </button>
       </div>
-      <div class="mb-3 col-md-5">
-
-      </div>
     </div>
   </form>
 </div>
-<div class="container-fluid">
-  <div class="row bg-kbt-azure" >
-    <div class="mb-2 col-1"></div>
-    <div class="mb-2 col-2"><b>Id</b></div>
-    <div class="mb-2 col-5"><B>Uitgever</B></div>
-  </div>
-</div>
-<div class="table-uitgever ">
-  <ng-container *ngFor="let publisher of (publisher$ | async)">
-    <div class="row ">
+<table class="table table-striped">
+  <thead>
+  <tr class="color-table-primary">
+    <th></th>
+    <th>Id</th>
+    <th>Uitgever</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let publisher of (publisher$ | async)">
+    <td>
       <div class="col-1" style="text-align: center;cursor: pointer;" data-placement="right"
            data-toggle="tooltip" title="Verwijder uitgever"
            (click)="onDeleteItem(content, publisher, $event)">
         <img src="assets/delete-24px.svg" style="opacity: 0.25;"/>
       </div>
-      <div class="col-2">{{ publisher.id }}</div>
-      <div class="col-5">{{ publisher.publisher }}</div>
-    </div>
-  </ng-container>
-</div>
-
+    </td>
+    <td>{{ publisher.id }}</td>
+    <td>{{ publisher.publisher }}</td>
+  </tr>
+  </tbody>
+</table>
 
 

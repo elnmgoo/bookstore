@@ -10,11 +10,11 @@ import {BtwTotal} from '../../models/btwTotal';
 
 @Component({
   selector: 'app-orders',
-  templateUrl: './purchase-orders.component.html',
-  styleUrls: ['./purchase-orders.component.scss'],
+  templateUrl: './verkocht.component.html',
+  styleUrls: ['./verkocht.component.scss'],
   providers: [PurchaseOrdersService, DecimalPipe]
 })
-export class PurchaseOrdersComponent implements OnInit, OnDestroy {
+export class VerkochtComponent implements OnInit, OnDestroy {
   purchaseOrders$: Observable<PurchaseOrder[]>;
   searchBtwTotal$: Observable<BtwTotal[]>;
   total$: Observable<number>;

@@ -9,10 +9,10 @@ import {Item} from '../../../store/items/models/item';
 
 @Component({
   selector: 'app-items',
-  templateUrl: './items.component.html',
-  styleUrls: ['./items.component.scss']
+  templateUrl: './artikelen.component.html',
+  styleUrls: ['./artikelen.component.scss']
 })
-export class ItemsComponent implements OnInit {
+export class ArtikelenComponent implements OnInit {
   item$ = this.store.pipe(select(selectItemList));
   taxArray = AppConstants.taxArray;
   itemForm: UntypedFormGroup;

@@ -4,10 +4,41 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/dist/css/bootstrap.css';
+//@import '~bootstrap/dist/css/bootstrap.css';
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+$primary:       $pink-600;
+$secondary:     $cyan-600;
+$success:       $green;
+$info:          $cyan;
+$warning:       $yellow;
+$danger:        $red;
+$light:         $gray-300;
+$dark:          $gray-700;
 
-
+$theme-colors: (
+  "primary":    $primary,
+  "secondary":  $secondary,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       $dark
+);
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 html {
   background-color: aquamarine;
 }
+
+.bg-kbt-aquamarine {
+  background-color: aquamarine;
+}
+
+.bg-kbt-azure {
+  background-color: #0dcaf0;
+}
+
+
+
