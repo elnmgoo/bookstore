@@ -29,10 +29,10 @@ import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-book-dialog',
-  templateUrl: './book-dialog.component.html',
-  styleUrls: ['./book-dialog.component.scss']
+  templateUrl: './boek-dialog.component.html',
+  styleUrls: ['./boek-dialog.component.scss']
 })
-export class BookDialogComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BoekDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('autofocus') private autofocusField: ElementRef;
   @Input() public book: Book;
   @Input() public bNew: boolean;

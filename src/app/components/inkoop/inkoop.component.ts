@@ -6,7 +6,7 @@ import {NgbCalendar, NgbDate, NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-b
 import {InkoopService} from '../../services/inkoop.service';
 import {Inkoop} from '../../models/inkoop';
 import {Book} from '../../../store/book/models/book';
-import {BookDialogComponent} from '../book-dialog/book-dialog.component';
+import {BoekDialogComponent} from '../boek-dialog/boek-dialog.component';
 import {BooksService} from '../../services/book.service';
 
 
@@ -66,7 +66,7 @@ export class InkoopComponent implements OnInit, OnDestroy {
 
   onButtonAdd() {
     const book: Book = new Book('', '', '', 0, null, 0, false);
-    const modalRef = this.modalService.open(BookDialogComponent);
+    const modalRef = this.modalService.open(BoekDialogComponent);
     modalRef.componentInstance.book = book;
     modalRef.componentInstance.bNew = true;
     modalRef.componentInstance.service = this.bookService;

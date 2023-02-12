@@ -75,12 +75,12 @@ export class CustomDateParserFormatter extends NgbDateParserFormatter {
 
 @Component({
   selector: 'app-sales',
-  templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.scss']
+  templateUrl: './kassa.component.html',
+  styleUrls: ['./kassa.component.scss']
 })
 
 
-export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('orderwindow') private myScrollContainer: ElementRef;
   @ViewChild('autofocus') private autofocusField: ElementRef;
   @ViewChild('autofocusPrijs') private autofocusPrijsField: ElementRef;

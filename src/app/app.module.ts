@@ -4,7 +4,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
-import {SalesComponent} from './components/kassa/sales.component';
+import {KassaComponent} from './components/kassa/kassa.component';
 import {ArtikelenComponent} from './components/artikelen/artikelen.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StoreModule} from '@ngrx/store';
@@ -33,7 +33,7 @@ import {ConfirmDialogService} from './modules/confirm-dialog/confirm-dialog.serv
 import {ConfirmDialogModule} from './modules/confirm-dialog/confirm-dialog.module';
 import { BoekenComponent } from './components/boeken/boeken.component';
 import {BooksService} from './services/book.service';
-import { BookDialogComponent } from './components/book-dialog/book-dialog.component';
+import { BoekDialogComponent } from './components/boek-dialog/boek-dialog.component';
 import { UitgeversComponent } from './components/uitgevers/uitgevers.component';
 import { InkoopComponent } from './components/inkoop/inkoop.component';
 import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
@@ -46,13 +46,13 @@ registerLocaleData(localeNl, 'nl');
   declarations: [
     AppComponent,
     HeaderComponent,
-    SalesComponent,
+    KassaComponent,
     ArtikelenComponent,
     LoginComponent,
     VerkochtComponent,
     NgbdSortableHeaderDirective,
     BoekenComponent,
-    BookDialogComponent,
+    BoekDialogComponent,
     UitgeversComponent,
     InkoopComponent,
   ],

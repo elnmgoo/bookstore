@@ -4,7 +4,7 @@ import {BooksService} from '../../services/book.service';
 import {Observable} from 'rxjs';
 import {Book} from '../../../store/book/models/book';
 import {NgbdSortableHeaderDirective, SortEvent} from '../../directives/ngbd-sortable-header.directive';
-import {BookDialogComponent} from '../book-dialog/book-dialog.component';
+import {BoekDialogComponent} from '../boek-dialog/boek-dialog.component';
 import {NgbModal, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 import {BookStatistics} from '../../models/bookStatistics';
 
@@ -71,7 +71,7 @@ export class BoekenComponent implements OnInit {
   }
 
   handleEdit(book) {
-    const modalRef = this.modalService.open(BookDialogComponent);
+    const modalRef = this.modalService.open(BoekDialogComponent);
     modalRef.componentInstance.book = book;
     modalRef.componentInstance.bNew = false;
     modalRef.componentInstance.service = this.service;
