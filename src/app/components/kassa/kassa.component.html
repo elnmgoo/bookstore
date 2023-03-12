@@ -80,14 +80,14 @@
           <label class="form-label-sm" for="inputDiscount">Korting</label><br>
           <input formControlName="discount" type="text" class="form-control form-control-sm"
                  id="inputDiscount"
-                 mask="separator.2"
+                 mask="separator.2" decimalMarker=","
                  thousandSeparator="." (change)="calculateTotalPriceBook()">
         </div>
         <div class="mb-3 col-md-2">
           <label class="form-label-sm" for="inputTotal">Totaal</label><br>
           <input formControlName="total" type="text" class="form-control form-control-sm"
                  id="inputTotal" placeholder="0"
-                 mask="separator.2"
+                 mask="separator.2" decimalMarker=","
                  thousandSeparator="." [readonly]=true>
         </div>
 
@@ -139,7 +139,7 @@
           <input #autofocusPrijs formControlName="itemPrice" type="text" name="inputObjectPrice"
                  class="form-control form-control-sm"
                  id="inputObjectPrice" placeholder="Prijs"
-                 mask="separator.2" thousandSeparator="."
+                 mask="separator.2" thousandSeparator="." decimalMarker=","
                  (change)="calculateTotalPriceItem()">
           <div class="validator"
                *ngIf="itemForm.controls['itemPrice'].invalid && (itemForm.controls['itemPrice'].dirty ||itemForm.controls['itemPrice'].touched)">
@@ -151,14 +151,14 @@
           <label class="form-label-sm" for="inputObjectDiscount">Korting</label><br>
           <input formControlName="itemDiscount" type="text" class="form-control form-control-sm"
                  id="inputObjectDiscount"
-                 mask="separator.2"
+                 mask="separator.2" decimalMarker=","
                  thousandSeparator="." (change)="calculateTotalPriceItem()">
         </div>
         <div class="mb-3 col-md-2">
           <label class="form-label-sm" for="inputObjectTotal">Totaal</label><br>
           <input formControlName="itemTotal" type="text" class="form-control form-control-sm"
                  id="inputObjectTotal" placeholder="0"
-                 mask="separator.2"
+                 mask="separator.2" decimalMarker=","
                  thousandSeparator="." [readonly]=true>
         </div>
         <div class="mb-3 col-md-4">
@@ -185,7 +185,7 @@
           <label class="form-label-sm" for="inputObjectDiscountTotal">&euro; v.totaal</label><br>
           <input formControlName="discountValue" type="text" class="form-control form-control-sm"
                  id="inputObjectDiscountTotal"
-                 mask="separator.2" thousandSeparator="." maxlength="10">
+                 mask="separator.2" thousandSeparator="." decimalMarker="," maxlength="10">
         </div>
         <div class="mb-3 col-md-2">
           <label class="form-label-sm" for="inputKortingTextPercent">Korting</label><br>
@@ -198,7 +198,7 @@
           <label class="form-label-sm" for="inputObjectExtraDiscountTotal">% v.totaal</label><br>
           <input formControlName="discountPercentage" type="text"
                  class="form-control form-control-sm"
-                 id="inputObjectExtraDiscountTotal"
+                 id="inputObjectExtraDiscountTotal" decimalMarker=","
                  mask="separator.1" maxlength="4"
                  thousandSeparator=".">
         </div>
