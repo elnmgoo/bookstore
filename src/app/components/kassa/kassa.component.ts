@@ -544,6 +544,9 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);
+        console.log('book price: ' + book.price);
+        console.log('book price: ' + book.price.toFixed(2));
+        console.log('book price: ' + formatNumber(book.price, 'nl', '1.2-2'));
         this.bookForm.controls.price.setValue(book.price.toFixed(2));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.tax.setValue(9);

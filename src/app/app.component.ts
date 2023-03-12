@@ -12,15 +12,5 @@ export class AppComponent {
   title = 'bookstore';
 
   constructor() {
-    /*
-    $('body').tooltip({
-      selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-      trigger: 'hover',
-      container: 'body'
-    }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', () => {
-      $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('dispose');
-    });
-
-     */
   }
 }
