@@ -37,7 +37,6 @@ import { BoekDialogComponent } from './components/boek-dialog/boek-dialog.compon
 import { UitgeversComponent } from './components/uitgevers/uitgevers.component';
 import { InkoopComponent } from './components/inkoop/inkoop.component';
 import { NoCacheHeadersInterceptor } from './interceptors/NoCacheHeadersInterceptor';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 
 registerLocaleData(localeNl, 'nl');

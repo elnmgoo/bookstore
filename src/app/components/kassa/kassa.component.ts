@@ -309,19 +309,19 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   calculateTotalPriceBook() {
-    let totalPrice = this.bookForm.controls.amount.value * Number(this.bookForm.controls.price.value.replace(',', '.'));
-    if (this.bookForm.controls.discount.value.toString().length > 0) {
-      totalPrice -= Number(this.bookForm.controls.discount.value.toString().replace(',', '.'));
+    let totalPrice = this.bookForm.controls.amount.value * Number(this.bookForm.controls.price.value);
+    if (this.bookForm.controls.discount.value !== null && this.bookForm.controls.discount.value.toString().length > 0) {
+      totalPrice -= Number(this.bookForm.controls.discount.value.toString());
     }
-    this.bookForm.controls.total.setValue(totalPrice.toFixed(2).replace('.', ','));
+    this.bookForm.controls.total.setValue(totalPrice.toFixed(2));
   }
 
   calculateTotalPriceItem() {
-    let itemTotalPrice = this.itemForm.controls.itemAmount.value * Number(this.itemForm.controls.itemPrice.value.replace(',', '.'));
+    let itemTotalPrice = this.itemForm.controls.itemAmount.value * Number(this.itemForm.controls.itemPrice.value);
     if (this.itemForm.controls.itemDiscount.value.toString().length > 0) {
       itemTotalPrice -= Number(this.itemForm.controls.itemDiscount.value.toString().replace(',', '.'));
     }
-    this.itemForm.controls.itemTotal.setValue(itemTotalPrice.toFixed(2).replace('.', ','));
+    this.itemForm.controls.itemTotal.setValue(itemTotalPrice.toFixed(2));
   }
 
   onAddItemButton() {
@@ -354,7 +354,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
       description,
       dateTime: 0,
       total: this.itemForm.controls.itemAmount.value * Math.round(Number(this.itemForm.controls.itemPrice.value.replace(',', '.')) * 100.0)
-        - Math.round(Number(this.itemForm.controls.itemDiscount.value.replace(',', '.')) * 100.0),
+        - Math.round(Number(this.itemForm.controls.itemDiscount.value) * 100.0),
     } as Order;
     this.store.dispatch(new AddOrder(order));
     this.itemForm.reset();
@@ -390,8 +390,8 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
       title: this.bookForm.controls.title.value,
       description,
       dateTime: 0,
-      total: this.bookForm.controls.amount.value * Math.round(Number(this.bookForm.controls.price.value.replace(',', '.')) * 100.0)
-        - Math.round(Number(this.bookForm.controls.discount.value.replace(',', '.')) * 100.0),
+      total: this.bookForm.controls.amount.value * Math.round(Number(this.bookForm.controls.price.value) * 100.0)
+        - Math.round(Number(this.bookForm.controls.discount.value) * 100.0),
     } as Order;
     this.store.dispatch(new AddOrder(order));
     const date = this.bookForm.controls.date.value;
@@ -544,11 +544,11 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.title.setValue(book.title);
         this.bookForm.controls.author.setValue(book.author);
         this.bookForm.controls.publisher.setValue(book.publisher.id);
-        this.bookForm.controls.price.setValue(book.price.toFixed(2).replace('.', ','));
+        this.bookForm.controls.price.setValue(book.price.toFixed(2));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.tax.setValue(9);
         this.bookForm.controls.discount.setValue('');
-        this.bookForm.controls.total.setValue(book.price.toFixed(2).replace('.', ','));
+        this.bookForm.controls.total.setValue(book.price.toFixed(2));
       });
     }
   }
