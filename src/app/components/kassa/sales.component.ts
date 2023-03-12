@@ -21,7 +21,8 @@ import {
   selectOrderTotalPriceWithDiscount,
   selectOrderTotalPriceWithDiscountAndReduction,
   selectOrderTotalPriceTaxMap, selectDiscountPercentageValue,
-  selectOrderTotalTaxMapWithDiscount
+  selectOrderTotalTaxMapWithDiscount,
+  selectTotalAmount
 } from '../../../store/orders/selectors/order.selectors';
 import {
   AddOrder,
@@ -116,6 +117,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceTaxMapWithDiscount$ = this.store.pipe(select(selectOrderTotalTaxMapWithDiscount));
   orderTotalPriceWithDiscount$ = this.store.pipe(select(selectOrderTotalPriceWithDiscount));
   orderTotalPriceWithDiscountAndReduction$ = this.store.pipe(select(selectOrderTotalPriceWithDiscountAndReduction));
+  totalAmount$ = this.store.pipe(select(selectTotalAmount));
 
   constructor(private store: Store<AppState>,
               private formBuilder: FormBuilder,

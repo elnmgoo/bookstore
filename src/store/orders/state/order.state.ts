@@ -10,6 +10,7 @@ export interface OrderState {
   priceTotalTaxMap: Map<number, number>;
   priceTotalTaxMapWithDiscount: Map<number, number>;
   discountPercentageValue: number;
+  totalAmount: number;
   discount: Discount;
   orderError: Error;
 }
@@ -23,6 +24,7 @@ export const initialOrderState: OrderState = {
   priceTotalTaxMap: new Map<number, number>(),
   priceTotalTaxMapWithDiscount: new Map<number, number>(),
   discountPercentageValue: 0,
+  totalAmount: 0,
   discount: {
     discountText: 'Af',
     discountValue: 0,

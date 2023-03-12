@@ -50,3 +50,9 @@ export const selectDiscount = createSelector(
   selectOrders,
   (state: OrderState) => state.discount
 );
+
+export const selectTotalAmount = createSelector(
+  selectOrders,
+  (state: OrderState) => state.totalAmount
+);
+
