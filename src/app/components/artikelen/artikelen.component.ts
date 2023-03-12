@@ -6,6 +6,7 @@ import {AppState} from '../../../store/app.state';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {AppConstants} from '../../app-constants';
 import {Item} from '../../../store/items/models/item';
+import {PriceValidator} from "../../validators/price.validator";
 
 @Component({
   selector: 'app-items',
@@ -29,7 +30,7 @@ export class ArtikelenComponent implements OnInit {
     this.itemForm = this.formBuilder.group({
       itemDescription: ['', [Validators.required, Validators.minLength(4)]],
       itemTax: [9, [Validators.required, Validators.min(0)]],
-      itemPrice: ['']
+      itemPrice: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceArticle)]]
     });
 
     /*console.log('result: ' + result);*/

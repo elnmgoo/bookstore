@@ -26,7 +26,8 @@ export const orderReducers = (
         discountPercentageValue: calculateDiscountPercentageValue(state.discount, price),
         priceTotalWithDiscount: calculateTotalWithDiscount(state.discount, price),
         priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(state.discount, price),
-        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap)
+        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap),
+        totalAmount: state.totalAmount + action.payload.amount
       };
     }
     case EOrderActions.DeleteOrderSuccess: {
@@ -45,7 +46,8 @@ export const orderReducers = (
         discountPercentageValue: calculateDiscountPercentageValue(state.discount, price),
         priceTotalWithDiscount: calculateTotalWithDiscount(state.discount, price),
         priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(state.discount, price),
-        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap)
+        priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap),
+        totalAmount: state.totalAmount - action.payload.amount
       };
     }
     case EOrderActions.DeleteAllOrder: {
@@ -65,7 +67,8 @@ export const orderReducers = (
         priceTotalTaxMapWithDiscount: new Map<number, number>(),
         priceTotalWithDiscount: 0,
         priceTotalWithDiscountAndReduction: 0,
-        orderError: null
+        orderError: null,
+        totalAmount: 0
       };
     }
     case EOrderActions.SetDiscount: {

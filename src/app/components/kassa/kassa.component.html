@@ -9,8 +9,9 @@
                    placeholder="dd-mm-yyyy"
                    name="date" ngbDatepicker #d="ngbDatepicker" id="inputDate"
             >
-              <button class="btn btn-outline-secondary bi bi-calendar3" style="font-size: 80%;" (click)="d.toggle()"
-                      type="button"></button>
+            <button class="btn btn-outline-secondary bi bi-calendar3" style="font-size: 80%;"
+                    (click)="d.toggle()"
+                    type="button"></button>
           </div>
         </div>
         <div class="mb-3 col-md-4">
@@ -108,7 +109,7 @@
             <label class="form-label-sm" for="inputItem">Artikel</label><br>
             <select formControlName="item" name="item" class="form-control form-control-sm"
                     id="inputItem"
-                    type="number" (change)='onInputArticleSelected()'>
+                    (change)="onInputArticleSelected()">
               <option *ngFor="let item of (item$ | async)" [ngValue]="item">{{item.description}}
                 ({{item.tax}}
                 %) {{item.price.replace('.', ',')}}
@@ -174,27 +175,27 @@
     <form [formGroup]="discountForm">
       <div class="row">
         <div class="mb-3 col-md-2">
-         <label class="form-label-sm" for="inputKortingText">Af</label><br>
+          <label class="form-label-sm" for="inputKortingText">Af</label><br>
           <input formControlName="discountValueText" type="text"
                  class="form-control form-control-sm" id="inputKortingText"
                  maxLength="30">
         </div>
 
         <div class="mb-3 col-md-2">
-         <label class="form-label-sm" for="inputObjectDiscountTotal">&euro; v.totaal</label><br>
+          <label class="form-label-sm" for="inputObjectDiscountTotal">&euro; v.totaal</label><br>
           <input formControlName="discountValue" type="text" class="form-control form-control-sm"
                  id="inputObjectDiscountTotal"
                  mask="separator.2" thousandSeparator="." maxlength="10">
         </div>
         <div class="mb-3 col-md-2">
-         <label class="form-label-sm" for="inputKortingTextPercent">Korting</label><br>
+          <label class="form-label-sm" for="inputKortingTextPercent">Korting</label><br>
           <input formControlName="discountPercentageText" maxLength=30 type="text"
                  class="form-control form-control-sm"
                  id="inputKortingTextPercent">
         </div>
 
         <div class="mb-3 col-md-2">
-         <label class="form-label-sm" for="inputObjectExtraDiscountTotal">% v.totaal</label><br>
+          <label class="form-label-sm" for="inputObjectExtraDiscountTotal">% v.totaal</label><br>
           <input formControlName="discountPercentage" type="text"
                  class="form-control form-control-sm"
                  id="inputObjectExtraDiscountTotal"
@@ -203,7 +204,7 @@
         </div>
 
         <div class="mb-3 col-md-2">
-         <label class="form-label-sm" for="buttonObjectPay">Totaal</label><br>
+          <label class="form-label-sm" for="buttonObjectPay">Totaal</label><br>
           <button type="button" class="btn btn-info btn-block btn-sm" id="buttonObjectPay"
                   [disabled]="orderTotalPrice === 0"
                   (click)="onPayButton()">Afrekenen(F3)
@@ -218,7 +219,8 @@
                    id="printLabelCount"
                    [checked]="this.printOrder"
                    (change)="onCheckboxChange($event)">
-           <label class="form-label-sm" for="printLabelCount" class="custom-control-label">Afdrukken van een
+            <label class="form-label-sm" for="printLabelCount" class="custom-control-label">Afdrukken
+              van een
               bonnetje</label><br>
           </div>
         </div>
@@ -277,52 +279,55 @@
         </ng-container>
 
         <ng-container *ngIf="orderTotalPrice$ | async as orderTotalPrice">
-          <ng-container *ngIf="orderTotalPrice > 0">
-            <span style="display:inline-block;width: 18ch;"></span>
-            <span style="display:inline-block;width: 32ch;"><b>Totaal:</b></span>
-            <span style="display:inline-block;width: 1ch;">&euro;</span>
-            <span
-              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount
-            / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
-            </span>
-            <ng-container *ngIf="orderTotalPriceTaxMap$">
-              <ng-container *ngFor="let tax of taxArray">
-                <ng-container *ngIf="orderTotalPriceTaxMapWithDiscount.get(tax) > 0">
-                  <span style="display:block"></span>
-                  <span style="display:inline-block;width: 18ch;"></span>
-                  <span style="display:inline-block;width: 32ch;">Btw {{tax | number: '2.0'}}
-                    % ({{(orderTotalPriceTaxMapWithDiscount.get(tax)
-                    / 100 | number:'1.2-2').toString().replace('.', ',')}}
-                    )</span>
-                  <span style="display:inline-block;width: 1ch;">&euro;</span>
-                  <span
-                    style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMapWithDiscount.get(
-                    tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.',
-                    ',')}}</span>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="discount.discountValue > 0">
+          <ng-container *ngIf="totalAmount$ | async as totalAmount">
+            <ng-container *ngIf="orderTotalPrice > 0">
               <span style="display:inline-block;width: 18ch;"></span>
-              <span style="display:inline-block;width: 32ch;"><b>{{discount.discountText}}
-                :</b></span>
+              <span style="display:inline-block;width: 32ch;"><b>Totaal({{totalAmount}}):</b></span>
               <span style="display:inline-block;width: 1ch;">&euro;</span>
               <span
-                style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discount.discountValue
-              / 100 | number:'1.2-2').toString().replace('.', ',')}}
-                -</b>
+                style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscount
+              / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
             </span>
-            </ng-container>
-            <span style="display:inline-block;width: 18ch;"></span>
-            <span style="display:inline-block;width: 32ch;"><b>Te betalen:</b></span>
-            <span style="display:inline-block;width: 1ch;">&euro;</span>
-            <span
-              style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscountAndReduction
-            / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+              <ng-container *ngIf="orderTotalPriceTaxMap$">
+                <ng-container *ngFor="let tax of taxArray">
+                  <ng-container *ngIf="orderTotalPriceTaxMapWithDiscount.get(tax) > 0">
+                    <span style="display:block"></span>
+                    <span style="display:inline-block;width: 18ch;"></span>
+                    <span style="display:inline-block;width: 32ch;">Btw {{tax | number: '2.0'}}
+                      % ({{(orderTotalPriceTaxMapWithDiscount.get(tax)
+                      / 100 | number:'1.2-2').toString().replace('.', ',')}}
+                      )</span>
+                    <span style="display:inline-block;width: 1ch;">&euro;</span>
+                    <span
+                      style="display:inline-block;width: 7ch;text-align: right;">{{(((orderTotalPriceTaxMapWithDiscount.get(
+                      tax) / (100 + tax)) * tax) / 100 | number:'1.2-2').toString().replace('.',
+                      ',')}}</span>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="discount.discountValue > 0">
+                <span style="display:inline-block;width: 18ch;"></span>
+                <span style="display:inline-block;width: 32ch;"><b>{{discount.discountText}}
+                  :</b></span>
+                <span style="display:inline-block;width: 1ch;">&euro;</span>
+                <span
+                  style="display:inline-block;width: 9ch;text-align: right;"><b>{{(discount.discountValue
+                / 100 | number:'1.2-2').toString().replace('.', ',')}}
+                  -</b>
             </span>
-            <ng-container *ngIf="time.length > 0">
-              <p></p>
-              <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i></p>
+              </ng-container>
+              <span style="display:block"></span>
+              <span style="display:inline-block;width: 18ch;"></span>
+              <span style="display:inline-block;width: 32ch;"><b>Te betalen:</b></span>
+              <span style="display:inline-block;width: 1ch;">&euro;</span>
+              <span
+                style="display:inline-block;width: 7ch;text-align: right;"><b>{{(orderTotalPriceWithDiscountAndReduction
+              / 100 | number:'1.2-2').toString().replace('.', ',')}}</b>
+            </span>
+              <ng-container *ngIf="time.length > 0">
+                <p></p>
+                <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i></p>
+              </ng-container>
             </ng-container>
           </ng-container>
         </ng-container>

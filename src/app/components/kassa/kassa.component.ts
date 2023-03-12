@@ -21,7 +21,8 @@ import {
   selectOrderTotalPriceWithDiscount,
   selectOrderTotalPriceWithDiscountAndReduction,
   selectOrderTotalPriceTaxMap, selectDiscountPercentageValue,
-  selectOrderTotalTaxMapWithDiscount
+  selectOrderTotalTaxMapWithDiscount,
+  selectTotalAmount
 } from '../../../store/orders/selectors/order.selectors';
 import {
   AddOrder,
@@ -116,6 +117,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceTaxMapWithDiscount$ = this.store.pipe(select(selectOrderTotalTaxMapWithDiscount));
   orderTotalPriceWithDiscount$ = this.store.pipe(select(selectOrderTotalPriceWithDiscount));
   orderTotalPriceWithDiscountAndReduction$ = this.store.pipe(select(selectOrderTotalPriceWithDiscountAndReduction));
+  totalAmount$ = this.store.pipe(select(selectTotalAmount));
 
   constructor(private store: Store<AppState>,
               private formBuilder: FormBuilder,
@@ -297,7 +299,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onInputArticleSelected() {
     this.itemForm.controls.itemTax.setValue(this.itemForm.controls.item.value.tax);
-    this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price.replace('.', ','));
+    this.itemForm.controls.itemPrice.setValue(this.itemForm.controls.item.value.price);
     this.itemForm.controls.itemAmount.setValue(1);
     this.itemForm.controls.itemDiscount.setValue('');
     if (this.itemForm.controls.itemPrice.value.length === 0) {
