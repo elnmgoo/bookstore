@@ -2,6 +2,7 @@ import {initialOrderState, OrderState} from '../state/order.state';
 import {EOrderActions, OrderActions} from '../actions/order.actions';
 import {Order} from '../models/order';
 import {Discount} from '../models/discount';
+import {formatDate} from "@angular/common";
 
 export const orderReducers = (
   state = initialOrderState,
@@ -27,6 +28,7 @@ export const orderReducers = (
         priceTotalWithDiscount: calculateTotalWithDiscount(state.discount, price),
         priceTotalWithDiscountAndReduction: calculateTotalWithDiscountWithReduction(state.discount, price),
         priceTotalTaxMapWithDiscount: calculateTotalTaxWithDiscount(state.discount, state.priceTotalTaxMap),
+        transactionRef: state.transactionRef === '' ? formatDate(Date.now(), 'yyyyMMddhhmmss', 'nl-NL') : state.transactionRef,
         totalAmount: state.totalAmount + action.payload.amount
       };
     }

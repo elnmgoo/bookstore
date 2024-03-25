@@ -162,16 +162,14 @@ export class BooksService {
   }
 
   handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Unknown error!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    window.alert(errorMessage);
+    const clientError = error.error instanceof ErrorEvent;
+    const errorMessage = clientError ? `Error: ${error.error.message}` : `Error Code: ${error.status}\nMessage: ${error.message}`;
+    this.displayError(errorMessage);
     return throwError(errorMessage);
+  }
+
+  private displayError(message: string) {
+    window.alert(message);
   }
 
   getBook(isbn: string): Observable<Book> {

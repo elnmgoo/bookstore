@@ -34,7 +34,12 @@ export class OrderService {
     return of(index);
   }
 
+  // Will be replaced
   bookOrder(order: Order): Observable<Order> {
     return this.httpClient.put<Order>(this.ordersUrl + '/addOrder', order);
+  }
+
+  bookOrders(order: Order): Observable<Order> {
+    return this.httpClient.put<Order>(this.ordersUrl + '/addOrders', order);
   }
 }

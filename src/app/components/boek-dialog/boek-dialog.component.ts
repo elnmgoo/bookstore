@@ -88,8 +88,8 @@ export class BoekDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: [this.book.publisher.id, Validators.required],
       price: [this.book.price.toString(10),
         [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
-      supply: [this.book.supply, [Validators.required, Validators.min(0), Validators.max(99)]],
-      amount: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
+      supply: [this.book.supply, [Validators.required, Validators.min(0), Validators.max(9999)]],
+      amount: [1, [Validators.required, Validators.min(0), Validators.max(9999)]],
       added: ['', [Validators.minLength(0), Validators.maxLength(100)]]
     });
     this.publisher = this.book.publisher;

@@ -22,7 +22,7 @@ import {
   selectOrderTotalPriceWithDiscountAndReduction,
   selectOrderTotalPriceTaxMap, selectDiscountPercentageValue,
   selectOrderTotalTaxMapWithDiscount,
-  selectTotalAmount
+  selectTotalAmount, selectTransactionRef
 } from '../../../store/orders/selectors/order.selectors';
 import {
   AddOrder,
@@ -103,6 +103,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceWithDiscountAndReduction = 0;
   discount: Discount;
   publishers: Publisher[];
+  transactionRef: string;
 
   printOrder = true;
   payed = false;
@@ -118,6 +119,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
   orderTotalPriceWithDiscount$ = this.store.pipe(select(selectOrderTotalPriceWithDiscount));
   orderTotalPriceWithDiscountAndReduction$ = this.store.pipe(select(selectOrderTotalPriceWithDiscountAndReduction));
   totalAmount$ = this.store.pipe(select(selectTotalAmount));
+  transactionRef$: Observable<string> = this.store.pipe(select(selectTransactionRef));
 
   constructor(private store: Store<AppState>,
               private formBuilder: FormBuilder,
@@ -200,11 +202,12 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
       publisher: ['', Validators.required],
       price: ['', [Validators.required, Validators.minLength(1), PriceValidator(AppConstants.maxPriceBook)]],
       amount: [1, [Validators.required, Validators.min(1), Validators.max(999)]],
-      discount: [''],
+      discountPercent: [''],
       total: ['', [Validators.required, Validators.minLength(1)]],
       tax: ['9', [Validators.required, Validators.min(0)]],
       date: [this.calendar.getToday()],
-      supply: ['']
+      supply: [''],
+      transactionRef : [this.transactionRef]
     });
 
     this.itemForm = this.formBuilder.group({
@@ -261,6 +264,11 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.orderTotalPriceTaxMapWithDiscount = orderTotalPriceTaxMapWithDiscount;
     }));
 
+    this.subscriptions.add(this.transactionRef$.subscribe(transactionRef => {
+      this.transactionRef = transactionRef;
+      this.bookForm.controls.transactionRef.setValue(transactionRef);
+    }));
+
     this.subscriptions.add(this.discountForm.get('discountValue').valueChanges
       .pipe(debounceTime(this.DEBOUNCE_TIME))
       .subscribe( value => {
@@ -310,8 +318,8 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   calculateTotalPriceBook() {
     let totalPrice = this.bookForm.controls.amount.value * Number(this.bookForm.controls.price.value);
-    if (this.bookForm.controls.discount.value !== null && this.bookForm.controls.discount.value.toString().length > 0) {
-      totalPrice -= Number(this.bookForm.controls.discount.value.toString());
+    if (this.bookForm.controls.discountPercent.value !== null && this.bookForm.controls.discountPercent.value.toString().length > 0) {
+      totalPrice *= (100 - Number(this.bookForm.controls.discountPercent.value.toString())) / 100;
     }
     this.bookForm.controls.total.setValue(totalPrice.toFixed(2));
   }
@@ -375,8 +383,8 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
         description += ' (' + this.bookForm.controls.price.value + ' x ' + this.bookForm.controls.amount.value + ')';
       }
     } else {
-      if (this.bookForm.controls.discount.value > 0) {
-        description += ' (' + this.bookForm.controls.price.value + ' - ' + this.bookForm.controls.discount.value + ')';
+      if (this.bookForm.controls.discountPercent.value > 0) {
+        description += ' (' + this.bookForm.controls.price.value + ' - ' + this.bookForm.controls.discountPercent.value + '%)';
       }
     }
     const order = {
@@ -391,11 +399,10 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
       description,
       dateTime: 0,
       total: this.bookForm.controls.amount.value * Math.round(Number(this.bookForm.controls.price.value) * 100.0)
-        - Math.round(Number(this.bookForm.controls.discount.value) * 100.0),
+        * ((100 - Number(this.bookForm.controls.discountPercent.value)) / 100),
     } as Order;
     this.store.dispatch(new AddOrder(order));
     const date = this.bookForm.controls.date.value;
-    this.bookForm.reset();
     this.bookForm.controls.date.setValue(date);
     setTimeout(() => this.scrollOrderWindow(), 1000);
     this.autofocusField.nativeElement.focus();
@@ -426,6 +433,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPayButton() {
     this.setTimeStamp();
+    //
     this.order.forEach(myOrder => {
       const order = {...myOrder};
       order.dateTime = this.timeStamp;
@@ -548,7 +556,7 @@ export class KassaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bookForm.controls.price.setValue(book.price.toFixed(2));
         this.bookForm.controls.amount.setValue(1);
         this.bookForm.controls.tax.setValue(9);
-        this.bookForm.controls.discount.setValue('');
+        this.bookForm.controls.discountPercent.setValue('');
         this.bookForm.controls.total.setValue(book.price.toFixed(2));
       });
     }

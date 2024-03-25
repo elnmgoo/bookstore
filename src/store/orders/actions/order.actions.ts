@@ -14,7 +14,9 @@ export enum EOrderActions {
   DeleteAllOrder = '[Order] - DeleteAll order',
   SetDiscount = '[Order] - SetDiscount',
   SetDiscountSuccess = '[Order] - SetDiscount success',
-  OrderError = '[Order] - Error'
+  OrderError = '[Order] - Error',
+  ConfirmOrders = '[Orders] Confirm',
+  ConfirmOrdersSuccess = '[Orders] Confirm success',
 }
 
 export class GetOrders implements Action {
@@ -33,6 +35,14 @@ export class AddOrder implements Action {
 
   constructor(public payload: Order) {
   }
+}
+
+export class ConfirmOrders implements Action {
+  public readonly type = EOrderActions.ConfirmOrders;
+}
+
+export class ConfirmOrdersSuccess implements Action {
+  public readonly type = EOrderActions.ConfirmOrdersSuccess;
 }
 
 export class AddOrderSuccess implements Action {

@@ -22,8 +22,13 @@
         </div>
         <div class="mb-3 col-md-2">
           <label class="form-label-sm" for="supply">Voorraad</label><br>
-          <input formControlName="supply" type="number" class="form-control form-control-sm"
+          <input formControlName="supply" type="text" class="form-control form-control-sm"
                  id="supply" [readonly]=true>
+        </div>
+        <div class="mb-3 col-md-2">
+          <label class="form-label-sm" for="transactionRef">transactieNr</label><br>
+          <input formControlName="transactionRef" type="number" class="form-control form-control-sm"
+                 id="transactionRef" [readonly]=true>
         </div>
       </div>
       <div class="row">
@@ -77,9 +82,9 @@
           </div>
         </div>
         <div class="mb-3 col-md-2">
-          <label class="form-label-sm" for="inputDiscount">Korting</label><br>
-          <input formControlName="discount" type="text" class="form-control form-control-sm"
-                 id="inputDiscount"
+          <label class="form-label-sm" for="inputDiscountPercent">% Korting</label><br>
+          <input formControlName="discountPercent" type="text" class="form-control form-control-sm"
+                 id="inputDiscountPercent"
                  mask="separator.2" decimalMarker=","
                  thousandSeparator="." (change)="calculateTotalPriceBook()">
         </div>
@@ -326,7 +331,7 @@
             </span>
               <ng-container *ngIf="time.length > 0">
                 <p></p>
-                <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i></p>
+                <p>&nbsp;&nbsp;&nbsp;<i>{{time}}</i>&nbsp;transactie: {{this.transactionRef}}</p>
               </ng-container>
             </ng-container>
           </ng-container>

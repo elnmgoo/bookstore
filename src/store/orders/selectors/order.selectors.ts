@@ -56,3 +56,7 @@ export const selectTotalAmount = createSelector(
   (state: OrderState) => state.totalAmount
 );
 
+export const selectTransactionRef = createSelector(
+  selectOrders,
+  (state: OrderState) => state.transactionRef
+);

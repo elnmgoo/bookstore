@@ -5,7 +5,7 @@ import {catchError, map, mergeMap, filter, take, switchMap} from 'rxjs/operators
 import {Order} from '../models/order';
 import {
   AddOrder,
-  AddOrderSuccess, BookOrder, BookOrderSuccess, DeleteAllOrder,
+  AddOrderSuccess, BookOrder, BookOrderSuccess, ConfirmOrders, DeleteAllOrder,
   DeleteOrder,
   DeleteOrderSuccess,
   EOrderActions,
@@ -44,14 +44,14 @@ export class OrderEffects {
     ofType<AddOrder>(EOrderActions.AddOrder),
     mergeMap(action =>
       this.orderService.addOrder(action.payload)
-        .pipe(
-          map((data: Order) => {
-            return new AddOrderSuccess(data);
-          }),
-          catchError((error: Error) => {
-            return of(new OrderError(error));
-          })
-        )
+      .pipe(
+        map((data: Order) => {
+          return new AddOrderSuccess(data);
+        }),
+        catchError((error: Error) => {
+          return of(new OrderError(error));
+        })
+      )
     )
   ));
 
@@ -60,14 +60,14 @@ export class OrderEffects {
     ofType<DeleteOrder>(EOrderActions.DeleteOrder),
     mergeMap(action =>
       this.orderService.deleteOrder(action.payload)
-        .pipe(
-          map((order: Order) => {
-            return new DeleteOrderSuccess(order);
-          }),
-          catchError((error: Error) => {
-            return of(new OrderError(error));
-          })
-        )
+      .pipe(
+        map((order: Order) => {
+          return new DeleteOrderSuccess(order);
+        }),
+        catchError((error: Error) => {
+          return of(new OrderError(error));
+        })
+      )
     )
   ));
 
@@ -76,14 +76,14 @@ export class OrderEffects {
     ofType<BookOrder>(EOrderActions.BookOrder),
     mergeMap(action =>
       this.orderService.bookOrder(action.payload)
-        .pipe(
-          map((data: Order) => {
-            return new BookOrderSuccess(data);
-          }),
-          catchError((error: Error) => {
-            return of(new OrderError(error));
-          })
-        )
+      .pipe(
+        map((data: Order) => {
+          return new BookOrderSuccess(data);
+        }),
+        catchError((error: Error) => {
+          return of(new OrderError(error));
+        })
+      )
     )
   ));
 
